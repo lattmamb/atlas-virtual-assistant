@@ -1,12 +1,68 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import { useRef, useEffect } from "react";
+import { ChatProvider, useChat } from "@/context/ChatContext";
+import ChatMessage from "@/components/ChatMessage";
+import ChatInput from "@/components/ChatInput";
+import AnimatedLogo from "@/components/AnimatedLogo";
+import { Trash2 } from "lucide-react";
+
+const ChatContainer = () => {
+  const { messages, clearMessages } = useChat();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to bottom when messages change
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
+
+  return (
+    <div className="flex flex-col h-full">
+      {/* Header with logo */}
+      <header className="flex items-center justify-between py-4 px-8 border-b">
+        <div className="flex items-center gap-3">
+          <AnimatedLogo />
+          <div>
+            <h1 className="text-xl font-medium">Atlas Assistant</h1>
+            <p className="text-xs text-muted-foreground">Your personal AI companion</p>
+          </div>
+        </div>
+        <button
+          onClick={clearMessages}
+          className="p-2 rounded-full hover:bg-slate-100 transition-colors text-slate-400 hover:text-slate-600"
+          aria-label="Clear chat"
+        >
+          <Trash2 size={20} />
+        </button>
+      </header>
+
+      {/* Messages container */}
+      <div className="flex-1 overflow-y-auto px-6 py-6">
+        <div className="max-w-4xl mx-auto">
+          {messages.map((message) => (
+            <ChatMessage key={message.id} message={message} />
+          ))}
+          <div ref={messagesEndRef} />
+        </div>
+      </div>
+
+      {/* Input container */}
+      <div className="py-6 px-6 border-t bg-gradient-to-b from-transparent to-slate-50/50">
+        <ChatInput />
+      </div>
+    </div>
+  );
+};
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
+    <div className="h-screen w-full bg-gradient-to-br from-blue-50 to-slate-50 overflow-hidden">
+      <ChatProvider>
+        <div className="h-full w-full max-w-[1400px] mx-auto">
+          <ChatContainer />
+        </div>
+      </ChatProvider>
     </div>
   );
 };
