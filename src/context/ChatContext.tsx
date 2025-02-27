@@ -78,6 +78,50 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [selectedProvider]);
 
+  const generateHuggingFaceResponse = async (userMessage: string) => {
+    const token = localStorage.getItem('huggingface_api_key');
+    if (!token) {
+      throw new Error("No Hugging Face API token found");
+    }
+
+    // Using the Hugging Face Inference API with a model (using a popular text generation model)
+    const response = await fetch(
+      "https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill",
+      {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ inputs: userMessage }),
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("Hugging Face API Error:", errorData);
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.generated_text || "I couldn't generate a response. Please try again.";
+  };
+
+  const generateOpenAIResponse = async (userMessage: string) => {
+    // Simulated OpenAI response for now
+    return `[OpenAI] You asked: "${userMessage}". Here's my simulated response...`;
+  };
+
+  const generateAnthropicResponse = async (userMessage: string) => {
+    // Simulated Anthropic response for now
+    return `[Anthropic] You asked: "${userMessage}". Here's my simulated response...`;
+  };
+
+  const generateCohereResponse = async (userMessage: string) => {
+    // Simulated Cohere response for now
+    return `[Cohere] You asked: "${userMessage}". Here's my simulated response...`;
+  };
+
   const generateResponse = useCallback(async (userMessage: string) => {
     // If no provider is selected, provide a helpful message
     if (!selectedProvider) {
@@ -88,20 +132,24 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
       }
     }
     
-    // For this demo, we'll simulate a response with a delay
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    
-    // In a real implementation, we would call the appropriate API here
-    // using the stored API key for the selected provider
-    const responses = [
-      `I processed your request using ${selectedProvider}. Here's what I found...`,
-      `Using ${selectedProvider}'s powerful AI, I can tell you that...`,
-      `Based on my analysis with ${selectedProvider}, I would recommend...`,
-      `According to ${selectedProvider}'s model, the answer to your question is...`,
-      `I've leveraged ${selectedProvider}'s AI capabilities to analyze your request.`,
-    ];
-    
-    return responses[Math.floor(Math.random() * responses.length)];
+    try {
+      // Call the appropriate API based on the selected provider
+      switch (selectedProvider) {
+        case 'huggingface':
+          return await generateHuggingFaceResponse(userMessage);
+        case 'openai':
+          return await generateOpenAIResponse(userMessage);
+        case 'anthropic':
+          return await generateAnthropicResponse(userMessage);
+        case 'cohere':
+          return await generateCohereResponse(userMessage);
+        default:
+          return "Unknown provider selected. Please check your settings.";
+      }
+    } catch (error) {
+      console.error("Error generating response:", error);
+      return "I encountered an error communicating with the AI provider. Please check your API key and try again.";
+    }
   }, [selectedProvider, availableProviders]);
 
   const sendMessage = useCallback(
