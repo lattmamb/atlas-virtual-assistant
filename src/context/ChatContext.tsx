@@ -7,8 +7,7 @@ import {
   ReactNode,
   useEffect,
 } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { ApiKey, ApiKeyProvider } from "@/lib/types";
+import { ApiKeyProvider } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
 
 export type Message = {
@@ -53,31 +52,27 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
   const [availableProviders, setAvailableProviders] = useState<ApiKeyProvider[]>([]);
   const { toast } = useToast();
 
-  // Fetch available API providers
+  // Check for API keys in localStorage
   useEffect(() => {
-    const fetchApiKeys = async () => {
-      try {
-        const { data, error } = await supabase
-          .from("api_keys")
-          .select("provider");
-        
-        if (error) throw error;
-        
-        if (data && data.length > 0) {
-          const providers = data.map(item => item.provider as ApiKeyProvider);
-          setAvailableProviders(providers);
-          
-          // If we have providers but none selected, select the first one
-          if (providers.length > 0 && !selectedProvider) {
-            setSelectedProvider(providers[0]);
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching API providers:", error);
-      }
-    };
+    const providers: ApiKeyProvider[] = [];
     
-    fetchApiKeys();
+    // Check for each provider's API key in localStorage
+    if (localStorage.getItem('openai_api_key')) {
+      providers.push('openai');
+    }
+    if (localStorage.getItem('anthropic_api_key')) {
+      providers.push('anthropic');
+    }
+    if (localStorage.getItem('cohere_api_key')) {
+      providers.push('cohere');
+    }
+    
+    setAvailableProviders(providers);
+    
+    // If we have providers but none selected, select the first one
+    if (providers.length > 0 && !selectedProvider) {
+      setSelectedProvider(providers[0]);
+    }
   }, [selectedProvider]);
 
   const generateResponse = useCallback(async (userMessage: string) => {

@@ -32,19 +32,8 @@ export function ApiKeyForm({ provider, currentKey, onSuccess }: ApiKeyFormProps)
     try {
       const { data: sessionData } = await supabase.auth.getSession();
       
-      if (!sessionData.session?.user.id) {
-        throw new Error("You must be logged in to save API keys");
-      }
-      
-      const { error } = await supabase.from("api_keys").upsert({
-        user_id: sessionData.session.user.id,
-        provider,
-        api_key: apiKey
-      }, {
-        onConflict: "user_id,provider"
-      });
-      
-      if (error) throw error;
+      // Store in local storage instead of database since we've removed authentication
+      localStorage.setItem(`${provider}_api_key`, apiKey);
       
       toast({
         title: "API Key Saved",
