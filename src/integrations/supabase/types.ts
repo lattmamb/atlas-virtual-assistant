@@ -18,7 +18,7 @@ export type Database = {
           user_id: string | null
         }
         Insert: {
-          api_key: string
+          api_key?: string
           created_at?: string | null
           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: string
           "hugging face": string
@@ -470,7 +470,7 @@ export type Database = {
       }
     }
     Enums: {
-      [_ in never]: never
+      "ATLAS assistant": "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"
     }
     CompositeTypes: {
       [_ in never]: never
