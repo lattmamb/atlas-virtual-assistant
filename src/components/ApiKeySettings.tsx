@@ -1,54 +1,11 @@
 
-import { useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { useState } from "react";
 import { ApiKeyForm } from "./ApiKeyForm";
-import { ApiKey, ApiKeyProvider } from "@/lib/types";
+import { ApiKeyProvider } from "@/lib/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export function ApiKeySettings() {
-  const [apiKeys, setApiKeys] = useState<Partial<Record<ApiKeyProvider, ApiKey>>>({});
-  const [isLoading, setIsLoading] = useState(true);
-
-  const fetchApiKeys = async () => {
-    setIsLoading(true);
-    try {
-      const { data, error } = await supabase
-        .from("api_keys")
-        .select("*");
-      
-      if (error) throw error;
-      
-      const keysByProvider: Partial<Record<ApiKeyProvider, ApiKey>> = {};
-      
-      if (data) {
-        data.forEach((key: ApiKey) => {
-          keysByProvider[key.provider as ApiKeyProvider] = key;
-        });
-      }
-      
-      setApiKeys(keysByProvider);
-    } catch (error) {
-      console.error("Error fetching API keys:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchApiKeys();
-  }, []);
-
-  if (isLoading) {
-    return (
-      <div className="p-6 flex justify-center">
-        <div className="loading-dots">
-          <div className="dot"></div>
-          <div className="dot"></div>
-          <div className="dot"></div>
-        </div>
-      </div>
-    );
-  }
+  const [selectedProvider, setSelectedProvider] = useState<ApiKeyProvider>("openai");
 
   return (
     <div className="space-y-6">
@@ -67,27 +24,36 @@ export function ApiKeySettings() {
         </TabsList>
         
         <TabsContent value="openai" className="p-4 border rounded-md mt-2">
-          <ApiKeyForm
-            provider="openai"
-            currentKey={apiKeys.openai?.api_key}
-            onSuccess={fetchApiKeys}
-          />
+          <div className="space-y-4">
+            <label className="text-sm font-medium">OpenAI API Key</label>
+            <input
+              type="password"
+              className="w-full rounded-md border border-input bg-background p-3 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              placeholder="Enter your OpenAI API key"
+            />
+          </div>
         </TabsContent>
         
         <TabsContent value="anthropic" className="p-4 border rounded-md mt-2">
-          <ApiKeyForm
-            provider="anthropic"
-            currentKey={apiKeys.anthropic?.api_key}
-            onSuccess={fetchApiKeys}
-          />
+          <div className="space-y-4">
+            <label className="text-sm font-medium">Anthropic API Key</label>
+            <input
+              type="password"
+              className="w-full rounded-md border border-input bg-background p-3 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              placeholder="Enter your Anthropic API key"
+            />
+          </div>
         </TabsContent>
         
         <TabsContent value="cohere" className="p-4 border rounded-md mt-2">
-          <ApiKeyForm
-            provider="cohere"
-            currentKey={apiKeys.cohere?.api_key}
-            onSuccess={fetchApiKeys}
-          />
+          <div className="space-y-4">
+            <label className="text-sm font-medium">Cohere API Key</label>
+            <input
+              type="password"
+              className="w-full rounded-md border border-input bg-background p-3 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              placeholder="Enter your Cohere API key"
+            />
+          </div>
         </TabsContent>
       </Tabs>
       

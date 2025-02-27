@@ -8,7 +8,6 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
-import Auth from "./pages/Auth";
 import Settings from "./pages/Settings";
 
 const queryClient = new QueryClient();
@@ -17,13 +16,7 @@ const App = () => {
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    const initializeAuth = async () => {
-      // Just check if we can get the current session to initialize auth
-      await supabase.auth.getSession();
-      setIsInitialized(true);
-    };
-
-    initializeAuth();
+    setIsInitialized(true);
   }, []);
 
   if (!isInitialized) {
@@ -47,7 +40,6 @@ const App = () => {
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
-              <Route path="/auth" element={<Auth />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

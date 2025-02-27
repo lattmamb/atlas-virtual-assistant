@@ -1,7 +1,6 @@
 
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
 import { ChatProvider, useChat } from "@/context/ChatContext";
 import ChatMessage from "@/components/ChatMessage";
 import ChatInput from "@/components/ChatInput";
@@ -13,7 +12,6 @@ const ChatContainer = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  // Auto-scroll to bottom when messages change
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
@@ -22,7 +20,6 @@ const ChatContainer = () => {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Header with logo */}
       <header className="flex items-center justify-between py-4 px-8 border-b">
         <div className="flex items-center gap-3">
           <AnimatedLogo />
@@ -49,7 +46,6 @@ const ChatContainer = () => {
         </div>
       </header>
 
-      {/* Messages container */}
       <div className="flex-1 overflow-y-auto px-6 py-6">
         <div className="max-w-4xl mx-auto">
           {messages.map((message) => (
@@ -59,7 +55,6 @@ const ChatContainer = () => {
         </div>
       </div>
 
-      {/* Input container */}
       <div className="py-6 px-6 border-t bg-gradient-to-b from-transparent to-slate-50/50">
         <ChatInput />
       </div>
@@ -68,45 +63,6 @@ const ChatContainer = () => {
 };
 
 const Index = () => {
-  const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      const { data } = await supabase.auth.getSession();
-      
-      if (!data.session) {
-        navigate("/auth");
-      } else {
-        setIsLoading(false);
-      }
-    };
-    
-    checkAuth();
-    
-    const { data: authListener } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "SIGNED_OUT") {
-        navigate("/auth");
-      }
-    });
-    
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
-  }, [navigate]);
-
-  if (isLoading) {
-    return (
-      <div className="h-screen w-full bg-gradient-to-br from-blue-50 to-slate-50 flex items-center justify-center">
-        <div className="loading-dots">
-          <div className="dot"></div>
-          <div className="dot"></div>
-          <div className="dot"></div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="h-screen w-full bg-gradient-to-br from-blue-50 to-slate-50 overflow-hidden">
       <ChatProvider>
