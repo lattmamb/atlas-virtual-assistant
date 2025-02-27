@@ -5,7 +5,11 @@ import {
   useState,
   useCallback,
   ReactNode,
+  useEffect,
 } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { ApiKey, ApiKeyProvider } from "@/lib/types";
+import { useToast } from "@/hooks/use-toast";
 
 export type Message = {
   id: string;
@@ -20,6 +24,9 @@ type ChatContextType = {
   isLoading: boolean;
   sendMessage: (content: string) => void;
   clearMessages: () => void;
+  availableProviders: ApiKeyProvider[];
+  selectedProvider: ApiKeyProvider | null;
+  setSelectedProvider: (provider: ApiKeyProvider) => void;
 };
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -42,22 +49,62 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
     },
   ]);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedProvider, setSelectedProvider] = useState<ApiKeyProvider | null>(null);
+  const [availableProviders, setAvailableProviders] = useState<ApiKeyProvider[]>([]);
+  const { toast } = useToast();
+
+  // Fetch available API providers
+  useEffect(() => {
+    const fetchApiKeys = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("api_keys")
+          .select("provider");
+        
+        if (error) throw error;
+        
+        if (data && data.length > 0) {
+          const providers = data.map(item => item.provider as ApiKeyProvider);
+          setAvailableProviders(providers);
+          
+          // If we have providers but none selected, select the first one
+          if (providers.length > 0 && !selectedProvider) {
+            setSelectedProvider(providers[0]);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching API providers:", error);
+      }
+    };
+    
+    fetchApiKeys();
+  }, [selectedProvider]);
 
   const generateResponse = useCallback(async (userMessage: string) => {
-    // Simulate a delay for the AI thinking
+    // If no provider is selected, provide a helpful message
+    if (!selectedProvider) {
+      if (availableProviders.length === 0) {
+        return "You need to configure an API key in Settings before I can process your requests. Click the settings icon in the top right to add your API key.";
+      } else {
+        return "Please select an AI provider from the dropdown above to process your request.";
+      }
+    }
+    
+    // For this demo, we'll simulate a response with a delay
     await new Promise((resolve) => setTimeout(resolve, 1500));
     
-    // Simple responses for demo purposes
+    // In a real implementation, we would call the appropriate API here
+    // using the stored API key for the selected provider
     const responses = [
-      "I understand what you're asking. Let me think about that for a moment.",
-      "That's an interesting question. Here's what I found.",
-      "I'm here to help with that. Based on my knowledge, I would suggest the following.",
-      "Let me analyze that for you. From my perspective, here's what you should consider.",
-      "I've processed your request, and here's my response.",
+      `I processed your request using ${selectedProvider}. Here's what I found...`,
+      `Using ${selectedProvider}'s powerful AI, I can tell you that...`,
+      `Based on my analysis with ${selectedProvider}, I would recommend...`,
+      `According to ${selectedProvider}'s model, the answer to your question is...`,
+      `I've leveraged ${selectedProvider}'s AI capabilities to analyze your request.`,
     ];
     
     return responses[Math.floor(Math.random() * responses.length)];
-  }, []);
+  }, [selectedProvider, availableProviders]);
 
   const sendMessage = useCallback(
     async (content: string) => {
@@ -101,7 +148,6 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
           )
         );
       } catch (error) {
-        // Handle error
         console.error("Error generating response:", error);
         setMessages((prev) =>
           prev.map((msg) =>
@@ -139,6 +185,9 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
         isLoading,
         sendMessage,
         clearMessages,
+        availableProviders,
+        selectedProvider,
+        setSelectedProvider,
       }}
     >
       {children}

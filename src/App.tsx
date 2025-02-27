@@ -4,26 +4,58 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import Auth from "./pages/Auth";
+import Settings from "./pages/Settings";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <div className="min-h-screen bg-background">
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+const App = () => {
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  useEffect(() => {
+    const initializeAuth = async () => {
+      // Just check if we can get the current session to initialize auth
+      await supabase.auth.getSession();
+      setIsInitialized(true);
+    };
+
+    initializeAuth();
+  }, []);
+
+  if (!isInitialized) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="loading-dots">
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+        </div>
       </div>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+    );
+  }
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <div className="min-h-screen bg-background">
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </div>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

@@ -1,14 +1,17 @@
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import { ChatProvider, useChat } from "@/context/ChatContext";
 import ChatMessage from "@/components/ChatMessage";
 import ChatInput from "@/components/ChatInput";
 import AnimatedLogo from "@/components/AnimatedLogo";
-import { Trash2 } from "lucide-react";
+import { Settings, Trash2 } from "lucide-react";
 
 const ChatContainer = () => {
   const { messages, clearMessages } = useChat();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
@@ -28,13 +31,22 @@ const ChatContainer = () => {
             <p className="text-xs text-muted-foreground">Your personal AI companion</p>
           </div>
         </div>
-        <button
-          onClick={clearMessages}
-          className="p-2 rounded-full hover:bg-slate-100 transition-colors text-slate-400 hover:text-slate-600"
-          aria-label="Clear chat"
-        >
-          <Trash2 size={20} />
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={clearMessages}
+            className="p-2 rounded-full hover:bg-slate-100 transition-colors text-slate-400 hover:text-slate-600"
+            aria-label="Clear chat"
+          >
+            <Trash2 size={20} />
+          </button>
+          <button
+            onClick={() => navigate("/settings")}
+            className="p-2 rounded-full hover:bg-slate-100 transition-colors text-slate-400 hover:text-slate-600"
+            aria-label="Settings"
+          >
+            <Settings size={20} />
+          </button>
+        </div>
       </header>
 
       {/* Messages container */}
@@ -56,6 +68,45 @@ const ChatContainer = () => {
 };
 
 const Index = () => {
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data } = await supabase.auth.getSession();
+      
+      if (!data.session) {
+        navigate("/auth");
+      } else {
+        setIsLoading(false);
+      }
+    };
+    
+    checkAuth();
+    
+    const { data: authListener } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "SIGNED_OUT") {
+        navigate("/auth");
+      }
+    });
+    
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, [navigate]);
+
+  if (isLoading) {
+    return (
+      <div className="h-screen w-full bg-gradient-to-br from-blue-50 to-slate-50 flex items-center justify-center">
+        <div className="loading-dots">
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="h-screen w-full bg-gradient-to-br from-blue-50 to-slate-50 overflow-hidden">
       <ChatProvider>
