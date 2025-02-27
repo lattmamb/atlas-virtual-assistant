@@ -9,10 +9,12 @@ export function ApiKeySettings() {
   const [openaiKey, setOpenaiKey] = useState("");
   const [anthropicKey, setAnthropicKey] = useState("");
   const [cohereKey, setCohereKey] = useState("");
+  const [huggingfaceKey, setHuggingfaceKey] = useState("");
   const [visibleKeys, setVisibleKeys] = useState<Record<string, boolean>>({
     openai: false,
     anthropic: false,
     cohere: false,
+    huggingface: false,
   });
   const { toast } = useToast();
 
@@ -21,10 +23,12 @@ export function ApiKeySettings() {
     const savedOpenaiKey = localStorage.getItem("openai_api_key");
     const savedAnthropicKey = localStorage.getItem("anthropic_api_key");
     const savedCohereKey = localStorage.getItem("cohere_api_key");
+    const savedHuggingfaceKey = localStorage.getItem("huggingface_api_key");
 
     if (savedOpenaiKey) setOpenaiKey("********");
     if (savedAnthropicKey) setAnthropicKey("********");
     if (savedCohereKey) setCohereKey("********");
+    if (savedHuggingfaceKey) setHuggingfaceKey("********");
   }, []);
 
   const toggleVisibility = (provider: string) => {
@@ -54,12 +58,42 @@ export function ApiKeySettings() {
         </p>
       </div>
       
-      <Tabs defaultValue="openai" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+      <Tabs defaultValue="huggingface" className="w-full">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="huggingface">Hugging Face</TabsTrigger>
           <TabsTrigger value="openai">OpenAI</TabsTrigger>
           <TabsTrigger value="anthropic">Anthropic</TabsTrigger>
           <TabsTrigger value="cohere">Cohere</TabsTrigger>
         </TabsList>
+        
+        <TabsContent value="huggingface" className="p-4 border rounded-md mt-2">
+          <div className="space-y-4">
+            <label className="text-sm font-medium">Hugging Face API Token</label>
+            <div className="relative">
+              <input
+                type={visibleKeys.huggingface ? "text" : "password"}
+                value={huggingfaceKey}
+                onChange={(e) => setHuggingfaceKey(e.target.value)}
+                className="w-full rounded-md border border-input bg-background p-3 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring pr-10"
+                placeholder="Enter your Hugging Face API token"
+              />
+              <button
+                type="button"
+                onClick={() => toggleVisibility("huggingface")}
+                className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+              >
+                {visibleKeys.huggingface ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
+            <button
+              onClick={() => saveKey("huggingface", huggingfaceKey)}
+              disabled={!huggingfaceKey.trim() || huggingfaceKey === "********"}
+              className="mt-2 px-4 py-2 rounded-md bg-primary text-white hover:bg-primary/90 disabled:opacity-50"
+            >
+              Save Hugging Face Token
+            </button>
+          </div>
+        </TabsContent>
         
         <TabsContent value="openai" className="p-4 border rounded-md mt-2">
           <div className="space-y-4">
@@ -152,6 +186,7 @@ export function ApiKeySettings() {
       <div className="text-sm p-4 bg-blue-50 rounded-md">
         <p className="font-medium text-blue-800">Getting API Keys</p>
         <ul className="list-disc list-inside mt-2 text-blue-700 space-y-1">
+          <li><a href="https://huggingface.co/settings/tokens" target="_blank" rel="noopener noreferrer" className="underline">Hugging Face API Tokens</a></li>
           <li><a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" className="underline">OpenAI API Keys</a></li>
           <li><a href="https://console.anthropic.com/account/keys" target="_blank" rel="noopener noreferrer" className="underline">Anthropic API Keys</a></li>
           <li><a href="https://dashboard.cohere.com/api-keys" target="_blank" rel="noopener noreferrer" className="underline">Cohere API Keys</a></li>

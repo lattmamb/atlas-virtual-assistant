@@ -1,5 +1,5 @@
 
-export type ApiKeyProvider = "openai" | "anthropic" | "cohere";
+export type ApiKeyProvider = "openai" | "anthropic" | "cohere" | "huggingface";
 
 export interface ApiKey {
   id: string;

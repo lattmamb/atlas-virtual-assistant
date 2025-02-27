@@ -66,6 +66,9 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
     if (localStorage.getItem('cohere_api_key')) {
       providers.push('cohere');
     }
+    if (localStorage.getItem('huggingface_api_key')) {
+      providers.push('huggingface');
+    }
     
     setAvailableProviders(providers);
     

@@ -40,7 +40,8 @@ const ChatInput = () => {
   const providerNames: Record<ApiKeyProvider, string> = {
     openai: "OpenAI",
     anthropic: "Anthropic",
-    cohere: "Cohere"
+    cohere: "Cohere",
+    huggingface: "Hugging Face"
   };
 
   return (
