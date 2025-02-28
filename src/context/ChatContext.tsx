@@ -1,165 +1,132 @@
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { toast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { v4 as uuidv4 } from "uuid";
-import { ApiKeyProvider } from "@/lib/types";
-import { toast } from "sonner";
+import { v4 as uuid } from "uuid";
 
-// Updated structure to reflect the actual database schema
-interface ApiKey {
-  id?: string;
-  user_id?: string;
-  api_key?: string;
-  provider?: ApiKeyProvider;
-  created_at?: string;
-}
-
-export interface ChatMessage {
+// Define the message type
+export interface Message {
   id: string;
   content: string;
-  role: "user" | "assistant";
-  isLoading?: boolean;
+  role: "user" | "assistant" | "system";
+  createdAt: Date;
 }
 
-interface ChatContextProps {
-  messages: ChatMessage[];
-  sendMessage: (content: string) => void;
+// Define provider types
+export type ApiKeyProvider = "openai" | "anthropic" | "google" | "hugging face" | "cohere";
+
+interface ChatContextType {
+  messages: Message[];
+  addMessage: (content: string, role: "user" | "assistant" | "system") => void;
   clearMessages: () => void;
   isLoading: boolean;
-  availableProviders: ApiKeyProvider[];
   selectedProvider: ApiKeyProvider | null;
-  setSelectedProvider: (provider: ApiKeyProvider) => void;
+  setSelectedProvider: (provider: ApiKeyProvider | null) => void;
+  availableProviders: ApiKeyProvider[];
 }
 
-const ChatContext = createContext<ChatContextProps | undefined>(undefined);
+const initialMessages: Message[] = [];
 
-export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [availableProviders, setAvailableProviders] = useState<ApiKeyProvider[]>([]);
+const ChatContext = createContext<ChatContextType>({
+  messages: initialMessages,
+  addMessage: () => {},
+  clearMessages: () => {},
+  isLoading: false,
+  selectedProvider: null,
+  setSelectedProvider: () => {},
+  availableProviders: [],
+});
+
+export function ChatProvider({ children }: { children: ReactNode }) {
+  const [messages, setMessages] = useState<Message[]>(initialMessages);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedProvider, setSelectedProvider] = useState<ApiKeyProvider | null>(null);
-  const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
+  const [availableProviders, setAvailableProviders] = useState<ApiKeyProvider[]>([]);
 
-  // Fetch API keys from Supabase
-  useEffect(() => {
-    const fetchApiKeys = async () => {
-      try {
-        const { data, error } = await supabase.from("api_keys").select("*");
-        if (error) throw error;
-
-        if (data && data.length > 0) {
-          setApiKeys(data as ApiKey[]);
-          
-          // Create list of providers with valid keys
-          const providers: ApiKeyProvider[] = [];
-          data.forEach((key: ApiKey) => {
-            if (key.provider && key.api_key) {
-              providers.push(key.provider);
-            }
-          });
-          
-          setAvailableProviders(providers);
-          
-          // Set first provider as default if available
-          if (providers.length > 0 && !selectedProvider) {
-            setSelectedProvider(providers[0]);
-          }
-        }
-      } catch (error: any) {
-        console.error("Error fetching API keys:", error.message);
-      }
+  const addMessage = (content: string, role: "user" | "assistant" | "system") => {
+    const message: Message = {
+      id: uuid(),
+      content,
+      role,
+      createdAt: new Date(),
     };
-
-    fetchApiKeys();
-  }, []);
+    setMessages((prev) => [...prev, message]);
+  };
 
   const clearMessages = () => {
     setMessages([]);
   };
 
-  const sendMessage = async (content: string) => {
-    if (!selectedProvider) {
-      toast.error("Please select an AI provider first");
-      return;
-    }
+  useEffect(() => {
+    const fetchApiKeys = async () => {
+      try {
+        const { data, error } = await supabase.from("api_keys").select("*");
+        
+        if (error) {
+          throw error;
+        }
 
-    // Add user message
-    const userMessage: ChatMessage = {
-      id: uuidv4(),
-      content,
-      role: "user",
+        if (data && data.length > 0) {
+          // Extract available providers based on table structure
+          // The table structure might vary, so we check for keys that contain valid API keys
+          const providers: ApiKeyProvider[] = [];
+          
+          for (const row of data) {
+            // Check each provider column in the row
+            if (row.openai && row.openai.trim() !== '') {
+              providers.push('openai');
+            }
+            if (row.anthropic && row.anthropic.trim() !== '') {
+              providers.push('anthropic');
+            }
+            if (row.google && row.google.trim() !== '') {
+              providers.push('google');
+            }
+            if (row["hugging face"] && row["hugging face"].trim() !== '') {
+              providers.push('hugging face');
+            }
+            if (row.cohere && row.cohere.trim() !== '') {
+              providers.push('cohere');
+            }
+          }
+          
+          // Remove duplicates
+          const uniqueProviders = [...new Set(providers)];
+          setAvailableProviders(uniqueProviders);
+          
+          // Select the first provider by default if none is selected
+          if (!selectedProvider && uniqueProviders.length > 0) {
+            setSelectedProvider(uniqueProviders[0]);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching API keys:", error);
+        toast({
+          title: "Error fetching API keys",
+          description: "Please check your database connection.",
+          variant: "destructive",
+        });
+      }
     };
 
-    // Add loading assistant message
-    const loadingMessage: ChatMessage = {
-      id: uuidv4(),
-      content: "",
-      role: "assistant",
-      isLoading: true,
-    };
-
-    setMessages((prev) => [...prev, userMessage, loadingMessage]);
-    setIsLoading(true);
-
-    try {
-      // Simulate AI response - in a real app you would call an API here
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      
-      // Convert loading message to actual message
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg.id === loadingMessage.id
-            ? {
-                ...msg,
-                content: `This is a response from the ${selectedProvider} AI model. Your message was: "${content}"`,
-                isLoading: false,
-              }
-            : msg
-        )
-      );
-    } catch (error: any) {
-      console.error("Error sending message:", error);
-      
-      // Convert loading message to error message
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg.id === loadingMessage.id
-            ? {
-                ...msg,
-                content: "Sorry, there was an error processing your message.",
-                isLoading: false,
-              }
-            : msg
-        )
-      );
-      
-      toast.error("Failed to get a response");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    fetchApiKeys();
+  }, [selectedProvider]);
 
   return (
     <ChatContext.Provider
       value={{
         messages,
-        sendMessage,
+        addMessage,
         clearMessages,
         isLoading,
-        availableProviders,
         selectedProvider,
         setSelectedProvider,
+        availableProviders,
       }}
     >
       {children}
     </ChatContext.Provider>
   );
-};
+}
 
-export const useChat = () => {
-  const context = useContext(ChatContext);
-  if (context === undefined) {
-    throw new Error("useChat must be used within a ChatProvider");
-  }
-  return context;
-};
+export const useChat = () => useContext(ChatContext);

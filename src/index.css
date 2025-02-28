@@ -5,74 +5,44 @@
 
 @layer base {
   :root {
-    --background: 0 0% 98%;
-    --foreground: 0 0% 12%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 12%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 12%;
-
-    --primary: 0 84% 60%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 25%;
-
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
-
-    --accent: 0 0% 96%;
-    --accent-foreground: 0 0% 25%;
-
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 0 84% 60%;
-
-    --radius: 0.75rem;
-
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 0 0% 26%;
-    --sidebar-primary: 0 0% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 0 0% 96%;
-    --sidebar-accent-foreground: 0 0% 10%;
-    --sidebar-border: 0 0% 91%;
-    --sidebar-ring: 0 84% 60%;
-  }
-
-  .dark {
-    --background: 0 0% 5%;
+    --background: 210 100% 40%; /* iCloud blue background */
     --foreground: 0 0% 98%;
 
-    --card: 0 0% 7%;
+    --card: 215 60% 10%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 0 0% 7%;
+    --popover: 215 60% 10%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 0 84% 60%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 215 60% 10%;
 
-    --secondary: 0 0% 12%;
+    --secondary: 215 50% 15%;
     --secondary-foreground: 0 0% 85%;
 
-    --muted: 0 0% 12%;
+    --muted: 215 50% 15%;
     --muted-foreground: 0 0% 65%;
 
-    --accent: 0 0% 12%;
+    --accent: 215 50% 15%;
     --accent-foreground: 0 0% 85%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 15%;
-    --input: 0 0% 15%;
+    --border: 215 30% 20%;
+    --input: 215 30% 20%;
     --ring: 0 84% 60%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 215 60% 10%;
+    --sidebar-foreground: 0 0% 85%;
+    --sidebar-primary: 0 0% 95%;
+    --sidebar-primary-foreground: 215 60% 10%;
+    --sidebar-accent: 215 50% 15%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 215 30% 20%;
+    --sidebar-ring: 0 84% 60%;
   }
 }
 
@@ -90,7 +60,7 @@
 
 @layer components {
   .glassmorphism {
-    @apply bg-white/90 backdrop-blur-md border border-white/30 shadow-lg;
+    @apply bg-white/10 backdrop-blur-md border border-white/20 shadow-lg;
   }
 
   .apple-button {
@@ -99,6 +69,34 @@
 
   .apple-card {
     @apply rounded-2xl bg-card p-6 shadow-md border border-border/50;
+  }
+
+  .icloud-widget {
+    @apply rounded-2xl bg-card shadow-lg border border-border/30 overflow-hidden;
+  }
+
+  .icloud-widget-header {
+    @apply flex items-center justify-between px-4 py-3;
+  }
+
+  .icloud-widget-title {
+    @apply flex items-center gap-2 text-lg font-medium;
+  }
+
+  .icloud-widget-body {
+    @apply p-4;
+  }
+
+  .icloud-icon {
+    @apply flex items-center justify-center w-12 h-12 rounded-xl bg-black/30 shadow-inner;
+  }
+
+  .icloud-app-grid {
+    @apply grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4;
+  }
+
+  .icloud-app-item {
+    @apply flex flex-col items-center gap-2;
   }
 
   .chat-message-fade-in {

@@ -4,9 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { useChat } from "@/context/ChatContext";
 import ChatMessage from "@/components/ChatMessage";
 import ChatInput from "@/components/ChatInput";
-import { Settings, Trash2, Apple } from "lucide-react";
+import { Settings, Trash2, Apple, LayoutGrid } from "lucide-react";
 import { NavbarDemo } from "@/components/ui/code-demo";
 import { VercelV0Chat } from "@/components/ui/v0-ai-chat";
+import ICloudLayout from "@/components/icloud/ICloudLayout";
 
 const ChatContainer = () => {
   const { messages, clearMessages, selectedProvider, availableProviders, setSelectedProvider } = useChat();
@@ -83,12 +84,14 @@ const ChatContainer = () => {
 };
 
 const Index = () => {
-  const [showVercelUI, setShowVercelUI] = useState(false);
+  const [displayMode, setDisplayMode] = useState<'atlas' | 'vercel' | 'icloud'>('icloud');
 
   return (
-    <div className="h-screen w-full bg-gradient-to-br from-slate-50 to-red-50/30 overflow-hidden">
-      {showVercelUI ? (
-        <div className="h-full w-full overflow-auto">
+    <div className="h-screen w-full overflow-hidden">
+      {displayMode === 'icloud' ? (
+        <ICloudLayout />
+      ) : displayMode === 'vercel' ? (
+        <div className="h-full w-full overflow-auto bg-gradient-to-br from-zinc-900 to-black">
           <VercelV0Chat />
         </div>
       ) : (
@@ -96,12 +99,25 @@ const Index = () => {
           <ChatContainer />
         </div>
       )}
-      <div className="fixed bottom-4 right-4">
+      
+      <div className="fixed bottom-4 right-4 flex gap-2">
         <button 
-          onClick={() => setShowVercelUI(!showVercelUI)}
-          className="bg-primary text-white px-4 py-2 rounded-md shadow-md"
+          onClick={() => setDisplayMode('atlas')}
+          className={`${displayMode === 'atlas' ? 'bg-primary' : 'bg-secondary'} text-white px-4 py-2 rounded-md shadow-md flex items-center gap-1`}
         >
-          {showVercelUI ? "Switch to Atlas" : "Switch to Vercel UI"}
+          <Apple size={16} /> Atlas
+        </button>
+        <button 
+          onClick={() => setDisplayMode('vercel')}
+          className={`${displayMode === 'vercel' ? 'bg-primary' : 'bg-secondary'} text-white px-4 py-2 rounded-md shadow-md`}
+        >
+          Vercel UI
+        </button>
+        <button 
+          onClick={() => setDisplayMode('icloud')}
+          className={`${displayMode === 'icloud' ? 'bg-primary' : 'bg-secondary'} text-white px-4 py-2 rounded-md shadow-md flex items-center gap-1`}
+        >
+          <LayoutGrid size={16} /> iCloud
         </button>
       </div>
     </div>

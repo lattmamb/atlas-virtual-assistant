@@ -1,297 +1,284 @@
 
 import { useState, useEffect } from "react";
-import { ApiKeyProvider } from "@/lib/types";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Eye, EyeOff } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Eye, EyeOff, Save } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
+import { ApiKeyProvider } from "@/context/ChatContext";
 
-export function ApiKeySettings() {
-  const [openaiKey, setOpenaiKey] = useState("");
-  const [anthropicKey, setAnthropicKey] = useState("");
-  const [cohereKey, setCohereKey] = useState("");
-  const [huggingfaceKey, setHuggingfaceKey] = useState("");
-  const [visibleKeys, setVisibleKeys] = useState<Record<string, boolean>>({
-    openai: false,
-    anthropic: false,
-    cohere: false,
-    huggingface: false,
-  });
-  const [loading, setLoading] = useState<Record<string, boolean>>({
-    openai: false,
-    anthropic: false,
-    cohere: false,
-    huggingface: false,
-  });
+// Define a consistent type for API key data
+interface ApiKeyData {
+  openai?: string;
+  anthropic?: string;
+  google?: string;
+  "hugging face"?: string;
+  cohere?: string;
+}
+
+const ApiKeySettings = () => {
   const { toast } = useToast();
+  const [apiKeys, setApiKeys] = useState<ApiKeyData>({
+    openai: "",
+    anthropic: "",
+    google: "",
+    "hugging face": "",
+    cohere: "",
+  });
+  
+  // Control visibility of API keys
+  const [showKeys, setShowKeys] = useState({
+    openai: false,
+    anthropic: false,
+    google: false,
+    "hugging face": false,
+    cohere: false,
+  });
 
-  // Load saved keys on component mount
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     const fetchApiKeys = async () => {
       try {
-        const { data, error } = await supabase
-          .from("api_keys")
-          .select("*");
+        const { data, error } = await supabase.from("api_keys").select("*");
 
         if (error) {
-          console.error("Error fetching API keys:", error);
-          return;
+          throw new Error(error.message);
         }
 
         if (data && data.length > 0) {
-          // Map the keys to their respective state variables
-          data.forEach((keyItem) => {
-            if (keyItem.provider === "openai" && keyItem.api_key) {
-              setOpenaiKey("********");
-            }
-            if (keyItem.provider === "anthropic" && keyItem.api_key) {
-              setAnthropicKey("********");
-            }
-            if (keyItem.provider === "cohere" && keyItem.api_key) {
-              setCohereKey("********");
-            }
-            if (keyItem.provider === "huggingface" && keyItem.api_key) {
-              setHuggingfaceKey("********");
-            }
-          });
+          // Use the first row of data
+          const keysData: ApiKeyData = {};
+          
+          // Map database fields to our state
+          if (data[0].openai) keysData.openai = "••••••••••••••••";
+          if (data[0].anthropic) keysData.anthropic = "••••••••••••••••";
+          if (data[0].google) keysData.google = "••••••••••••••••";
+          if (data[0]["hugging face"]) keysData["hugging face"] = "••••••••••••••••";
+          if (data[0].cohere) keysData.cohere = "••••••••••••••••";
+          
+          setApiKeys(keysData);
         }
       } catch (error) {
-        console.error("Error in fetchApiKeys:", error);
+        console.error("Error fetching API keys:", error);
+        toast({
+          title: "Error fetching API keys",
+          description: "Please check your database connection.",
+          variant: "destructive",
+        });
       }
     };
 
     fetchApiKeys();
-  }, []);
+  }, [toast]);
 
-  const toggleVisibility = (provider: string) => {
-    setVisibleKeys((prev) => ({
+  const handleApiKeyChange = (provider: keyof ApiKeyData, value: string) => {
+    setApiKeys((prev) => ({
+      ...prev,
+      [provider]: value,
+    }));
+  };
+
+  const toggleShowKey = (provider: keyof typeof showKeys) => {
+    setShowKeys((prev) => ({
       ...prev,
       [provider]: !prev[provider],
     }));
   };
 
-  const saveKey = async (provider: ApiKeyProvider, key: string) => {
-    if (!key.trim() || key === "********") return;
-
-    setLoading((prev) => ({ ...prev, [provider]: true }));
-
+  const handleSaveApiKeys = async () => {
+    setLoading(true);
     try {
-      // First check if the key already exists
-      const { data: existingKeys, error: fetchError } = await supabase
-        .from("api_keys")
-        .select("*")
-        .eq("provider", provider);
+      // Filter out masked values and empty strings
+      const keysToUpdate: ApiKeyData = {};
+      
+      // Only update keys that have been changed (not masked)
+      if (apiKeys.openai && !apiKeys.openai.includes("•")) keysToUpdate.openai = apiKeys.openai;
+      if (apiKeys.anthropic && !apiKeys.anthropic.includes("•")) keysToUpdate.anthropic = apiKeys.anthropic;
+      if (apiKeys.google && !apiKeys.google.includes("•")) keysToUpdate.google = apiKeys.google;
+      if (apiKeys["hugging face"] && !apiKeys["hugging face"].includes("•")) keysToUpdate["hugging face"] = apiKeys["hugging face"];
+      if (apiKeys.cohere && !apiKeys.cohere.includes("•")) keysToUpdate.cohere = apiKeys.cohere;
 
-      if (fetchError) {
-        throw fetchError;
-      }
+      // If there are keys to update
+      if (Object.keys(keysToUpdate).length > 0) {
+        const { data, error } = await supabase.from("api_keys").upsert([keysToUpdate], {
+          onConflict: "user_id",
+        });
 
-      let result;
+        if (error) {
+          throw new Error(error.message);
+        }
 
-      if (existingKeys && existingKeys.length > 0) {
-        // Update existing key
-        result = await supabase
-          .from("api_keys")
-          .update({ api_key: key })
-          .eq("provider", provider);
+        // Mask the saved keys for display
+        const maskedKeys = { ...apiKeys };
+        for (const key in keysToUpdate) {
+          maskedKeys[key as keyof ApiKeyData] = "••••••••••••••••";
+        }
+        setApiKeys(maskedKeys);
+
+        toast({
+          title: "API keys saved",
+          description: "Your API keys have been securely saved.",
+        });
       } else {
-        // Insert new key
-        result = await supabase
-          .from("api_keys")
-          .insert([{ provider, api_key: key }]);
-      }
-
-      if (result.error) {
-        throw result.error;
-      }
-
-      toast({
-        title: "API Key Saved",
-        description: `Your ${provider.charAt(0).toUpperCase() + provider.slice(1)} API key has been saved successfully.`,
-      });
-
-      // Mask the key after saving
-      switch (provider) {
-        case "openai":
-          setOpenaiKey("********");
-          break;
-        case "anthropic":
-          setAnthropicKey("********");
-          break;
-        case "cohere":
-          setCohereKey("********");
-          break;
-        case "huggingface":
-          setHuggingfaceKey("********");
-          break;
+        toast({
+          title: "No changes to save",
+          description: "No API key changes were detected.",
+        });
       }
     } catch (error) {
-      console.error(`Error saving ${provider} API key:`, error);
+      console.error("Error saving API keys:", error);
       toast({
-        title: "Error Saving API Key",
-        description: `There was a problem saving your ${provider} API key. Please try again.`,
+        title: "Error saving API keys",
+        description: "An error occurred while saving your API keys.",
         variant: "destructive",
       });
     } finally {
-      setLoading((prev) => ({ ...prev, [provider]: false }));
+      setLoading(false);
     }
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-xl font-semibold">API Keys</h2>
-        <p className="text-sm text-muted-foreground">
-          Configure your AI service provider API keys to use with Atlas Assistant.
-        </p>
-      </div>
-      
-      <Tabs defaultValue="huggingface" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="huggingface">Hugging Face</TabsTrigger>
-          <TabsTrigger value="openai">OpenAI</TabsTrigger>
-          <TabsTrigger value="anthropic">Anthropic</TabsTrigger>
-          <TabsTrigger value="cohere">Cohere</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="huggingface" className="p-4 border rounded-md mt-2">
-          <div className="space-y-4">
-            <label className="text-sm font-medium">Hugging Face API Token</label>
-            <div className="relative">
-              <input
-                type={visibleKeys.huggingface ? "text" : "password"}
-                value={huggingfaceKey}
-                onChange={(e) => setHuggingfaceKey(e.target.value)}
-                className="w-full rounded-md border border-input bg-background p-3 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring pr-10"
-                placeholder="Enter your Hugging Face API token"
-              />
-              <button
-                type="button"
-                onClick={() => toggleVisibility("huggingface")}
-                className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
-              >
-                {visibleKeys.huggingface ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </button>
-            </div>
-            <button
-              onClick={() => saveKey("huggingface", huggingfaceKey)}
-              disabled={!huggingfaceKey.trim() || huggingfaceKey === "********" || loading.huggingface}
-              className="mt-2 px-4 py-2 rounded-md bg-primary text-white hover:bg-primary/90 disabled:opacity-50 flex items-center justify-center"
+    <Card>
+      <CardHeader>
+        <CardTitle>API Key Settings</CardTitle>
+        <CardDescription>
+          Configure your API keys for various language model providers.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {/* OpenAI API Key */}
+        <div className="space-y-2">
+          <Label htmlFor="openai">OpenAI API Key</Label>
+          <div className="flex gap-2">
+            <Input
+              id="openai"
+              type={showKeys.openai ? "text" : "password"}
+              placeholder="sk-..."
+              value={apiKeys.openai || ""}
+              onChange={(e) => handleApiKeyChange("openai", e.target.value)}
+            />
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => toggleShowKey("openai")}
+              type="button"
             >
-              {loading.huggingface ? (
-                <span className="inline-block h-4 w-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2"></span>
-              ) : null}
-              Save Hugging Face Token
-            </button>
+              {showKeys.openai ? <EyeOff size={16} /> : <Eye size={16} />}
+            </Button>
           </div>
-        </TabsContent>
-        
-        <TabsContent value="openai" className="p-4 border rounded-md mt-2">
-          <div className="space-y-4">
-            <label className="text-sm font-medium">OpenAI API Key</label>
-            <div className="relative">
-              <input
-                type={visibleKeys.openai ? "text" : "password"}
-                value={openaiKey}
-                onChange={(e) => setOpenaiKey(e.target.value)}
-                className="w-full rounded-md border border-input bg-background p-3 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring pr-10"
-                placeholder="Enter your OpenAI API key"
-              />
-              <button
-                type="button"
-                onClick={() => toggleVisibility("openai")}
-                className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
-              >
-                {visibleKeys.openai ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </button>
-            </div>
-            <button
-              onClick={() => saveKey("openai", openaiKey)}
-              disabled={!openaiKey.trim() || openaiKey === "********" || loading.openai}
-              className="mt-2 px-4 py-2 rounded-md bg-primary text-white hover:bg-primary/90 disabled:opacity-50 flex items-center justify-center"
+        </div>
+
+        {/* Anthropic API Key */}
+        <div className="space-y-2">
+          <Label htmlFor="anthropic">Anthropic API Key</Label>
+          <div className="flex gap-2">
+            <Input
+              id="anthropic"
+              type={showKeys.anthropic ? "text" : "password"}
+              placeholder="sk-ant-..."
+              value={apiKeys.anthropic || ""}
+              onChange={(e) => handleApiKeyChange("anthropic", e.target.value)}
+            />
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => toggleShowKey("anthropic")}
+              type="button"
             >
-              {loading.openai ? (
-                <span className="inline-block h-4 w-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2"></span>
-              ) : null}
-              Save OpenAI Key
-            </button>
+              {showKeys.anthropic ? <EyeOff size={16} /> : <Eye size={16} />}
+            </Button>
           </div>
-        </TabsContent>
-        
-        <TabsContent value="anthropic" className="p-4 border rounded-md mt-2">
-          <div className="space-y-4">
-            <label className="text-sm font-medium">Anthropic API Key</label>
-            <div className="relative">
-              <input
-                type={visibleKeys.anthropic ? "text" : "password"}
-                value={anthropicKey}
-                onChange={(e) => setAnthropicKey(e.target.value)}
-                className="w-full rounded-md border border-input bg-background p-3 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring pr-10"
-                placeholder="Enter your Anthropic API key"
-              />
-              <button
-                type="button"
-                onClick={() => toggleVisibility("anthropic")}
-                className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
-              >
-                {visibleKeys.anthropic ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </button>
-            </div>
-            <button
-              onClick={() => saveKey("anthropic", anthropicKey)}
-              disabled={!anthropicKey.trim() || anthropicKey === "********" || loading.anthropic}
-              className="mt-2 px-4 py-2 rounded-md bg-primary text-white hover:bg-primary/90 disabled:opacity-50 flex items-center justify-center"
+        </div>
+
+        {/* Google API Key */}
+        <div className="space-y-2">
+          <Label htmlFor="google">Google API Key</Label>
+          <div className="flex gap-2">
+            <Input
+              id="google"
+              type={showKeys.google ? "text" : "password"}
+              placeholder="aiz-..."
+              value={apiKeys.google || ""}
+              onChange={(e) => handleApiKeyChange("google", e.target.value)}
+            />
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => toggleShowKey("google")}
+              type="button"
             >
-              {loading.anthropic ? (
-                <span className="inline-block h-4 w-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2"></span>
-              ) : null}
-              Save Anthropic Key
-            </button>
+              {showKeys.google ? <EyeOff size={16} /> : <Eye size={16} />}
+            </Button>
           </div>
-        </TabsContent>
-        
-        <TabsContent value="cohere" className="p-4 border rounded-md mt-2">
-          <div className="space-y-4">
-            <label className="text-sm font-medium">Cohere API Key</label>
-            <div className="relative">
-              <input
-                type={visibleKeys.cohere ? "text" : "password"}
-                value={cohereKey}
-                onChange={(e) => setCohereKey(e.target.value)}
-                className="w-full rounded-md border border-input bg-background p-3 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring pr-10"
-                placeholder="Enter your Cohere API key"
-              />
-              <button
-                type="button"
-                onClick={() => toggleVisibility("cohere")}
-                className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
-              >
-                {visibleKeys.cohere ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </button>
-            </div>
-            <button
-              onClick={() => saveKey("cohere", cohereKey)}
-              disabled={!cohereKey.trim() || cohereKey === "********" || loading.cohere}
-              className="mt-2 px-4 py-2 rounded-md bg-primary text-white hover:bg-primary/90 disabled:opacity-50 flex items-center justify-center"
+        </div>
+
+        {/* Hugging Face API Key */}
+        <div className="space-y-2">
+          <Label htmlFor="hugging-face">Hugging Face API Key</Label>
+          <div className="flex gap-2">
+            <Input
+              id="hugging-face"
+              type={showKeys["hugging face"] ? "text" : "password"}
+              placeholder="hf_..."
+              value={apiKeys["hugging face"] || ""}
+              onChange={(e) => handleApiKeyChange("hugging face", e.target.value)}
+            />
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => toggleShowKey("hugging face")}
+              type="button"
             >
-              {loading.cohere ? (
-                <span className="inline-block h-4 w-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2"></span>
-              ) : null}
-              Save Cohere Key
-            </button>
+              {showKeys["hugging face"] ? <EyeOff size={16} /> : <Eye size={16} />}
+            </Button>
           </div>
-        </TabsContent>
-      </Tabs>
-      
-      <div className="text-sm p-4 bg-blue-50 rounded-md">
-        <p className="font-medium text-blue-800">Getting API Keys</p>
-        <ul className="list-disc list-inside mt-2 text-blue-700 space-y-1">
-          <li><a href="https://huggingface.co/settings/tokens" target="_blank" rel="noopener noreferrer" className="underline">Hugging Face API Tokens</a></li>
-          <li><a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" className="underline">OpenAI API Keys</a></li>
-          <li><a href="https://console.anthropic.com/account/keys" target="_blank" rel="noopener noreferrer" className="underline">Anthropic API Keys</a></li>
-          <li><a href="https://dashboard.cohere.com/api-keys" target="_blank" rel="noopener noreferrer" className="underline">Cohere API Keys</a></li>
-        </ul>
-      </div>
-    </div>
+        </div>
+
+        {/* Cohere API Key */}
+        <div className="space-y-2">
+          <Label htmlFor="cohere">Cohere API Key</Label>
+          <div className="flex gap-2">
+            <Input
+              id="cohere"
+              type={showKeys.cohere ? "text" : "password"}
+              placeholder="co-..."
+              value={apiKeys.cohere || ""}
+              onChange={(e) => handleApiKeyChange("cohere", e.target.value)}
+            />
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => toggleShowKey("cohere")}
+              type="button"
+            >
+              {showKeys.cohere ? <EyeOff size={16} /> : <Eye size={16} />}
+            </Button>
+          </div>
+        </div>
+
+        <Button
+          onClick={handleSaveApiKeys}
+          className="w-full"
+          disabled={loading}
+        >
+          {loading ? (
+            <div className="loading-dots">
+              <div className="dot"></div>
+              <div className="dot"></div>
+              <div className="dot"></div>
+            </div>
+          ) : (
+            <>
+              <Save className="mr-2 h-4 w-4" /> Save API Keys
+            </>
+          )}
+        </Button>
+      </CardContent>
+    </Card>
   );
-}
+};
+
+export default ApiKeySettings;
