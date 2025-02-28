@@ -4,6 +4,7 @@ import { ApiKeyProvider } from "@/lib/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 export function ApiKeySettings() {
   const [openaiKey, setOpenaiKey] = useState("");
@@ -16,19 +17,50 @@ export function ApiKeySettings() {
     cohere: false,
     huggingface: false,
   });
+  const [loading, setLoading] = useState<Record<string, boolean>>({
+    openai: false,
+    anthropic: false,
+    cohere: false,
+    huggingface: false,
+  });
   const { toast } = useToast();
 
   // Load saved keys on component mount
   useEffect(() => {
-    const savedOpenaiKey = localStorage.getItem("openai_api_key");
-    const savedAnthropicKey = localStorage.getItem("anthropic_api_key");
-    const savedCohereKey = localStorage.getItem("cohere_api_key");
-    const savedHuggingfaceKey = localStorage.getItem("huggingface_api_key");
+    const fetchApiKeys = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("api_keys")
+          .select("*");
 
-    if (savedOpenaiKey) setOpenaiKey("********");
-    if (savedAnthropicKey) setAnthropicKey("********");
-    if (savedCohereKey) setCohereKey("********");
-    if (savedHuggingfaceKey) setHuggingfaceKey("********");
+        if (error) {
+          console.error("Error fetching API keys:", error);
+          return;
+        }
+
+        if (data && data.length > 0) {
+          // Map the keys to their respective state variables
+          data.forEach((keyItem) => {
+            if (keyItem.provider === "openai" && keyItem.api_key) {
+              setOpenaiKey("********");
+            }
+            if (keyItem.provider === "anthropic" && keyItem.api_key) {
+              setAnthropicKey("********");
+            }
+            if (keyItem.provider === "cohere" && keyItem.api_key) {
+              setCohereKey("********");
+            }
+            if (keyItem.provider === "huggingface" && keyItem.api_key) {
+              setHuggingfaceKey("********");
+            }
+          });
+        }
+      } catch (error) {
+        console.error("Error in fetchApiKeys:", error);
+      }
+    };
+
+    fetchApiKeys();
   }, []);
 
   const toggleVisibility = (provider: string) => {
@@ -38,15 +70,71 @@ export function ApiKeySettings() {
     }));
   };
 
-  const saveKey = (provider: ApiKeyProvider, key: string) => {
-    if (!key.trim()) return;
+  const saveKey = async (provider: ApiKeyProvider, key: string) => {
+    if (!key.trim() || key === "********") return;
 
-    localStorage.setItem(`${provider}_api_key`, key);
-    
-    toast({
-      title: "API Key Saved",
-      description: `Your ${provider.charAt(0).toUpperCase() + provider.slice(1)} API key has been saved successfully.`,
-    });
+    setLoading((prev) => ({ ...prev, [provider]: true }));
+
+    try {
+      // First check if the key already exists
+      const { data: existingKeys, error: fetchError } = await supabase
+        .from("api_keys")
+        .select("*")
+        .eq("provider", provider);
+
+      if (fetchError) {
+        throw fetchError;
+      }
+
+      let result;
+
+      if (existingKeys && existingKeys.length > 0) {
+        // Update existing key
+        result = await supabase
+          .from("api_keys")
+          .update({ api_key: key })
+          .eq("provider", provider);
+      } else {
+        // Insert new key
+        result = await supabase
+          .from("api_keys")
+          .insert([{ provider, api_key: key }]);
+      }
+
+      if (result.error) {
+        throw result.error;
+      }
+
+      toast({
+        title: "API Key Saved",
+        description: `Your ${provider.charAt(0).toUpperCase() + provider.slice(1)} API key has been saved successfully.`,
+      });
+
+      // Mask the key after saving
+      switch (provider) {
+        case "openai":
+          setOpenaiKey("********");
+          break;
+        case "anthropic":
+          setAnthropicKey("********");
+          break;
+        case "cohere":
+          setCohereKey("********");
+          break;
+        case "huggingface":
+          setHuggingfaceKey("********");
+          break;
+      }
+    } catch (error) {
+      console.error(`Error saving ${provider} API key:`, error);
+      toast({
+        title: "Error Saving API Key",
+        description: `There was a problem saving your ${provider} API key. Please try again.`,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading((prev) => ({ ...prev, [provider]: false }));
+    }
   };
 
   return (
@@ -87,9 +175,12 @@ export function ApiKeySettings() {
             </div>
             <button
               onClick={() => saveKey("huggingface", huggingfaceKey)}
-              disabled={!huggingfaceKey.trim() || huggingfaceKey === "********"}
-              className="mt-2 px-4 py-2 rounded-md bg-primary text-white hover:bg-primary/90 disabled:opacity-50"
+              disabled={!huggingfaceKey.trim() || huggingfaceKey === "********" || loading.huggingface}
+              className="mt-2 px-4 py-2 rounded-md bg-primary text-white hover:bg-primary/90 disabled:opacity-50 flex items-center justify-center"
             >
+              {loading.huggingface ? (
+                <span className="inline-block h-4 w-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2"></span>
+              ) : null}
               Save Hugging Face Token
             </button>
           </div>
@@ -116,9 +207,12 @@ export function ApiKeySettings() {
             </div>
             <button
               onClick={() => saveKey("openai", openaiKey)}
-              disabled={!openaiKey.trim() || openaiKey === "********"}
-              className="mt-2 px-4 py-2 rounded-md bg-primary text-white hover:bg-primary/90 disabled:opacity-50"
+              disabled={!openaiKey.trim() || openaiKey === "********" || loading.openai}
+              className="mt-2 px-4 py-2 rounded-md bg-primary text-white hover:bg-primary/90 disabled:opacity-50 flex items-center justify-center"
             >
+              {loading.openai ? (
+                <span className="inline-block h-4 w-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2"></span>
+              ) : null}
               Save OpenAI Key
             </button>
           </div>
@@ -145,9 +239,12 @@ export function ApiKeySettings() {
             </div>
             <button
               onClick={() => saveKey("anthropic", anthropicKey)}
-              disabled={!anthropicKey.trim() || anthropicKey === "********"}
-              className="mt-2 px-4 py-2 rounded-md bg-primary text-white hover:bg-primary/90 disabled:opacity-50"
+              disabled={!anthropicKey.trim() || anthropicKey === "********" || loading.anthropic}
+              className="mt-2 px-4 py-2 rounded-md bg-primary text-white hover:bg-primary/90 disabled:opacity-50 flex items-center justify-center"
             >
+              {loading.anthropic ? (
+                <span className="inline-block h-4 w-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2"></span>
+              ) : null}
               Save Anthropic Key
             </button>
           </div>
@@ -174,9 +271,12 @@ export function ApiKeySettings() {
             </div>
             <button
               onClick={() => saveKey("cohere", cohereKey)}
-              disabled={!cohereKey.trim() || cohereKey === "********"}
-              className="mt-2 px-4 py-2 rounded-md bg-primary text-white hover:bg-primary/90 disabled:opacity-50"
+              disabled={!cohereKey.trim() || cohereKey === "********" || loading.cohere}
+              className="mt-2 px-4 py-2 rounded-md bg-primary text-white hover:bg-primary/90 disabled:opacity-50 flex items-center justify-center"
             >
+              {loading.cohere ? (
+                <span className="inline-block h-4 w-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2"></span>
+              ) : null}
               Save Cohere Key
             </button>
           </div>
