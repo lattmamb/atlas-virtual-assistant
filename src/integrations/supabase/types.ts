@@ -11,22 +11,31 @@ export type Database = {
     Tables: {
       api_keys: {
         Row: {
+          anthropic: string | null
           api_key: string
+          cohere: string | null
           created_at: string | null
+          google: string | null
           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: string
           "hugging face": string
           user_id: string | null
         }
         Insert: {
+          anthropic?: string | null
           api_key?: string
+          cohere?: string | null
           created_at?: string | null
+          google?: string | null
           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: string
           "hugging face": string
           user_id?: string | null
         }
         Update: {
+          anthropic?: string | null
           api_key?: string
+          cohere?: string | null
           created_at?: string | null
+          google?: string | null
           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?: string
           "hugging face"?: string
           user_id?: string | null
