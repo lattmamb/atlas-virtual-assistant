@@ -100,20 +100,29 @@ const ApiKeySettings = () => {
     try {
       // Prepare data for database update
       const keysToUpdate: any = {
-        // We need to provide this field, it's required by the database schema
-        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: apiKeys.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 || "default_key",
-        "hugging face": apiKeys["hugging face"] || "default_key"
+        // Default values for required fields
+        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: apiKeys.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 || apiKeys["hugging face"] || "default_key",
       };
       
-      // Map UI fields to database fields
+      // Add the hugging face key if provided
+      if (apiKeys["hugging face"]) {
+        keysToUpdate["hugging face"] = apiKeys["hugging face"];
+      } else {
+        keysToUpdate["hugging face"] = "default_key";
+      }
+      
+      // Add the openai key if provided
       if (apiKeys.openai) {
         keysToUpdate.api_key = apiKeys.openai;
       }
       
-      // If there are keys to update
-      const { data, error } = await supabase.from("api_keys").upsert([keysToUpdate]);
+      console.log("Saving API keys:", keysToUpdate);
+      
+      // Update the database
+      const { error } = await supabase.from("api_keys").upsert([keysToUpdate]);
 
       if (error) {
+        console.error("Supabase error:", error);
         throw new Error(error.message);
       }
 
@@ -122,16 +131,19 @@ const ApiKeySettings = () => {
         description: "Your API keys have been securely saved.",
       });
       
-      // Fetch the updated keys
+      // Fetch the updated keys to confirm the save worked
       const { data: updatedData, error: fetchError } = await supabase.from("api_keys").select("*");
       
       if (fetchError) {
         throw new Error(fetchError.message);
       }
       
+      console.log("Updated data:", updatedData);
+      
       if (updatedData && updatedData.length > 0) {
         // Update local state with the saved keys
         const savedKeys: ApiKeyDisplayData = {
+          ...apiKeys, // Keep any UI-only keys
           api_key: updatedData[0].api_key,
           "hugging face": updatedData[0]["hugging face"],
           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: updatedData[0].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,
