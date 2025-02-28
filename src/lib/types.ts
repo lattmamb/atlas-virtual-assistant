@@ -4,10 +4,14 @@ export type ApiKeyProvider = "openai" | "anthropic" | "cohere" | "huggingface" |
 export interface ApiKey {
   id?: string;
   user_id?: string;
-  api_key: string;
+  api_key?: string;
   created_at?: string;
-  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: string;
-  "hugging face": string;
+  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?: string;
+  "hugging face"?: string;
+  // Add these missing properties
+  anthropic?: string;
+  google?: string;
+  cohere?: string;
 }
 
 export interface User {
