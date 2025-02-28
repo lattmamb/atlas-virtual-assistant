@@ -4,7 +4,7 @@ import { ApiKeyProvider } from "@/lib/types";
 import { supabase } from "@/integrations/supabase/client";
 
 // Define message types
-interface Message {
+export interface Message {
   id: string;
   role: "user" | "assistant";
   content: string;
@@ -19,6 +19,7 @@ interface ChatContextType {
   selectedProvider: ApiKeyProvider | null;
   setSelectedProvider: (provider: ApiKeyProvider | null) => void;
   availableProviders: ApiKeyProvider[];
+  clearMessages: () => void;
 }
 
 // Create context with default values
@@ -29,6 +30,7 @@ const ChatContext = createContext<ChatContextType>({
   selectedProvider: null,
   setSelectedProvider: () => {},
   availableProviders: [],
+  clearMessages: () => {},
 });
 
 // Hook to use the chat context
@@ -46,7 +48,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const { data, error } = await supabase
         .from("api_keys")
-        .select("provider, api_key");
+        .select("*");
 
       if (error) {
         console.error("Error fetching API keys:", error);
@@ -54,9 +56,23 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       // Filter out providers with valid API keys
-      const providers = data
-        .filter(item => item.api_key && item.api_key.trim() !== "")
-        .map(item => item.provider as ApiKeyProvider);
+      const providers: ApiKeyProvider[] = [];
+      
+      // Check each potential provider and add it if it has a valid API key
+      data.forEach(item => {
+        if (item.openai_key && item.openai_key.trim() !== "") {
+          providers.push("openai");
+        }
+        if (item.anthropic_key && item.anthropic_key.trim() !== "") {
+          providers.push("anthropic");
+        }
+        if (item.cohere_key && item.cohere_key.trim() !== "") {
+          providers.push("cohere");
+        }
+        if (item.huggingface_key && item.huggingface_key.trim() !== "") {
+          providers.push("huggingface");
+        }
+      });
 
       setAvailableProviders(providers);
 
@@ -67,6 +83,11 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (error) {
       console.error("Error in fetchAvailableProviders:", error);
     }
+  };
+
+  // Clear all messages
+  const clearMessages = () => {
+    setMessages([]);
   };
 
   // Fetch available API keys on component mount
@@ -166,6 +187,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
         selectedProvider,
         setSelectedProvider,
         availableProviders,
+        clearMessages,
       }}
     >
       {children}
