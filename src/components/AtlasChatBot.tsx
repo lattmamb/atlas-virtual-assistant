@@ -1,6 +1,7 @@
 
 import { useState, useRef } from "react";
 import { useChat } from "@/context/ChatContext";
+import { useMobile } from "@/hooks/use-mobile";
 import {
   Tabs, 
   TabsContent, 
@@ -20,6 +21,7 @@ const AtlasChatBot = () => {
   const [activeTab, setActiveTab] = useState("chat");
   const [activeTool, setActiveTool] = useState<string | null>(null);
   const widgetRef = useRef<HTMLDivElement>(null);
+  const isMobile = useMobile();
 
   const { 
     messages, 
@@ -47,8 +49,8 @@ const AtlasChatBot = () => {
         toggleExpand={toggleExpand} 
         toggleMinimize={toggleMinimize} 
       />}
-      minWidth="340px"
-      minHeight={isMinimized ? "52px" : "480px"}
+      minWidth={isMobile ? "280px" : "340px"}
+      minHeight={isMinimized ? "52px" : isMobile ? "400px" : "480px"}
       className="z-30"
     >
       {!isMinimized && (

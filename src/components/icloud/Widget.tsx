@@ -2,6 +2,7 @@
 import React, { useState, useRef } from 'react';
 import { Minus } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useMobile } from '@/hooks/use-mobile';
 
 interface WidgetProps {
   title: string;
@@ -28,10 +29,14 @@ const Widget: React.FC<WidgetProps> = ({
   const widgetRef = useRef<HTMLDivElement>(null);
   const dragStartRef = useRef({ x: 0, y: 0 });
   const resizeStartRef = useRef({ width: 0, height: 0 });
+  const isMobile = useMobile();
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     if ((e.target as HTMLElement).closest('.resize-handle')) return;
     if ((e.target as HTMLElement).closest('button')) return;
+    
+    // Don't allow dragging on mobile
+    if (isMobile) return;
     
     setIsDragging(true);
     dragStartRef.current = { 
@@ -40,7 +45,35 @@ const Widget: React.FC<WidgetProps> = ({
     };
   };
 
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    if ((e.target as HTMLElement).closest('.resize-handle')) return;
+    if ((e.target as HTMLElement).closest('button')) return;
+    
+    // For mobile: make sure we're touching in the header area
+    const headerElement = e.currentTarget.querySelector('.icloud-widget-header');
+    if (!headerElement) return;
+    
+    const headerRect = headerElement.getBoundingClientRect();
+    const touch = e.touches[0];
+    
+    // Check if touch is within header
+    if (
+      touch.clientX >= headerRect.left && 
+      touch.clientX <= headerRect.right &&
+      touch.clientY >= headerRect.top &&
+      touch.clientY <= headerRect.bottom
+    ) {
+      setIsDragging(true);
+      dragStartRef.current = { 
+        x: touch.clientX - position.x, 
+        y: touch.clientY - position.y 
+      };
+    }
+  };
+
   const handleResizeMouseDown = (e: React.MouseEvent<HTMLDivElement>, direction: string) => {
+    if (isMobile) return; // Disable resize on mobile
+    
     e.stopPropagation();
     e.preventDefault();
     
@@ -80,16 +113,37 @@ const Widget: React.FC<WidgetProps> = ({
       });
     };
 
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        const touch = e.touches[0];
+        setPosition({
+          x: touch.clientX - dragStartRef.current.x,
+          y: touch.clientY - dragStartRef.current.y
+        });
+      }
+    };
+
     const handleMouseUp = () => {
       setIsDragging(false);
     };
 
+    const handleTouchEnd = () => {
+      setIsDragging(false);
+    };
+
+    // Mouse events
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseup', handleMouseUp);
+    
+    // Touch events
+    window.addEventListener('touchmove', handleTouchMove);
+    window.addEventListener('touchend', handleTouchEnd);
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
     };
   }, [isDragging]);
 
@@ -115,6 +169,7 @@ const Widget: React.FC<WidgetProps> = ({
         height: size.height,
       }}
       onMouseDown={handleMouseDown}
+      onTouchStart={handleTouchStart}
     >
       <div className="icloud-widget-header cursor-move">
         <div className="icloud-widget-title">
@@ -131,18 +186,22 @@ const Widget: React.FC<WidgetProps> = ({
         {children}
       </div>
       
-      <div
-        className="absolute bottom-0 right-0 w-4 h-4 cursor-se-resize resize-handle z-20"
-        onMouseDown={(e) => handleResizeMouseDown(e, 'se')}
-      />
-      <div
-        className="absolute bottom-0 right-4 left-4 h-4 cursor-s-resize resize-handle z-10"
-        onMouseDown={(e) => handleResizeMouseDown(e, 's')}
-      />
-      <div
-        className="absolute right-0 bottom-4 top-12 w-4 cursor-e-resize resize-handle z-10"
-        onMouseDown={(e) => handleResizeMouseDown(e, 'e')}
-      />
+      {!isMobile && (
+        <>
+          <div
+            className="absolute bottom-0 right-0 w-4 h-4 cursor-se-resize resize-handle z-20"
+            onMouseDown={(e) => handleResizeMouseDown(e, 'se')}
+          />
+          <div
+            className="absolute bottom-0 right-4 left-4 h-4 cursor-s-resize resize-handle z-10"
+            onMouseDown={(e) => handleResizeMouseDown(e, 's')}
+          />
+          <div
+            className="absolute right-0 bottom-4 top-12 w-4 cursor-e-resize resize-handle z-10"
+            onMouseDown={(e) => handleResizeMouseDown(e, 'e')}
+          />
+        </>
+      )}
     </div>
   );
 };

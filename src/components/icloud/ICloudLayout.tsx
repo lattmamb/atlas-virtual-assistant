@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { useMobile } from '@/hooks/use-mobile';
 import Widget from './Widget';
 import { Image, Mail, Calendar, FileText, Settings, MessageSquare } from 'lucide-react';
 import AtlasChatBot from '@/components/AtlasChatBot';
@@ -12,6 +13,7 @@ interface ICloudLayoutProps {
 
 const ICloudLayout: React.FC<ICloudLayoutProps> = ({ children }) => {
   const [background, setBackground] = useState<string>('bg-gradient-to-r from-blue-50 to-blue-100');
+  const isMobile = useMobile();
   
   const backgroundOptions = [
     'bg-gradient-to-r from-blue-50 to-blue-100',
@@ -23,15 +25,15 @@ const ICloudLayout: React.FC<ICloudLayoutProps> = ({ children }) => {
 
   return (
     <div className={cn(
-      'min-h-screen font-sans p-6 transition-all duration-500',
+      'min-h-screen font-sans p-2 md:p-6 transition-all duration-500',
       background
     )}>
-      <div className="absolute top-6 right-6 z-10 flex space-x-2">
+      <div className={`absolute ${isMobile ? 'top-2 right-2' : 'top-6 right-6'} z-10 flex space-x-1 md:space-x-2`}>
         {backgroundOptions.map((bg, index) => (
           <button
             key={index}
             className={cn(
-              'w-8 h-8 rounded-full border-2 transition-all',
+              `${isMobile ? 'w-6 h-6' : 'w-8 h-8'} rounded-full border-2 transition-all`,
               bg.includes('url') 
                 ? bg.replace('bg-[url(', 'bg-[url(') // Keep the URL background
                 : bg, // Apply the gradient class directly
@@ -43,7 +45,7 @@ const ICloudLayout: React.FC<ICloudLayoutProps> = ({ children }) => {
         ))}
       </div>
       
-      <div className="relative z-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-16">
+      <div className="relative z-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 mt-12 md:mt-16">
         {/* Main content passed as children */}
         {children}
         
@@ -51,7 +53,7 @@ const ICloudLayout: React.FC<ICloudLayoutProps> = ({ children }) => {
         <Widget
           title="Mail"
           icon={<Mail className="h-5 w-5" />}
-          minWidth="280px"
+          minWidth={isMobile ? "260px" : "280px"}
           className="hidden md:block"
         >
           <div className="p-4 text-center text-gray-500">
@@ -62,7 +64,7 @@ const ICloudLayout: React.FC<ICloudLayoutProps> = ({ children }) => {
         <Widget
           title="Photos"
           icon={<Image className="h-5 w-5" />}
-          minWidth="280px"
+          minWidth={isMobile ? "260px" : "280px"}
           className="hidden lg:block"
         >
           <div className="grid grid-cols-3 gap-2 p-4">
@@ -78,7 +80,7 @@ const ICloudLayout: React.FC<ICloudLayoutProps> = ({ children }) => {
         <Widget
           title="Calendar"
           icon={<Calendar className="h-5 w-5" />}
-          minWidth="320px"
+          minWidth={isMobile ? "260px" : "320px"}
           className="hidden lg:block"
         >
           <div className="p-4">
