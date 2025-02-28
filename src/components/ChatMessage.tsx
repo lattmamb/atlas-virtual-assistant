@@ -1,7 +1,7 @@
 
 import { Sparkles } from "lucide-react";
 import { useChat } from "@/context/ChatContext";
-import { Message } from "@/context/ChatContext";
+import { Message } from "@/lib/types";
 
 interface ChatMessageProps {
   message: Message;
