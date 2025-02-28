@@ -25,6 +25,7 @@ export interface Message {
   role: "user" | "assistant" | "system";
   createdAt: Date;
   isLoading?: boolean;
+  model?: string;
 }
 
 export interface ChatContextType {
