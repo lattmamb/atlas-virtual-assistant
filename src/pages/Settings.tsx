@@ -1,6 +1,6 @@
 
 import { useNavigate } from "react-router-dom";
-import ApiKeySettings from "@/components/ApiKeySettings";
+import ApiKeySettings from "@/components/api-key-settings";
 import { Settings as SettingsIcon } from "lucide-react";
 
 export default function Settings() {
