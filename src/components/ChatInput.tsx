@@ -37,11 +37,13 @@ const ChatInput = () => {
     }
   };
 
-  const providerNames: Record<ApiKeyProvider, string> = {
+  const providerNames: Record<string, string> = {
     openai: "OpenAI",
     anthropic: "Anthropic",
     cohere: "Cohere",
-    huggingface: "Hugging Face"
+    huggingface: "Hugging Face",
+    "hugging face": "Hugging Face",
+    google: "Google"
   };
 
   return (
@@ -59,7 +61,7 @@ const ChatInput = () => {
             <SelectContent>
               {availableProviders.map((provider) => (
                 <SelectItem key={provider} value={provider}>
-                  {providerNames[provider]}
+                  {providerNames[provider] || provider}
                 </SelectItem>
               ))}
             </SelectContent>

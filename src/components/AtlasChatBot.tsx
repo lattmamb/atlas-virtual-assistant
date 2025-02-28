@@ -1,5 +1,5 @@
 
-import { useState, useEffect, FormEvent } from "react";
+import { useState, FormEvent } from "react";
 import { Bot, Send, Sparkles } from "lucide-react";
 import { useChat } from "@/context/ChatContext";
 import {

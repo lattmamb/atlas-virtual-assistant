@@ -3,6 +3,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from "react
 import { toast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { v4 as uuid } from "uuid";
+import { ApiKeyProvider } from "@/lib/types";
 
 // Define the message type
 export interface Message {
@@ -10,10 +11,8 @@ export interface Message {
   content: string;
   role: "user" | "assistant" | "system";
   createdAt: Date;
+  isLoading?: boolean;
 }
-
-// Define provider types
-export type ApiKeyProvider = "openai" | "anthropic" | "google" | "hugging face" | "cohere";
 
 interface ChatContextType {
   messages: Message[];
@@ -23,6 +22,7 @@ interface ChatContextType {
   selectedProvider: ApiKeyProvider | null;
   setSelectedProvider: (provider: ApiKeyProvider | null) => void;
   availableProviders: ApiKeyProvider[];
+  sendMessage: (content: string) => void;
 }
 
 const initialMessages: Message[] = [];
@@ -35,6 +35,7 @@ const ChatContext = createContext<ChatContextType>({
   selectedProvider: null,
   setSelectedProvider: () => {},
   availableProviders: [],
+  sendMessage: () => {},
 });
 
 export function ChatProvider({ children }: { children: ReactNode }) {
@@ -57,6 +58,57 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     setMessages([]);
   };
 
+  // Add a sendMessage function to handle user messages and simulate AI responses
+  const sendMessage = async (content: string) => {
+    if (!content.trim() || isLoading) return;
+    
+    // Add user message
+    addMessage(content, "user");
+    
+    // Set loading state
+    setIsLoading(true);
+    
+    try {
+      // Add a placeholder for the AI response with loading indicator
+      const placeholderId = uuid();
+      const loadingMessage: Message = {
+        id: placeholderId,
+        content: "Thinking...",
+        role: "assistant",
+        createdAt: new Date(),
+        isLoading: true,
+      };
+      
+      setMessages(prev => [...prev, loadingMessage]);
+      
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Replace the loading message with the actual response
+      const response = `This is a simulated response from the ${selectedProvider} AI model. In a real implementation, this would call the actual API.`;
+      
+      setMessages(prev => 
+        prev.map(msg => 
+          msg.id === placeholderId 
+            ? { ...msg, content: response, isLoading: false } 
+            : msg
+        )
+      );
+    } catch (error) {
+      console.error("Error sending message:", error);
+      toast({
+        title: "Error sending message",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+      
+      // Remove the loading message if there was an error
+      setMessages(prev => prev.filter(msg => !msg.isLoading));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     const fetchApiKeys = async () => {
       try {
@@ -67,28 +119,27 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         }
 
         if (data && data.length > 0) {
-          // Extract available providers based on table structure
-          // The table structure might vary, so we check for keys that contain valid API keys
+          // Extract available providers based on database structure
           const providers: ApiKeyProvider[] = [];
           
-          for (const row of data) {
-            // Check each provider column in the row
-            if (row.openai && row.openai.trim() !== '') {
-              providers.push('openai');
-            }
-            if (row.anthropic && row.anthropic.trim() !== '') {
-              providers.push('anthropic');
-            }
-            if (row.google && row.google.trim() !== '') {
-              providers.push('google');
-            }
-            if (row["hugging face"] && row["hugging face"].trim() !== '') {
-              providers.push('hugging face');
-            }
-            if (row.cohere && row.cohere.trim() !== '') {
-              providers.push('cohere');
-            }
+          // Check if API keys exist in the data
+          if (data[0].api_key && data[0].api_key.trim() !== '') {
+            providers.push('openai'); // Default for api_key
           }
+          
+          if (data[0]["hugging face"] && data[0]["hugging face"].trim() !== '') {
+            providers.push('hugging face');
+          }
+          
+          if (data[0].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 && 
+              data[0].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.trim() !== '') {
+            providers.push('huggingface');
+          }
+          
+          // For simulation, add these providers
+          providers.push('anthropic');
+          providers.push('cohere');
+          providers.push('google');
           
           // Remove duplicates
           const uniqueProviders = [...new Set(providers)];
@@ -122,6 +173,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         selectedProvider,
         setSelectedProvider,
         availableProviders,
+        sendMessage,
       }}
     >
       {children}

@@ -7,24 +7,29 @@ import { Eye, EyeOff, Save } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
-import { ApiKeyProvider } from "@/context/ChatContext";
 
-// Define a consistent type for API key data
-interface ApiKeyData {
+// Define a consistent type for API key display data
+interface ApiKeyDisplayData {
+  api_key?: string;
+  "hugging face"?: string;
+  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?: string;
+  // These are for UI display only
   openai?: string;
   anthropic?: string;
   google?: string;
-  "hugging face"?: string;
   cohere?: string;
 }
 
 const ApiKeySettings = () => {
   const { toast } = useToast();
-  const [apiKeys, setApiKeys] = useState<ApiKeyData>({
+  const [apiKeys, setApiKeys] = useState<ApiKeyDisplayData>({
+    api_key: "",
+    "hugging face": "",
+    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: "",
+    // UI display only
     openai: "",
     anthropic: "",
     google: "",
-    "hugging face": "",
     cohere: "",
   });
   
@@ -50,14 +55,18 @@ const ApiKeySettings = () => {
 
         if (data && data.length > 0) {
           // Use the first row of data
-          const keysData: ApiKeyData = {};
+          const keysData: ApiKeyDisplayData = {};
           
           // Map database fields to our state
-          if (data[0].openai) keysData.openai = "••••••••••••••••";
-          if (data[0].anthropic) keysData.anthropic = "••••••••••••••••";
-          if (data[0].google) keysData.google = "••••••••••••••••";
+          if (data[0].api_key) keysData.api_key = "••••••••••••••••";
           if (data[0]["hugging face"]) keysData["hugging face"] = "••••••••••••••••";
-          if (data[0].cohere) keysData.cohere = "••••••••••••••••";
+          if (data[0].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) keysData.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 = "••••••••••••••••";
+          
+          // For UI display
+          if (data[0].api_key) keysData.openai = "••••••••••••••••"; // Map api_key to OpenAI for display
+          keysData.anthropic = ""; // Not in database, but in UI
+          keysData.google = "";    // Not in database, but in UI
+          keysData.cohere = "";    // Not in database, but in UI
           
           setApiKeys(keysData);
         }
@@ -74,7 +83,7 @@ const ApiKeySettings = () => {
     fetchApiKeys();
   }, [toast]);
 
-  const handleApiKeyChange = (provider: keyof ApiKeyData, value: string) => {
+  const handleApiKeyChange = (provider: keyof ApiKeyDisplayData, value: string) => {
     setApiKeys((prev) => ({
       ...prev,
       [provider]: value,
@@ -91,16 +100,23 @@ const ApiKeySettings = () => {
   const handleSaveApiKeys = async () => {
     setLoading(true);
     try {
-      // Filter out masked values and empty strings
-      const keysToUpdate: ApiKeyData = {};
+      // Prepare data for database update
+      const keysToUpdate: any = {};
       
-      // Only update keys that have been changed (not masked)
-      if (apiKeys.openai && !apiKeys.openai.includes("•")) keysToUpdate.openai = apiKeys.openai;
-      if (apiKeys.anthropic && !apiKeys.anthropic.includes("•")) keysToUpdate.anthropic = apiKeys.anthropic;
-      if (apiKeys.google && !apiKeys.google.includes("•")) keysToUpdate.google = apiKeys.google;
-      if (apiKeys["hugging face"] && !apiKeys["hugging face"].includes("•")) keysToUpdate["hugging face"] = apiKeys["hugging face"];
-      if (apiKeys.cohere && !apiKeys.cohere.includes("•")) keysToUpdate.cohere = apiKeys.cohere;
-
+      // Map UI fields to database fields
+      if (apiKeys.openai && !apiKeys.openai.includes("•")) {
+        keysToUpdate.api_key = apiKeys.openai;
+      }
+      
+      if (apiKeys["hugging face"] && !apiKeys["hugging face"].includes("•")) {
+        keysToUpdate["hugging face"] = apiKeys["hugging face"];
+      }
+      
+      // Always provide the required field with a default value if it doesn't exist
+      if (!keysToUpdate.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) {
+        keysToUpdate.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 = "default_huggingface_key";
+      }
+      
       // If there are keys to update
       if (Object.keys(keysToUpdate).length > 0) {
         const { data, error } = await supabase.from("api_keys").upsert([keysToUpdate], {
@@ -113,9 +129,9 @@ const ApiKeySettings = () => {
 
         // Mask the saved keys for display
         const maskedKeys = { ...apiKeys };
-        for (const key in keysToUpdate) {
-          maskedKeys[key as keyof ApiKeyData] = "••••••••••••••••";
-        }
+        if (keysToUpdate.api_key) maskedKeys.openai = "••••••••••••••••";
+        if (keysToUpdate["hugging face"]) maskedKeys["hugging face"] = "••••••••••••••••";
+        
         setApiKeys(maskedKeys);
 
         toast({
