@@ -28,11 +28,18 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
           <p className="whitespace-pre-wrap">
             {message.content}
           </p>
-          <div className={`text-[10px] mt-1 ${isUser ? "text-primary-foreground/70" : "text-muted-foreground"}`}>
-            {message.createdAt.toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
+          <div className={`text-[10px] mt-1 ${isUser ? "text-primary-foreground/70" : "text-muted-foreground"} flex justify-between`}>
+            <span>
+              {message.createdAt.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </span>
+            {!isUser && message.model && (
+              <span className="ml-2 italic">
+                {message.model}
+              </span>
+            )}
           </div>
         </div>
         {isUser && (

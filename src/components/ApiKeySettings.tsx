@@ -18,6 +18,7 @@ interface ApiKeyDisplayData {
   anthropic?: string;
   google?: string;
   cohere?: string;
+  huggingface?: string;
 }
 
 const ApiKeySettings = () => {
@@ -31,6 +32,7 @@ const ApiKeySettings = () => {
     anthropic: "",
     google: "",
     cohere: "",
+    huggingface: "",
   });
   
   // Control visibility of API keys
@@ -40,6 +42,7 @@ const ApiKeySettings = () => {
     google: false,
     "hugging face": false,
     cohere: false,
+    huggingface: false,
   });
 
   const [loading, setLoading] = useState(false);
@@ -62,9 +65,17 @@ const ApiKeySettings = () => {
           if (data[0]["hugging face"]) keysData["hugging face"] = data[0]["hugging face"];
           if (data[0].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) keysData.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 = data[0].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;
           
+          // Additional provider keys
+          if (data[0].anthropic) keysData.anthropic = data[0].anthropic;
+          if (data[0].google) keysData.google = data[0].google;
+          if (data[0].cohere) keysData.cohere = data[0].cohere;
+          
           // For UI display - show the actual keys if we fetched them
           if (data[0].api_key) keysData.openai = data[0].api_key;
-          if (data[0]["hugging face"]) keysData["hugging face"] = data[0]["hugging face"];
+          if (data[0]["hugging face"]) {
+            keysData["hugging face"] = data[0]["hugging face"];
+            keysData.huggingface = data[0]["hugging face"];
+          }
           
           setApiKeys(keysData);
         }
@@ -116,6 +127,24 @@ const ApiKeySettings = () => {
         keysToUpdate.api_key = apiKeys.openai;
       }
       
+      // Add additional provider keys
+      if (apiKeys.anthropic) {
+        keysToUpdate.anthropic = apiKeys.anthropic;
+      }
+      
+      if (apiKeys.google) {
+        keysToUpdate.google = apiKeys.google;
+      }
+      
+      if (apiKeys.cohere) {
+        keysToUpdate.cohere = apiKeys.cohere;
+      }
+      
+      // If huggingface is provided but hugging face is not, use it
+      if (apiKeys.huggingface && !apiKeys["hugging face"]) {
+        keysToUpdate["hugging face"] = apiKeys.huggingface;
+      }
+      
       console.log("Saving API keys:", keysToUpdate);
       
       // Update the database
@@ -147,6 +176,9 @@ const ApiKeySettings = () => {
           api_key: updatedData[0].api_key,
           "hugging face": updatedData[0]["hugging face"],
           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: updatedData[0].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,
+          anthropic: updatedData[0].anthropic,
+          google: updatedData[0].google,
+          cohere: updatedData[0].cohere,
           openai: updatedData[0].api_key,
         };
         
@@ -225,7 +257,7 @@ const ApiKeySettings = () => {
             <Input
               id="google"
               type={showKeys.google ? "text" : "password"}
-              placeholder="aiz-..."
+              placeholder="AIza..."
               value={apiKeys.google || ""}
               onChange={(e) => handleApiKeyChange("google", e.target.value)}
             />

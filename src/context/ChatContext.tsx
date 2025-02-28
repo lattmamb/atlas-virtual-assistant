@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,11 +11,12 @@ export interface Message {
   role: "user" | "assistant" | "system";
   createdAt: Date;
   isLoading?: boolean;
+  model?: string;
 }
 
 interface ChatContextType {
   messages: Message[];
-  addMessage: (content: string, role: "user" | "assistant" | "system") => void;
+  addMessage: (content: string, role: "user" | "assistant" | "system", model?: string) => void;
   clearMessages: () => void;
   isLoading: boolean;
   selectedProvider: ApiKeyProvider | null;
@@ -44,12 +44,13 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   const [selectedProvider, setSelectedProvider] = useState<ApiKeyProvider | null>(null);
   const [availableProviders, setAvailableProviders] = useState<ApiKeyProvider[]>([]);
 
-  const addMessage = (content: string, role: "user" | "assistant" | "system") => {
+  const addMessage = (content: string, role: "user" | "assistant" | "system", model?: string) => {
     const message: Message = {
       id: uuid(),
       content,
       role,
       createdAt: new Date(),
+      model,
     };
     setMessages((prev) => [...prev, message]);
   };
@@ -58,9 +59,9 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     setMessages([]);
   };
 
-  // Add a sendMessage function to handle user messages and simulate AI responses
+  // Add a sendMessage function to handle user messages and get AI responses
   const sendMessage = async (content: string) => {
-    if (!content.trim() || isLoading) return;
+    if (!content.trim() || isLoading || !selectedProvider) return;
     
     // Add user message
     addMessage(content, "user");
@@ -81,16 +82,50 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       
       setMessages(prev => [...prev, loadingMessage]);
       
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Prepare conversation history
+      const conversationMessages = messages
+        .filter(msg => !msg.isLoading)
+        .map(msg => ({
+          role: msg.role,
+          content: msg.content
+        }));
+      
+      // Add the new user message
+      conversationMessages.push({
+        role: "user",
+        content
+      });
+      
+      // Call the API via our edge function
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify({
+          provider: selectedProvider,
+          messages: conversationMessages,
+        }),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Error from ${selectedProvider} API`);
+      }
+      
+      const data = await response.json();
       
       // Replace the loading message with the actual response
-      const response = `This is a simulated response from the ${selectedProvider} AI model. In a real implementation, this would call the actual API.`;
-      
       setMessages(prev => 
         prev.map(msg => 
           msg.id === placeholderId 
-            ? { ...msg, content: response, isLoading: false } 
+            ? { 
+                ...msg, 
+                content: data.content, 
+                isLoading: false,
+                model: data.model
+              } 
             : msg
         )
       );
@@ -98,7 +133,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       console.error("Error sending message:", error);
       toast({
         title: "Error sending message",
-        description: "Please try again later.",
+        description: error instanceof Error ? error.message : "Please try again later.",
         variant: "destructive",
       });
       
@@ -137,9 +172,19 @@ export function ChatProvider({ children }: { children: ReactNode }) {
           }
           
           // For simulation, add these providers
-          providers.push('anthropic');
-          providers.push('cohere');
-          providers.push('google');
+          // We'll only keep these if you've set up the corresponding API keys
+          const providerKeyMap = {
+            'anthropic': false,
+            'cohere': false,
+            'google': false
+          };
+          
+          // Only add these providers if we're running in production or they have keys
+          Object.keys(providerKeyMap).forEach(provider => {
+            if (data[0][provider] && data[0][provider].trim() !== '') {
+              providers.push(provider as ApiKeyProvider);
+            }
+          });
           
           // Remove duplicates
           const uniqueProviders = [...new Set(providers)];
