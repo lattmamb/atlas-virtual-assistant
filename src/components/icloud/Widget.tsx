@@ -10,6 +10,7 @@ interface WidgetProps {
   children: React.ReactNode;
   minWidth?: string;
   minHeight?: string;
+  headerControls?: React.ReactNode;
 }
 
 const Widget: React.FC<WidgetProps> = ({ 
@@ -18,7 +19,8 @@ const Widget: React.FC<WidgetProps> = ({
   className, 
   children,
   minWidth = '320px',
-  minHeight = '280px'
+  minHeight = '280px',
+  headerControls
 }) => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
@@ -91,6 +93,14 @@ const Widget: React.FC<WidgetProps> = ({
     };
   }, [isDragging]);
 
+  // Ensure the widget respects the minHeight prop
+  React.useEffect(() => {
+    setSize(prev => ({
+      ...prev,
+      height: minHeight,
+    }));
+  }, [minHeight]);
+
   return (
     <div
       ref={widgetRef}
@@ -113,10 +123,8 @@ const Widget: React.FC<WidgetProps> = ({
             <span>{title}</span>
           </div>
         </div>
-        <div>
-          <button className="p-1.5 hover:bg-white/10 rounded-full transition">
-            <Minus className="w-4 h-4" />
-          </button>
+        <div className="flex items-center">
+          {headerControls}
         </div>
       </div>
       <div className="icloud-widget-body overflow-auto" style={{ maxHeight: `calc(${size.height} - 54px)` }}>

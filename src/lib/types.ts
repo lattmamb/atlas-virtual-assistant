@@ -14,3 +14,22 @@ export interface User {
   id: string;
   email?: string;
 }
+
+export interface Message {
+  id: string;
+  content: string;
+  role: "user" | "assistant" | "system";
+  createdAt: Date;
+  isLoading?: boolean;
+}
+
+export interface ChatContextType {
+  messages: Message[];
+  addMessage: (content: string, role: "user" | "assistant" | "system") => void;
+  clearMessages: () => void;
+  isLoading: boolean;
+  selectedProvider: ApiKeyProvider | null;
+  setSelectedProvider: (provider: ApiKeyProvider | null) => void;
+  availableProviders: ApiKeyProvider[];
+  sendMessage: (content: string) => void;
+}

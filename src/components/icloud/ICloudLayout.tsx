@@ -1,171 +1,260 @@
 
 import React, { useState } from 'react';
-import { Apple, Mail, Calendar, Image, Cloud, FileText, List, BarChart3, ChevronDown } from 'lucide-react';
-import Widget from './Widget';
-import { Link } from 'react-router-dom';
-import { useChat } from '@/context/ChatContext';
-import ChatMessage from '@/components/ChatMessage';
-import ChatInput from '@/components/ChatInput';
-import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
+import { Apple, Settings, User, Mail, Calendar, Photos, Cloud, Search, Globe } from 'lucide-react';
+import AtlasChatBot from '@/components/AtlasChatBot';
+import Widget from '@/components/icloud/Widget';
+import { NavbarDemo } from '@/components/ui/code-demo';
+import { VercelV0Chat } from '@/components/ui/v0-ai-chat';
+import { cn } from '@/lib/utils';
 
-const AppIcon = ({ icon, label, notification }: { icon: React.ReactNode, label: string, notification?: number }) => (
-  <div className="icloud-app-item">
-    <div className="relative">
-      <div className="icloud-icon">{icon}</div>
-      {notification && (
-        <div className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
-          {notification}
-        </div>
-      )}
-    </div>
-    <span className="text-xs text-white">{label}</span>
-  </div>
-);
+type BackgroundOption = {
+  name: string;
+  bgClass: string;
+};
+
+const backgrounds: BackgroundOption[] = [
+  { name: 'Default', bgClass: 'bg-gradient-to-br from-blue-50 to-white' },
+  { name: 'Minimal', bgClass: 'bg-white' },
+  { name: 'Sunset', bgClass: 'bg-gradient-to-br from-orange-50 via-rose-50 to-purple-50' },
+  { name: 'Ocean', bgClass: 'bg-gradient-to-br from-cyan-50 via-blue-50 to-indigo-50' },
+  { name: 'Forest', bgClass: 'bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50' },
+];
 
 const ICloudLayout = () => {
-  const { messages, clearMessages } = useChat();
-  const [backgroundChoice, setBackgroundChoice] = useState<string>('bg-gradient-to-br from-blue-800 to-blue-600');
-  const [showBackgroundOptions, setShowBackgroundOptions] = useState(false);
+  const [background, setBackground] = useState<BackgroundOption>(backgrounds[0]);
+  const navigate = useNavigate();
   
-  const backgroundOptions = [
-    { name: 'Blue', value: 'bg-gradient-to-br from-blue-800 to-blue-600' },
-    { name: 'Purple', value: 'bg-gradient-to-br from-purple-800 to-indigo-700' },
-    { name: 'Green', value: 'bg-gradient-to-br from-emerald-700 to-teal-600' },
-    { name: 'Dark', value: 'bg-gradient-to-br from-gray-900 to-gray-800' }
-  ];
-
   return (
-    <div className={`min-h-screen w-full ${backgroundChoice} overflow-hidden p-6 relative`}>
-      {/* Header */}
-      <header className="flex items-center justify-between mb-8 glassmorphism py-2 px-4 rounded-full">
-        <div className="flex items-center space-x-2">
-          <Apple className="w-6 h-6 text-white" />
-          <span className="text-white font-medium">iCloud</span>
-        </div>
-        <div className="flex items-center space-x-4">
-          <div className="relative">
-            <Button 
-              variant="ghost" 
-              className="text-white flex items-center gap-2"
-              onClick={() => setShowBackgroundOptions(!showBackgroundOptions)}
-            >
-              Background <ChevronDown className="w-4 h-4" />
-            </Button>
-            {showBackgroundOptions && (
-              <div className="absolute top-full right-0 mt-2 glassmorphism rounded-lg p-2 z-50">
-                {backgroundOptions.map(option => (
-                  <button 
-                    key={option.name} 
-                    className="block w-full px-4 py-2 text-left text-white hover:bg-white/10 rounded-md"
-                    onClick={() => {
-                      setBackgroundChoice(option.value);
-                      setShowBackgroundOptions(false);
-                    }}
-                  >
-                    {option.name}
-                  </button>
-                ))}
-              </div>
-            )}
+    <div className={cn("min-h-screen w-full relative overflow-hidden transition-colors duration-500", background.bgClass)}>
+      {/* Top Navigation */}
+      <header className="flex items-center justify-between py-2 px-4 bg-white/60 backdrop-blur-md border-b border-gray-200/50">
+        <div className="flex items-center gap-8">
+          <div className="flex items-center gap-2">
+            <Apple className="h-5 w-5 text-gray-800" />
+            <span className="font-medium text-gray-800">iCloud</span>
           </div>
-          <Link to="/settings" className="text-white hover:underline">
-            Settings
-          </Link>
+          
+          <nav className="hidden md:flex items-center gap-6">
+            <button className="text-sm text-gray-600 hover:text-gray-800">Mail</button>
+            <button className="text-sm text-gray-600 hover:text-gray-800">Contacts</button>
+            <button className="text-sm text-gray-600 hover:text-gray-800">Calendar</button>
+            <button className="text-sm text-gray-600 hover:text-gray-800">Photos</button>
+            <button className="text-sm text-gray-600 hover:text-gray-800">Drive</button>
+            <button className="text-sm text-gray-600 hover:text-gray-800">Notes</button>
+          </nav>
+        </div>
+        
+        <div className="flex items-center gap-4">
+          <div className="relative">
+            <Search className="h-4 w-4 absolute top-1/2 left-3 -translate-y-1/2 text-gray-400" />
+            <input 
+              type="text" 
+              placeholder="Search iCloud" 
+              className="pl-9 pr-4 py-1.5 text-sm border border-gray-200 rounded-full bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500/30 w-[180px]"
+            />
+          </div>
+          
+          <button 
+            onClick={() => navigate('/settings')}
+            className="p-1.5 rounded-full hover:bg-gray-100 text-gray-600"
+          >
+            <Settings className="h-4 w-4" />
+          </button>
+          
+          <div className="h-7 w-7 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-medium text-xs">
+            JD
+          </div>
         </div>
       </header>
-
-      {/* Widgets Container */}
-      <div className="relative w-full h-[calc(100vh-100px)]">
-        {/* Profile Widget */}
-        <Widget
-          title="Profile"
-          icon={<Apple />}
-          className="left-0 top-0 z-10"
+      
+      {/* Background options */}
+      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 flex gap-2 p-2 bg-white/80 backdrop-blur-sm rounded-full shadow-sm border border-gray-200/50 z-40">
+        {backgrounds.map((bg) => (
+          <button
+            key={bg.name}
+            onClick={() => setBackground(bg)}
+            className={cn(
+              "w-6 h-6 rounded-full transition-all border",
+              bg.name === background.name 
+                ? "border-blue-500 scale-110" 
+                : "border-gray-200 hover:scale-105"
+            )}
+            style={{ background: getPreviewColor(bg.bgClass) }}
+            title={bg.name}
+          />
+        ))}
+      </div>
+      
+      {/* Widgets */}
+      <div className="pt-8 relative h-[calc(100vh-58px)]">
+        <Widget 
+          title="Mail" 
+          icon={<Mail className="h-5 w-5" />}
+          className="top-[80px] left-[40px]"
         >
-          <div className="flex flex-col items-center space-y-4">
-            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center overflow-hidden">
-              <img 
-                src="/lovable-uploads/c9ad08ff-68c3-4635-af88-f133d638efc9.png" 
-                alt="User Avatar" 
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <h3 className="text-lg font-medium text-white">Atlas User</h3>
-            <p className="text-sm text-gray-300">user@example.com</p>
-            <p className="text-xs text-primary/70">iCloud+</p>
-          </div>
-        </Widget>
-
-        {/* Apps Widget */}
-        <Widget
-          title="Apps"
-          icon={<List />}
-          className="left-[340px] top-0 z-10"
-          minWidth="520px"
-        >
-          <div className="icloud-app-grid p-4">
-            <AppIcon icon={<Mail className="w-6 h-6 text-blue-400" />} label="Mail" notification={3} />
-            <AppIcon icon={<Calendar className="w-6 h-6 text-red-400" />} label="Calendar" />
-            <AppIcon icon={<Image className="w-6 h-6 text-purple-400" />} label="Photos" />
-            <AppIcon icon={<Cloud className="w-6 h-6 text-white" />} label="Drive" />
-            <AppIcon icon={<FileText className="w-6 h-6 text-yellow-400" />} label="Notes" />
-            <AppIcon icon={<List className="w-6 h-6 text-red-300" />} label="Reminders" />
-            <AppIcon icon={<FileText className="w-6 h-6 text-amber-400" />} label="Pages" />
-            <AppIcon icon={<BarChart3 className="w-6 h-6 text-green-400" />} label="Numbers" />
-          </div>
-        </Widget>
-
-        {/* Notes Widget */}
-        <Widget
-          title="Notes"
-          icon={<FileText className="text-yellow-400" />}
-          className="left-10 top-[320px] z-10"
-          minWidth="440px"
-          minHeight="340px"
-        >
-          <div className="flex flex-col space-y-3">
-            {[
-              { title: "Meeting Notes", date: "2/28/2024", content: "Discussed product roadmap and timeline." },
-              { title: "Project Deadlines", date: "2/25/2024", content: "Website redesign due by April 15." },
-              { title: "Ideas", date: "2/20/2024", content: "New feature concepts for the dashboard." }
-            ].map((note, index) => (
-              <div key={index} className="p-3 rounded-lg bg-black/20 border border-white/10">
-                <div className="flex justify-between items-center mb-1">
-                  <h4 className="font-medium text-white">{note.title}</h4>
-                  <span className="text-xs text-gray-400">{note.date}</span>
+          <div className="p-4 flex flex-col h-full">
+            <div className="flex-1">
+              <div className="flex justify-between mb-4">
+                <h3 className="font-medium">Inbox</h3>
+                <span className="text-xs text-gray-500">Updated just now</span>
+              </div>
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="py-2 border-b border-gray-100 last:border-0">
+                  <div className="flex justify-between mb-1">
+                    <div className="font-medium text-sm">Company Newsletter</div>
+                    <div className="text-xs text-gray-500">10:{i+10} AM</div>
+                  </div>
+                  <div className="text-xs text-gray-500 truncate">
+                    Latest updates and announcements from our company...
+                  </div>
                 </div>
-                <p className="text-sm text-gray-300">{note.content}</p>
+              ))}
+            </div>
+            <div className="mt-4">
+              <button className="w-full py-2 text-sm bg-blue-50 text-blue-600 rounded-md hover:bg-blue-100 transition">
+                Compose New Email
+              </button>
+            </div>
+          </div>
+        </Widget>
+        
+        <Widget 
+          title="Calendar" 
+          icon={<Calendar className="h-5 w-5" />} 
+          className="top-[80px] left-[400px]"
+        >
+          <div className="p-4">
+            <div className="grid grid-cols-7 mb-2 text-center">
+              {['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'].map(day => (
+                <div key={day} className="text-xs text-gray-500">{day}</div>
+              ))}
+            </div>
+            <div className="grid grid-cols-7 gap-1">
+              {Array.from({ length: 30 }).map((_, i) => (
+                <div 
+                  key={i} 
+                  className={cn(
+                    "aspect-square flex items-center justify-center text-xs rounded-full",
+                    i === 14 && "bg-blue-500 text-white",
+                    i !== 14 && "hover:bg-gray-100 cursor-pointer"
+                  )}
+                >
+                  {i + 1}
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 space-y-2">
+              <div className="rounded-md bg-blue-50 p-2 text-xs">
+                <div className="font-medium">Team Meeting</div>
+                <div className="text-gray-500">2:00 PM - 3:00 PM</div>
+              </div>
+              <div className="rounded-md bg-purple-50 p-2 text-xs">
+                <div className="font-medium">Project Review</div>
+                <div className="text-gray-500">4:00 PM - 5:00 PM</div>
+              </div>
+            </div>
+          </div>
+        </Widget>
+        
+        <Widget 
+          title="Photos" 
+          icon={<Photos className="h-5 w-5" />}
+          className="top-[380px] left-[40px]"
+        >
+          <div className="p-4">
+            <div className="flex justify-between mb-3">
+              <h3 className="font-medium text-sm">Recent Photos</h3>
+              <button className="text-xs text-blue-500">View All</button>
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              {Array.from({ length: 9 }).map((_, i) => (
+                <div 
+                  key={i} 
+                  className="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 rounded-md"
+                />
+              ))}
+            </div>
+          </div>
+        </Widget>
+        
+        <Widget 
+          title="iCloud Drive" 
+          icon={<Cloud className="h-5 w-5" />}
+          className="top-[380px] left-[400px]"
+        >
+          <div className="p-4">
+            <div className="flex justify-between mb-3">
+              <h3 className="font-medium text-sm">Recent Files</h3>
+              <button className="text-xs text-blue-500">View All</button>
+            </div>
+            {['Document.pdf', 'Presentation.key', 'Spreadsheet.numbers', 'Image.jpg'].map((file, i) => (
+              <div key={i} className="flex items-center gap-3 py-2 border-b border-gray-100 last:border-0">
+                <div className="w-8 h-8 bg-gray-100 rounded flex items-center justify-center text-xs text-gray-500">
+                  {file.split('.').pop()}
+                </div>
+                <div>
+                  <div className="text-sm">{file}</div>
+                  <div className="text-xs text-gray-500">Modified {i + 1}d ago</div>
+                </div>
               </div>
             ))}
           </div>
         </Widget>
-
-        {/* Chat Widget */}
-        <Widget
-          title="Atlas Assistant"
-          icon={<Apple className="text-white" />}
-          className="left-[480px] top-[180px] z-20"
-          minWidth="500px"
-          minHeight="400px"
+        
+        <Widget 
+          title="Weather" 
+          icon={<Globe className="h-5 w-5" />}
+          className="top-[120px] left-[750px]"
+          minWidth="280px"
+          minHeight="200px"
         >
-          <div className="flex flex-col h-full">
-            <div className="flex-1 overflow-y-auto mb-4 space-y-4">
-              {messages.length > 0 ? (
-                messages.map((message) => (
-                  <ChatMessage key={message.id} message={message} />
-                ))
-              ) : (
-                <div className="text-center py-10">
-                  <p className="text-gray-400">No messages yet. Start a conversation!</p>
+          <div className="p-4 text-center">
+            <div className="text-5xl font-light mb-2">72°</div>
+            <div className="text-sm">Sunny</div>
+            <div className="text-xs text-gray-500 mb-4">San Francisco, CA</div>
+            
+            <div className="grid grid-cols-5 gap-1 text-xs">
+              {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].map((day, i) => (
+                <div key={day} className="flex flex-col items-center">
+                  <div className="text-gray-500">{day}</div>
+                  <div className="my-1">{72 + i > 75 ? 'Sunny' : 'Cloudy'}</div>
+                  <div>{72 + i}°</div>
                 </div>
-              )}
+              ))}
             </div>
-            <ChatInput />
           </div>
         </Widget>
+        
+        <Widget 
+          title="Notes" 
+          className="top-[340px] left-[750px]"
+          minWidth="280px"
+          minHeight="220px"
+        >
+          <div className="p-4">
+            <textarea 
+              className="w-full h-full bg-transparent resize-none border-0 focus:outline-none focus:ring-0 text-sm"
+              placeholder="Type your notes here..."
+            />
+          </div>
+        </Widget>
+        
+        {/* Add Atlas Assistant */}
+        <AtlasChatBot />
       </div>
     </div>
   );
+};
+
+// Helper function to extract a preview color from Tailwind classes
+const getPreviewColor = (bgClass: string): string => {
+  if (bgClass.includes('white')) return '#ffffff';
+  if (bgClass.includes('blue')) return '#dbeafe';
+  if (bgClass.includes('orange')) return '#fff7ed';
+  if (bgClass.includes('emerald')) return '#ecfdf5';
+  if (bgClass.includes('cyan')) return '#ecfeff';
+  return '#f8fafc';
 };
 
 export default ICloudLayout;
