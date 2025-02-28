@@ -15,10 +15,13 @@ const SaveButton = ({ loading, onClick }: SaveButtonProps) => {
       disabled={loading}
     >
       {loading ? (
-        <div className="loading-dots">
-          <div className="dot"></div>
-          <div className="dot"></div>
-          <div className="dot"></div>
+        <div className="flex items-center justify-center">
+          <span className="animate-pulse mr-2">Saving</span>
+          <div className="flex space-x-1">
+            <div className="w-1.5 h-1.5 bg-primary-foreground rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+            <div className="w-1.5 h-1.5 bg-primary-foreground rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+            <div className="w-1.5 h-1.5 bg-primary-foreground rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+          </div>
         </div>
       ) : (
         <>

@@ -71,6 +71,11 @@ const AtlasChatBot = () => {
 
   const handleToolClick = (toolName: string) => {
     setActiveTool(toolName === activeTool ? null : toolName);
+    
+    // Navigate to workflows page if the Workflows tool is clicked
+    if (toolName === "Workflows") {
+      navigate("/workflows");
+    }
   };
 
   return (
@@ -191,15 +196,17 @@ const AtlasChatBot = () => {
                           {tool.name}
                         </Button>
                       </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Coming soon</p>
-                      </TooltipContent>
+                      {tool.name !== "Workflows" && (
+                        <TooltipContent>
+                          <p>Coming soon</p>
+                        </TooltipContent>
+                      )}
                     </Tooltip>
                   </TooltipProvider>
                 ))}
               </div>
               
-              {activeTool && (
+              {activeTool && activeTool !== "Workflows" && (
                 <div className="p-4 border rounded-lg">
                   <div className="flex justify-between items-center mb-3">
                     <h3 className="text-sm font-medium flex items-center gap-2">

@@ -11,6 +11,8 @@ import { supabase } from "@/integrations/supabase/client";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Settings from "./pages/Settings";
+import WorkflowDashboard from "./components/workflow";
+import WorkflowBuilder from "./components/workflow/WorkflowBuilder";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +46,8 @@ const App = () => {
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/settings" element={<Settings />} />
+                <Route path="/workflows" element={<WorkflowDashboard />} />
+                <Route path="/workflows/builder" element={<WorkflowBuilder />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <AtlasChatBot />

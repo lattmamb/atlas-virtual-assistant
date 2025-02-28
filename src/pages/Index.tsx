@@ -4,11 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { useChat } from "@/context/ChatContext";
 import ChatMessage from "@/components/ChatMessage";
 import ChatInput from "@/components/ChatInput";
-import { Settings, Trash2, Apple, LayoutGrid, MessageSquare } from "lucide-react";
+import { Settings, Trash2, Apple, LayoutGrid, MessageSquare, Workflow } from "lucide-react";
 import { NavbarDemo } from "@/components/ui/code-demo";
 import { VercelV0Chat } from "@/components/ui/v0-ai-chat";
 import ICloudLayout from "@/components/icloud/ICloudLayout";
 import Widget from "@/components/icloud/Widget";
+import NavbarMenu from "@/components/ui/navbar-menu";
 
 const ChatContainer = () => {
   const { messages, clearMessages, selectedProvider, availableProviders, setSelectedProvider } = useChat();
@@ -33,7 +34,7 @@ const ChatContainer = () => {
             <p className="text-xs text-muted-foreground">Your personal AI companion</p>
           </div>
         </div>
-        <NavbarDemo />
+        <NavbarMenu />
         <div className="flex items-center gap-4">
           {availableProviders.length > 0 && (
             <select
@@ -127,18 +128,41 @@ const WidgetChatContainer = () => {
 
 const Index = () => {
   const [displayMode, setDisplayMode] = useState<'atlas' | 'vercel' | 'icloud'>('icloud');
+  const navigate = useNavigate();
 
   return (
     <div className="h-screen w-full overflow-hidden">
       {displayMode === 'icloud' ? (
         <ICloudLayout>
-          <Widget
-            title="Atlas Assistant"
-            icon={<MessageSquare className="h-5 w-5" />}
-            minWidth="340px"
-          >
-            <WidgetChatContainer />
-          </Widget>
+          <div className="flex flex-wrap gap-4 p-4">
+            <Widget
+              title="Atlas Assistant"
+              icon={<MessageSquare className="h-5 w-5" />}
+              minWidth="340px"
+            >
+              <WidgetChatContainer />
+            </Widget>
+            
+            <Widget
+              title="Workflows"
+              icon={<Workflow className="h-5 w-5" />}
+              minWidth="340px"
+            >
+              <div className="p-4 flex flex-col items-center justify-center h-full">
+                <div className="text-center mb-4">
+                  <Workflow className="h-10 w-10 text-primary/50 mb-2 mx-auto" />
+                  <h3 className="text-lg font-medium">Automation Workflows</h3>
+                  <p className="text-sm text-muted-foreground">Create powerful AI automations</p>
+                </div>
+                <button 
+                  onClick={() => navigate("/workflows")}
+                  className="px-4 py-2 bg-primary text-white rounded-full text-sm"
+                >
+                  Open Workflows
+                </button>
+              </div>
+            </Widget>
+          </div>
         </ICloudLayout>
       ) : displayMode === 'vercel' ? (
         <div className="h-full w-full overflow-auto bg-gradient-to-br from-zinc-900 to-black">
