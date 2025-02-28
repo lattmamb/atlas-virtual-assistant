@@ -89,7 +89,18 @@ const Index = () => {
   return (
     <div className="h-screen w-full overflow-hidden">
       {displayMode === 'icloud' ? (
-        <ICloudLayout />
+        <ICloudLayout>
+          <Widget
+            title="Atlas Assistant"
+            icon={<MessageSquare className="h-5 w-5" />}
+            minWidth="340px"
+          >
+            <div className="p-4 space-y-2">
+              <p className="text-sm text-gray-600">Welcome to Atlas Assistant!</p>
+              <p className="text-xs text-gray-500">Ask me anything or try one of the tools.</p>
+            </div>
+          </Widget>
+        </ICloudLayout>
       ) : displayMode === 'vercel' ? (
         <div className="h-full w-full overflow-auto bg-gradient-to-br from-zinc-900 to-black">
           <VercelV0Chat />

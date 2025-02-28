@@ -2,8 +2,8 @@
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import Widget from './Widget';
-import { Image, Mail, Calendar, Notes, FileText, Settings, MessageSquare } from 'lucide-react';
-import { AtlasChatBot } from '@/components/AtlasChatBot';
+import { Image, Mail, Calendar, FileText, Settings, MessageSquare } from 'lucide-react';
+import AtlasChatBot from '@/components/AtlasChatBot';
 import { VercelV0Chat } from '@/components/ui/v0-ai-chat';
 
 interface ICloudLayoutProps {
