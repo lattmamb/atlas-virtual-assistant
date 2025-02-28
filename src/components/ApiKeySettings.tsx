@@ -58,15 +58,13 @@ const ApiKeySettings = () => {
           const keysData: ApiKeyDisplayData = {};
           
           // Map database fields to our state
-          if (data[0].api_key) keysData.api_key = "••••••••••••••••";
-          if (data[0]["hugging face"]) keysData["hugging face"] = "••••••••••••••••";
-          if (data[0].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) keysData.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 = "••••••••••••••••";
+          if (data[0].api_key) keysData.api_key = data[0].api_key;
+          if (data[0]["hugging face"]) keysData["hugging face"] = data[0]["hugging face"];
+          if (data[0].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) keysData.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 = data[0].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;
           
-          // For UI display
-          if (data[0].api_key) keysData.openai = "••••••••••••••••"; // Map api_key to OpenAI for display
-          keysData.anthropic = ""; // Not in database, but in UI
-          keysData.google = "";    // Not in database, but in UI
-          keysData.cohere = "";    // Not in database, but in UI
+          // For UI display - show the actual keys if we fetched them
+          if (data[0].api_key) keysData.openai = data[0].api_key;
+          if (data[0]["hugging face"]) keysData["hugging face"] = data[0]["hugging face"];
           
           setApiKeys(keysData);
         }
@@ -101,49 +99,48 @@ const ApiKeySettings = () => {
     setLoading(true);
     try {
       // Prepare data for database update
-      const keysToUpdate: any = {};
+      const keysToUpdate: any = {
+        // We need to provide this field, it's required by the database schema
+        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: apiKeys.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 || "default_key",
+        "hugging face": apiKeys["hugging face"] || "default_key"
+      };
       
       // Map UI fields to database fields
-      if (apiKeys.openai && !apiKeys.openai.includes("•")) {
+      if (apiKeys.openai) {
         keysToUpdate.api_key = apiKeys.openai;
       }
       
-      if (apiKeys["hugging face"] && !apiKeys["hugging face"].includes("•")) {
-        keysToUpdate["hugging face"] = apiKeys["hugging face"];
-      }
-      
-      // Always provide the required field with a default value if it doesn't exist
-      if (!keysToUpdate.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) {
-        keysToUpdate.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 = "default_huggingface_key";
-      }
-      
       // If there are keys to update
-      if (Object.keys(keysToUpdate).length > 0) {
-        const { data, error } = await supabase.from("api_keys").upsert([keysToUpdate], {
-          onConflict: "user_id",
-        });
+      const { data, error } = await supabase.from("api_keys").upsert([keysToUpdate]);
 
-        if (error) {
-          throw new Error(error.message);
-        }
-
-        // Mask the saved keys for display
-        const maskedKeys = { ...apiKeys };
-        if (keysToUpdate.api_key) maskedKeys.openai = "••••••••••••••••";
-        if (keysToUpdate["hugging face"]) maskedKeys["hugging face"] = "••••••••••••••••";
-        
-        setApiKeys(maskedKeys);
-
-        toast({
-          title: "API keys saved",
-          description: "Your API keys have been securely saved.",
-        });
-      } else {
-        toast({
-          title: "No changes to save",
-          description: "No API key changes were detected.",
-        });
+      if (error) {
+        throw new Error(error.message);
       }
+
+      toast({
+        title: "API keys saved",
+        description: "Your API keys have been securely saved.",
+      });
+      
+      // Fetch the updated keys
+      const { data: updatedData, error: fetchError } = await supabase.from("api_keys").select("*");
+      
+      if (fetchError) {
+        throw new Error(fetchError.message);
+      }
+      
+      if (updatedData && updatedData.length > 0) {
+        // Update local state with the saved keys
+        const savedKeys: ApiKeyDisplayData = {
+          api_key: updatedData[0].api_key,
+          "hugging face": updatedData[0]["hugging face"],
+          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: updatedData[0].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,
+          openai: updatedData[0].api_key,
+        };
+        
+        setApiKeys(savedKeys);
+      }
+      
     } catch (error) {
       console.error("Error saving API keys:", error);
       toast({
