@@ -84,27 +84,40 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
       throw new Error("No Hugging Face API token found");
     }
 
-    // Using the Hugging Face Inference API with a model (using a popular text generation model)
-    const response = await fetch(
-      "https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill",
-      {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ inputs: userMessage }),
+    try {
+      // Using a different model that's more likely to be available
+      const response = await fetch(
+        "https://api-inference.huggingface.co/models/google/flan-t5-small",
+        {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ inputs: userMessage }),
+        }
+      );
+
+      if (!response.ok) {
+        // Better error handling
+        const errorText = await response.text();
+        console.error("Hugging Face API Error:", errorText);
+        
+        // Check if the model is still loading
+        if (errorText.includes("Model is currently loading")) {
+          return "The AI model is still loading. Please try again in a few moments.";
+        }
+        
+        throw new Error(`API error: ${response.status}`);
       }
-    );
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error("Hugging Face API Error:", errorData);
-      throw new Error(`API error: ${response.status}`);
+      const data = await response.json();
+      return data[0]?.generated_text || data.generated_text || "I couldn't generate a response. Please try again.";
+    } catch (error) {
+      console.error("Error in Hugging Face API call:", error);
+      // More user-friendly error message
+      return "There was an issue connecting to Hugging Face. Please check your API token or try again later.";
     }
-
-    const data = await response.json();
-    return data.generated_text || "I couldn't generate a response. Please try again.";
   };
 
   const generateOpenAIResponse = async (userMessage: string) => {
@@ -148,9 +161,14 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
       }
     } catch (error) {
       console.error("Error generating response:", error);
+      toast({
+        title: "API Error",
+        description: "There was an error communicating with the AI provider. Please check your API key and try again.",
+        variant: "destructive",
+      });
       return "I encountered an error communicating with the AI provider. Please check your API key and try again.";
     }
-  }, [selectedProvider, availableProviders]);
+  }, [selectedProvider, availableProviders, toast]);
 
   const sendMessage = useCallback(
     async (content: string) => {
