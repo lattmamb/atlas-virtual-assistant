@@ -1,8 +1,9 @@
 
 "use client";
 import React, { useState } from "react";
-import { HoveredLink, Menu, MenuItem, ProductItem } from "./navbar-menu";
+import { HoveredLink, Menu, MenuItem, ProductItem } from "@/components/ui/navbar-menu";
 import { cn } from "@/lib/utils";
+import { VercelV0Chat } from "@/components/ui/v0-ai-chat";
 
 export function NavbarDemo() {
   return (
@@ -69,4 +70,8 @@ function Navbar({ className }: { className?: string }) {
       </Menu>
     </div>
   );
+}
+
+export function ChatDemo() {
+  return <VercelV0Chat />;
 }

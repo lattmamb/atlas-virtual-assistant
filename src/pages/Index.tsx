@@ -1,10 +1,12 @@
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useChat } from "@/context/ChatContext";
 import ChatMessage from "@/components/ChatMessage";
 import ChatInput from "@/components/ChatInput";
 import { Settings, Trash2, Apple } from "lucide-react";
+import { NavbarDemo } from "@/components/ui/code-demo";
+import { VercelV0Chat } from "@/components/ui/v0-ai-chat";
 
 const ChatContainer = () => {
   const { messages, clearMessages, selectedProvider, availableProviders, setSelectedProvider } = useChat();
@@ -29,6 +31,7 @@ const ChatContainer = () => {
             <p className="text-xs text-muted-foreground">Your personal AI companion</p>
           </div>
         </div>
+        <NavbarDemo />
         <div className="flex items-center gap-4">
           {availableProviders.length > 0 && (
             <select
@@ -80,10 +83,26 @@ const ChatContainer = () => {
 };
 
 const Index = () => {
+  const [showVercelUI, setShowVercelUI] = useState(false);
+
   return (
     <div className="h-screen w-full bg-gradient-to-br from-slate-50 to-red-50/30 overflow-hidden">
-      <div className="h-full w-full max-w-[1400px] mx-auto apple-card my-4 md:my-6 lg:my-8 overflow-hidden shadow-xl bg-white/95">
-        <ChatContainer />
+      {showVercelUI ? (
+        <div className="h-full w-full overflow-auto">
+          <VercelV0Chat />
+        </div>
+      ) : (
+        <div className="h-full w-full max-w-[1400px] mx-auto apple-card my-4 md:my-6 lg:my-8 overflow-hidden shadow-xl bg-white/95">
+          <ChatContainer />
+        </div>
+      )}
+      <div className="fixed bottom-4 right-4">
+        <button 
+          onClick={() => setShowVercelUI(!showVercelUI)}
+          className="bg-primary text-white px-4 py-2 rounded-md shadow-md"
+        >
+          {showVercelUI ? "Switch to Atlas" : "Switch to Vercel UI"}
+        </button>
       </div>
     </div>
   );
