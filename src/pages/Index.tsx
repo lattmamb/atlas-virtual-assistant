@@ -1,10 +1,9 @@
 
 import { useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChatProvider, useChat } from "@/context/ChatContext";
+import { useChat } from "@/context/ChatContext";
 import ChatMessage from "@/components/ChatMessage";
 import ChatInput from "@/components/ChatInput";
-import AnimatedLogo from "@/components/AnimatedLogo";
 import { Settings, Trash2, Apple } from "lucide-react";
 
 const ChatContainer = () => {
@@ -83,11 +82,9 @@ const ChatContainer = () => {
 const Index = () => {
   return (
     <div className="h-screen w-full bg-gradient-to-br from-slate-50 to-red-50/30 overflow-hidden">
-      <ChatProvider>
-        <div className="h-full w-full max-w-[1400px] mx-auto apple-card my-4 md:my-6 lg:my-8 overflow-hidden shadow-xl bg-white/95">
-          <ChatContainer />
-        </div>
-      </ChatProvider>
+      <div className="h-full w-full max-w-[1400px] mx-auto apple-card my-4 md:my-6 lg:my-8 overflow-hidden shadow-xl bg-white/95">
+        <ChatContainer />
+      </div>
     </div>
   );
 };
