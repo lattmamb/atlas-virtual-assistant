@@ -1,112 +1,79 @@
 
-import { useState } from "react";
+import { useState, FormEvent, KeyboardEvent, useRef, useEffect } from "react";
+import { Send, Loader2, X } from "lucide-react";
 import { useChat } from "@/context/ChatContext";
-import { SendHorizonal, Settings } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from "@/components/ui/select";
-import { ApiKeyProvider } from "@/lib/types";
 
-const ChatInput = () => {
+interface ChatInputProps {
+  compact?: boolean;
+}
+
+const ChatInput = ({ compact = false }: ChatInputProps) => {
   const [input, setInput] = useState("");
-  const { 
-    sendMessage, 
-    isLoading, 
-    availableProviders, 
-    selectedProvider, 
-    setSelectedProvider 
-  } = useChat();
-  const navigate = useNavigate();
+  const { sendMessage, isLoading } = useChat();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const handleSend = () => {
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  }, [input]);
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
     if (input.trim() && !isLoading) {
       sendMessage(input);
       setInput("");
+      if (textareaRef.current) {
+        textareaRef.current.style.height = "auto";
+      }
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      handleSend();
+      handleSubmit(e);
     }
-  };
-
-  const providerNames: Record<string, string> = {
-    openai: "OpenAI",
-    anthropic: "Anthropic",
-    cohere: "Cohere",
-    huggingface: "Hugging Face",
-    "hugging face": "Hugging Face",
-    google: "Google"
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-4">
-      {/* Provider selector */}
-      {availableProviders.length > 0 ? (
-        <div className="flex justify-center">
-          <Select
-            value={selectedProvider || undefined}
-            onValueChange={(value) => setSelectedProvider(value as ApiKeyProvider)}
-          >
-            <SelectTrigger className="w-[180px] mx-auto">
-              <SelectValue placeholder="Select provider" />
-            </SelectTrigger>
-            <SelectContent>
-              {availableProviders.map((provider) => (
-                <SelectItem key={provider} value={provider}>
-                  {providerNames[provider] || provider}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      ) : (
-        <div className="text-center">
-          <button
-            onClick={() => navigate("/settings")}
-            className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
-          >
-            <Settings size={14} />
-            Configure API Keys
-          </button>
-        </div>
-      )}
-
-      {/* Input area */}
-      <div className="relative flex items-center">
+    <form onSubmit={handleSubmit} className="relative">
+      <div className={`relative flex items-center ${compact ? 'rounded-full' : 'rounded-xl'} bg-secondary/30 shadow-input focus-within:ring-2 focus-within:ring-primary/20`}>
         <textarea
-          className="w-full resize-none rounded-full pl-6 pr-16 py-3 
-                    bg-white border border-slate-200 shadow-sm focus:ring-1 focus:ring-primary focus:outline-none 
-                    transition-all duration-200 placeholder:text-gray-400 min-h-[54px]"
-          placeholder="Ask me anything..."
-          rows={1}
+          ref={textareaRef}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
+          placeholder={compact ? "Ask Atlas..." : "Type your message..."}
+          className={`flex-1 resize-none border-0 bg-transparent py-3 ${compact ? 'px-4 text-sm' : 'px-5'} placeholder:text-muted-foreground focus:outline-none focus:ring-0 disabled:opacity-50 max-h-[200px]`}
+          rows={compact ? 1 : 2}
           disabled={isLoading}
         />
+        {input && !isLoading && (
+          <button
+            type="button"
+            onClick={() => setInput("")}
+            className="p-2 text-muted-foreground hover:text-foreground"
+            aria-label="Clear input"
+          >
+            <X size={18} />
+          </button>
+        )}
         <button
-          className={`absolute right-2 h-10 w-10 rounded-full flex items-center justify-center
-                    ${
-                      input.trim() && !isLoading
-                        ? "bg-primary text-white"
-                        : "bg-gray-100 text-gray-400"
-                    }
-                    hover:scale-105 active:scale-95 transition-all duration-200`}
-          onClick={handleSend}
+          type="submit"
           disabled={!input.trim() || isLoading}
+          className={`${compact ? 'mr-1 p-2' : 'mr-2 p-2'} text-primary bg-primary-foreground rounded-full disabled:opacity-50 hover:bg-accent transition-colors`}
+          aria-label="Send message"
         >
-          <SendHorizonal size={18} />
+          {isLoading ? (
+            <Loader2 size={compact ? 16 : 20} className="animate-spin" />
+          ) : (
+            <Send size={compact ? 16 : 20} />
+          )}
         </button>
       </div>
-    </div>
+    </form>
   );
 };
 

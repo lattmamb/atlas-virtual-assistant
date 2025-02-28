@@ -84,6 +84,47 @@ const ChatContainer = () => {
   );
 };
 
+// Mini chat container for the iCloud widget
+const WidgetChatContainer = () => {
+  const { messages } = useChat();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
+  
+  return (
+    <div className="flex flex-col h-full">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 max-h-[300px]">
+        {messages.length > 0 ? (
+          messages.slice(-3).map((message) => (
+            <div key={message.id} className="flex flex-col">
+              <div className="text-xs font-medium mb-1">
+                {message.role === "user" ? "You" : "Atlas"}
+              </div>
+              <div className={`p-2 rounded-lg text-sm ${
+                message.role === "user" ? "bg-blue-100 text-blue-800" : "bg-gray-100 text-gray-800"
+              }`}>
+                {message.content}
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="text-center text-gray-500 py-6">
+            <p className="text-sm">Ask me anything!</p>
+          </div>
+        )}
+        <div ref={messagesEndRef} />
+      </div>
+      <div className="p-3 border-t">
+        <ChatInput compact />
+      </div>
+    </div>
+  );
+};
+
 const Index = () => {
   const [displayMode, setDisplayMode] = useState<'atlas' | 'vercel' | 'icloud'>('icloud');
 
@@ -96,10 +137,7 @@ const Index = () => {
             icon={<MessageSquare className="h-5 w-5" />}
             minWidth="340px"
           >
-            <div className="p-4 space-y-2">
-              <p className="text-sm text-gray-600">Welcome to Atlas Assistant!</p>
-              <p className="text-xs text-gray-500">Ask me anything or try one of the tools.</p>
-            </div>
+            <WidgetChatContainer />
           </Widget>
         </ICloudLayout>
       ) : displayMode === 'vercel' ? (
