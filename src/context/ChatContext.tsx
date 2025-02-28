@@ -121,18 +121,111 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const generateOpenAIResponse = async (userMessage: string) => {
-    // Simulated OpenAI response for now
-    return `[OpenAI] You asked: "${userMessage}". Here's my simulated response...`;
+    const token = localStorage.getItem('openai_api_key');
+    if (!token) {
+      throw new Error("No OpenAI API token found");
+    }
+
+    try {
+      const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo",
+          messages: [
+            { role: "system", content: "You are a helpful assistant." },
+            { role: "user", content: userMessage }
+          ],
+          max_tokens: 150
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("OpenAI API Error:", errorData);
+        throw new Error(`OpenAI API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.choices[0].message.content;
+    } catch (error) {
+      console.error("Error in OpenAI API call:", error);
+      return "There was an issue connecting to OpenAI. Please check your API token or try again later.";
+    }
   };
 
   const generateAnthropicResponse = async (userMessage: string) => {
-    // Simulated Anthropic response for now
-    return `[Anthropic] You asked: "${userMessage}". Here's my simulated response...`;
+    const token = localStorage.getItem('anthropic_api_key');
+    if (!token) {
+      throw new Error("No Anthropic API token found");
+    }
+
+    try {
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": token,
+          "anthropic-version": "2023-06-01"
+        },
+        body: JSON.stringify({
+          model: "claude-2",
+          messages: [
+            { role: "user", content: userMessage }
+          ],
+          max_tokens: 150
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Anthropic API Error:", errorData);
+        throw new Error(`Anthropic API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.content[0].text;
+    } catch (error) {
+      console.error("Error in Anthropic API call:", error);
+      return "There was an issue connecting to Anthropic. Please check your API token or try again later.";
+    }
   };
 
   const generateCohereResponse = async (userMessage: string) => {
-    // Simulated Cohere response for now
-    return `[Cohere] You asked: "${userMessage}". Here's my simulated response...`;
+    const token = localStorage.getItem('cohere_api_key');
+    if (!token) {
+      throw new Error("No Cohere API token found");
+    }
+
+    try {
+      const response = await fetch("https://api.cohere.ai/v1/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          model: "command",
+          prompt: userMessage,
+          max_tokens: 150
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Cohere API Error:", errorData);
+        throw new Error(`Cohere API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.generations[0].text;
+    } catch (error) {
+      console.error("Error in Cohere API call:", error);
+      return "There was an issue connecting to Cohere. Please check your API token or try again later.";
+    }
   };
 
   const generateResponse = useCallback(async (userMessage: string) => {
