@@ -4,10 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { useChat } from "@/context/ChatContext";
 import ChatMessage from "@/components/ChatMessage";
 import ChatInput from "@/components/ChatInput";
-import { Settings, Trash2, Apple, LayoutGrid } from "lucide-react";
+import { Settings, Trash2, Apple, LayoutGrid, MessageSquare } from "lucide-react";
 import { NavbarDemo } from "@/components/ui/code-demo";
 import { VercelV0Chat } from "@/components/ui/v0-ai-chat";
 import ICloudLayout from "@/components/icloud/ICloudLayout";
+import Widget from "@/components/icloud/Widget";
 
 const ChatContainer = () => {
   const { messages, clearMessages, selectedProvider, availableProviders, setSelectedProvider } = useChat();
