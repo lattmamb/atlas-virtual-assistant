@@ -8,7 +8,6 @@ export interface ApiKey {
   created_at?: string;
   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?: string;
   "hugging face"?: string;
-  // Add these missing properties
   anthropic?: string;
   google?: string;
   cohere?: string;
