@@ -5,14 +5,35 @@
     position: relative !important;
     transform: none !important;
     margin-bottom: 1rem;
+    width: 100% !important;
+    max-width: 100%;
   }
   
   .icloud-widget-header {
     @apply p-2;
   }
+  
+  /* Improved widget placement for mobile */
+  .widget-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+  }
+  
+  /* Adjust button sizing for mobile */
+  .mode-switcher-buttons {
+    @apply bottom-2 right-2 flex-col gap-1;
+  }
+  
+  /* Improve scrolling on mobile */
+  .widget-scroll-container {
+    -webkit-overflow-scrolling: touch;
+    max-height: 70vh;
+  }
 }
 
-/* Support for touch controls on mobile */
+/* Better support for touch controls on mobile */
 @media (pointer: coarse) {
   button, a, .clickable {
     @apply min-h-[44px] min-w-[44px];
@@ -20,5 +41,23 @@
   
   input, select, textarea {
     @apply text-base;
+  }
+  
+  /* Improve touch targets */
+  .icloud-widget-header {
+    @apply min-h-[48px];
+  }
+  
+  /* Add pull-to-refresh feeling */
+  .overscroll-bounce {
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Handle different screen heights */
+@media (max-height: 700px) {
+  .icloud-widget {
+    max-height: 80vh !important;
   }
 }

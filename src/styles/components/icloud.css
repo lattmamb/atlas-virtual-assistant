@@ -21,6 +21,12 @@
   @apply bg-transparent;
 }
 
+/* Touch-friendly controls */
+.touch-control {
+  @apply p-3;
+  touch-action: manipulation;
+}
+
 /* Glass morphism effect for dark theme */
 .glass-dark {
   @apply backdrop-blur-xl bg-slate-900/40 border border-slate-800/50 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.5)];
@@ -40,4 +46,10 @@
 .dark-apple-card {
   @apply bg-slate-800/90 backdrop-blur-lg border border-slate-700 shadow-lg;
   border-radius: 12px;
+}
+
+/* Mobile optimized widget */
+.mobile-widget {
+  @apply w-full relative my-2 max-w-full;
+  transform: none !important;
 }

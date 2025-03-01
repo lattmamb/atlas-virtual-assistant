@@ -161,14 +161,15 @@ const Widget: React.FC<WidgetProps> = ({
     <div
       ref={widgetRef}
       className={cn(
-        "icloud-widget absolute",
+        "icloud-widget",
+        isMobile && "mobile-widget",
         isDragging && "cursor-grabbing opacity-80 z-50",
         isDarkMode ? "bg-slate-800/90 backdrop-blur-sm border-slate-700" : "bg-white/90 backdrop-blur-sm border-gray-200/50",
         className
       )}
       style={{
-        transform: `translate(${position.x}px, ${position.y}px)`,
-        width: size.width,
+        transform: isMobile ? "none" : `translate(${position.x}px, ${position.y}px)`,
+        width: isMobile ? "100%" : size.width,
         height: size.height,
       }}
       onMouseDown={handleMouseDown}
@@ -188,7 +189,7 @@ const Widget: React.FC<WidgetProps> = ({
           {headerControls}
         </div>
       </div>
-      <div className="icloud-widget-body overflow-auto" style={{ maxHeight: `calc(${size.height} - 54px)` }}>
+      <div className="icloud-widget-body overflow-auto overscroll-bounce widget-scroll-container" style={{ maxHeight: `calc(${size.height} - 54px)` }}>
         {children}
       </div>
       

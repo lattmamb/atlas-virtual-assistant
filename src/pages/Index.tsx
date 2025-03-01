@@ -1,3 +1,4 @@
+
 import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useChat } from "@/context/ChatContext";
@@ -41,7 +42,7 @@ const ChatContainer = () => {
           <>
             <button 
               onClick={() => setMenuOpen(!menuOpen)}
-              className="p-2 rounded-full hover:bg-secondary transition-colors"
+              className="p-2 rounded-full hover:bg-secondary transition-colors touch-control"
               aria-label={menuOpen ? "Close menu" : "Open menu"}
             >
               {menuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -55,7 +56,7 @@ const ChatContainer = () => {
                     <select
                       value={selectedProvider || ""}
                       onChange={(e) => setSelectedProvider(e.target.value as any)}
-                      className="w-full bg-secondary text-sm rounded-full px-4 py-1.5 border-none focus:ring-2 focus:ring-primary/20 outline-none"
+                      className="w-full bg-secondary text-sm rounded-full px-4 py-2.5 border-none focus:ring-2 focus:ring-primary/20 outline-none"
                     >
                       <option value="" disabled>Select Provider</option>
                       {availableProviders.map((provider) => (
@@ -68,7 +69,7 @@ const ChatContainer = () => {
                   <div className="flex gap-2">
                     <button
                       onClick={clearMessages}
-                      className="flex-1 py-2 px-3 rounded-lg hover:bg-secondary transition-colors text-slate-600 flex items-center justify-center gap-2"
+                      className="flex-1 py-2 px-3 rounded-lg hover:bg-secondary transition-colors text-slate-600 flex items-center justify-center gap-2 touch-control"
                       aria-label="Clear chat"
                     >
                       <Trash2 size={16} />
@@ -79,7 +80,7 @@ const ChatContainer = () => {
                         navigate("/settings");
                         setMenuOpen(false);
                       }}
-                      className="flex-1 py-2 px-3 rounded-lg hover:bg-secondary transition-colors text-slate-600 flex items-center justify-center gap-2"
+                      className="flex-1 py-2 px-3 rounded-lg hover:bg-secondary transition-colors text-slate-600 flex items-center justify-center gap-2 touch-control"
                       aria-label="Settings"
                     >
                       <Settings size={16} />
@@ -127,7 +128,7 @@ const ChatContainer = () => {
         )}
       </header>
 
-      <div className="flex-1 overflow-y-auto px-3 py-4 md:px-6 md:py-6 bg-gradient-to-br from-slate-50 to-white">
+      <div className="flex-1 overflow-y-auto overscroll-bounce px-3 py-4 md:px-6 md:py-6 bg-gradient-to-br from-slate-50 to-white">
         <div className="max-w-4xl mx-auto">
           {messages.map((message) => (
             <ChatMessage key={message.id} message={message} />
@@ -157,7 +158,7 @@ const WidgetChatContainer = () => {
   
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 max-h-[300px]">
+      <div className="flex-1 overflow-y-auto overscroll-bounce p-4 space-y-4 max-h-[300px]">
         {messages.length > 0 ? (
           messages.slice(-3).map((message) => (
             <div key={message.id} className="flex flex-col">
@@ -194,7 +195,7 @@ const Index = () => {
     <div className="h-screen w-full overflow-hidden">
       {displayMode === 'icloud' ? (
         <ICloudLayout>
-          <div className="flex flex-wrap gap-4 p-4">
+          <div className="flex flex-wrap gap-4 p-4 widget-container">
             <Widget
               title="Atlas Assistant"
               icon={<MessageSquare className="h-5 w-5" />}
@@ -216,7 +217,7 @@ const Index = () => {
                 </div>
                 <button 
                   onClick={() => navigate("/workflows")}
-                  className="px-4 py-2 bg-primary text-white rounded-full text-sm"
+                  className="px-4 py-2 bg-primary text-white rounded-full text-sm touch-control"
                 >
                   Open Workflows
                 </button>
@@ -234,23 +235,23 @@ const Index = () => {
         </div>
       )}
       
-      <div className={`fixed ${isMobile ? 'bottom-2 right-2' : 'bottom-4 right-4'} flex ${isMobile ? 'flex-col gap-1' : 'gap-2'}`}>
+      <div className={`fixed ${isMobile ? 'bottom-2 right-2' : 'bottom-4 right-4'} flex ${isMobile ? 'flex-col gap-1 mode-switcher-buttons' : 'gap-2'}`}>
         <button 
           onClick={() => setDisplayMode('atlas')}
-          className={`${displayMode === 'atlas' ? 'bg-primary' : 'bg-secondary'} text-white ${isMobile ? 'px-3 py-1.5 text-xs' : 'px-4 py-2'} rounded-md shadow-md flex items-center gap-1`}
+          className={`${displayMode === 'atlas' ? 'bg-primary' : 'bg-secondary'} text-white ${isMobile ? 'px-3 py-1.5 text-xs touch-control' : 'px-4 py-2'} rounded-md shadow-md flex items-center gap-1`}
         >
           <Apple size={16} /> {!isMobile && "Atlas"}
         </button>
         <button 
           onClick={() => setDisplayMode('vercel')}
-          className={`${displayMode === 'vercel' ? 'bg-primary' : 'bg-secondary'} text-white ${isMobile ? 'px-3 py-1.5 text-xs' : 'px-4 py-2'} rounded-md shadow-md flex items-center gap-1`}
+          className={`${displayMode === 'vercel' ? 'bg-primary' : 'bg-secondary'} text-white ${isMobile ? 'px-3 py-1.5 text-xs touch-control' : 'px-4 py-2'} rounded-md shadow-md flex items-center gap-1`}
         >
           {!isMobile && "Vercel UI"}
           <span className="font-bold">V0</span>
         </button>
         <button 
           onClick={() => setDisplayMode('icloud')}
-          className={`${displayMode === 'icloud' ? 'bg-primary' : 'bg-secondary'} text-white ${isMobile ? 'px-3 py-1.5 text-xs' : 'px-4 py-2'} rounded-md shadow-md flex items-center gap-1`}
+          className={`${displayMode === 'icloud' ? 'bg-primary' : 'bg-secondary'} text-white ${isMobile ? 'px-3 py-1.5 text-xs touch-control' : 'px-4 py-2'} rounded-md shadow-md flex items-center gap-1`}
         >
           <LayoutGrid size={16} /> {!isMobile && "iCloud"}
         </button>
