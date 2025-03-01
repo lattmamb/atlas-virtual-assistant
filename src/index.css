@@ -101,7 +101,7 @@
 }
 
 .icloud-widget {
-  @apply bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200/50 overflow-hidden;
+  @apply rounded-xl shadow-lg border overflow-hidden backdrop-blur-sm;
   width: 100%;
   transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
 }
@@ -111,7 +111,7 @@
 }
 
 .icloud-widget-header {
-  @apply flex items-center justify-between p-3 bg-gray-50/80 border-b border-gray-200/50 text-sm font-medium;
+  @apply flex items-center justify-between p-3 border-b text-sm font-medium;
 }
 
 .icloud-widget-title {
@@ -120,6 +120,15 @@
 
 .icloud-widget-body {
   @apply bg-transparent;
+}
+
+/* Glass morphism effect for dark theme */
+.glass-dark {
+  @apply backdrop-blur-xl bg-slate-900/40 border border-slate-800/50 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.5)];
+}
+
+.glass-light {
+  @apply backdrop-blur-xl bg-white/40 border border-white/20 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.1)];
 }
 
 /* Mobile-specific styles */
@@ -139,6 +148,12 @@
 .apple-card {
   border-radius: 12px;
   transition: all 0.3s ease;
+}
+
+/* Dark mode apple card */
+.dark-apple-card {
+  @apply bg-slate-800/90 backdrop-blur-lg border border-slate-700 shadow-lg;
+  border-radius: 12px;
 }
 
 /* Loading dots animation */

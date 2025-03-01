@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from 'react';
 import { Minus } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -11,6 +12,7 @@ interface WidgetProps {
   minWidth?: string;
   minHeight?: string;
   headerControls?: React.ReactNode;
+  isDarkMode?: boolean;
 }
 
 const Widget: React.FC<WidgetProps> = ({ 
@@ -20,7 +22,8 @@ const Widget: React.FC<WidgetProps> = ({
   children,
   minWidth = '320px',
   minHeight = '280px',
-  headerControls
+  headerControls,
+  isDarkMode = false
 }) => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
@@ -160,6 +163,7 @@ const Widget: React.FC<WidgetProps> = ({
       className={cn(
         "icloud-widget absolute",
         isDragging && "cursor-grabbing opacity-80 z-50",
+        isDarkMode ? "bg-slate-800/90 backdrop-blur-sm border-slate-700" : "bg-white/90 backdrop-blur-sm border-gray-200/50",
         className
       )}
       style={{
@@ -170,11 +174,14 @@ const Widget: React.FC<WidgetProps> = ({
       onMouseDown={handleMouseDown}
       onTouchStart={handleTouchStart}
     >
-      <div className="icloud-widget-header cursor-move">
+      <div className={cn(
+        "icloud-widget-header cursor-move",
+        isDarkMode ? "bg-slate-800/80 border-slate-700" : "bg-gray-50/80 border-gray-200/50"
+      )}>
         <div className="icloud-widget-title">
           <div className="flex items-center gap-2">
-            {icon && <div className="text-primary">{icon}</div>}
-            <span>{title}</span>
+            {icon && <div className={cn("text-primary", isDarkMode && "text-blue-400")}>{icon}</div>}
+            <span className={isDarkMode ? "text-white" : "text-gray-800"}>{title}</span>
           </div>
         </div>
         <div className="flex items-center">

@@ -1,3 +1,4 @@
+
 import { useState, useRef } from "react";
 import { useChat } from "@/context/ChatContext";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -51,6 +52,7 @@ const AtlasChatBot = () => {
       minWidth={isMobile ? "280px" : "340px"}
       minHeight={isMinimized ? "52px" : isMobile ? "400px" : "480px"}
       className="z-30"
+      isDarkMode={true}
     >
       {!isMinimized && (
         <div className="flex flex-col h-full">
