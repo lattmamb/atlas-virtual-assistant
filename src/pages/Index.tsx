@@ -1,8 +1,7 @@
-
 import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useChat } from "@/context/ChatContext";
-import { useMobile } from "@/hooks/use-mobile";
+import { useIsMobile } from "@/hooks/use-mobile";
 import ChatMessage from "@/components/ChatMessage";
 import ChatInput from "@/components/ChatInput";
 import { Settings, Trash2, Apple, LayoutGrid, MessageSquare, Workflow, Menu, X } from "lucide-react";
@@ -16,7 +15,7 @@ const ChatContainer = () => {
   const { messages, clearMessages, selectedProvider, availableProviders, setSelectedProvider } = useChat();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  const isMobile = useMobile();
+  const isMobile = useIsMobile();
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -146,7 +145,6 @@ const ChatContainer = () => {
   );
 };
 
-// Mini chat container for the iCloud widget
 const WidgetChatContainer = () => {
   const { messages } = useChat();
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -190,7 +188,7 @@ const WidgetChatContainer = () => {
 const Index = () => {
   const [displayMode, setDisplayMode] = useState<'atlas' | 'vercel' | 'icloud'>('icloud');
   const navigate = useNavigate();
-  const isMobile = useMobile();
+  const isMobile = useIsMobile();
 
   return (
     <div className="h-screen w-full overflow-hidden">

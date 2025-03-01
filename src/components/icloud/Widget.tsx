@@ -1,8 +1,7 @@
-
 import React, { useState, useRef } from 'react';
 import { Minus } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useMobile } from '@/hooks/use-mobile';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface WidgetProps {
   title: string;
@@ -29,7 +28,7 @@ const Widget: React.FC<WidgetProps> = ({
   const widgetRef = useRef<HTMLDivElement>(null);
   const dragStartRef = useRef({ x: 0, y: 0 });
   const resizeStartRef = useRef({ width: 0, height: 0 });
-  const isMobile = useMobile();
+  const isMobile = useIsMobile();
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     if ((e.target as HTMLElement).closest('.resize-handle')) return;

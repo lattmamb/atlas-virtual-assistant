@@ -1,7 +1,6 @@
-
 import { useState, useRef } from "react";
 import { useChat } from "@/context/ChatContext";
-import { useMobile } from "@/hooks/use-mobile";
+import { useIsMobile } from "@/hooks/use-mobile";
 import {
   Tabs, 
   TabsContent, 
@@ -21,7 +20,7 @@ const AtlasChatBot = () => {
   const [activeTab, setActiveTab] = useState("chat");
   const [activeTool, setActiveTool] = useState<string | null>(null);
   const widgetRef = useRef<HTMLDivElement>(null);
-  const isMobile = useMobile();
+  const isMobile = useIsMobile();
 
   const { 
     messages, 

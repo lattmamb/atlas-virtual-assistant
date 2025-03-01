@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
-import { useMobile } from '@/hooks/use-mobile';
+import { useIsMobile } from '@/hooks/use-mobile';
 import Widget from './Widget';
 import { Image, Mail, Calendar, FileText, Settings, MessageSquare } from 'lucide-react';
 import AtlasChatBot from '@/components/AtlasChatBot';
@@ -13,7 +12,7 @@ interface ICloudLayoutProps {
 
 const ICloudLayout: React.FC<ICloudLayoutProps> = ({ children }) => {
   const [background, setBackground] = useState<string>('bg-gradient-to-r from-blue-50 to-blue-100');
-  const isMobile = useMobile();
+  const isMobile = useIsMobile();
   
   const backgroundOptions = [
     'bg-gradient-to-r from-blue-50 to-blue-100',
