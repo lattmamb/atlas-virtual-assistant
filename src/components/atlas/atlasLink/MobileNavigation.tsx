@@ -33,31 +33,31 @@ const MobileNavigation: React.FC = () => {
         variant="ghost" 
         size="icon" 
         className="tap-highlight no-select"
-        onClick={() => setActiveTab('dashboard')}
+        onClick={() => setActiveTab('knowledge')}
         aria-label="Knowledge Base"
-        aria-current={activeTab === 'dashboard' ? 'page' : undefined}
+        aria-current={activeTab === 'knowledge' ? 'page' : undefined}
       >
-        <Book size={24} className={activeTab === 'dashboard' ? "text-primary" : ""} />
+        <Book size={24} className={activeTab === 'knowledge' ? "text-primary" : ""} />
       </Button>
       <Button 
         variant="ghost" 
         size="icon" 
         className="tap-highlight no-select"
-        onClick={() => setActiveTab('dashboard')}
+        onClick={() => setActiveTab('store')}
         aria-label="GPT Store"
-        aria-current={activeTab === 'dashboard' ? 'page' : undefined}
+        aria-current={activeTab === 'store' ? 'page' : undefined}
       >
-        <Store size={24} className={activeTab === 'dashboard' ? "text-primary" : ""} />
+        <Store size={24} className={activeTab === 'store' ? "text-primary" : ""} />
       </Button>
       <Button 
         variant="ghost" 
         size="icon" 
         className="tap-highlight no-select"
-        onClick={() => setActiveTab('dashboard')}
+        onClick={() => setActiveTab('api')}
         aria-label="API Integrations"
-        aria-current={activeTab === 'dashboard' ? 'page' : undefined}
+        aria-current={activeTab === 'api' ? 'page' : undefined}
       >
-        <Key size={24} className={activeTab === 'dashboard' ? "text-primary" : ""} />
+        <Key size={24} className={activeTab === 'api' ? "text-primary" : ""} />
       </Button>
       <Button 
         variant="ghost" 

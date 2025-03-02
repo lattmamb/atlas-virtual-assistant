@@ -130,7 +130,7 @@ export const AtlasLinkProvider: React.FC<{ children: ReactNode }> = ({ children 
     setTimeout(() => {
       const aiResponse = !apiKeys.openai
         ? 'Please provide an OpenAI API key in the sidebar first.'
-        : `AI: You said "${messageToSend}". This is a placeholder response.`;
+        : `You said "${messageToSend}". This is a placeholder response. I can help you with car sales at Trinity Dodge in Taylorville, Illinois. How can I assist you today?`;
       
       addMessage(aiResponse, 'assistant');
     }, 600);

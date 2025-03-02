@@ -1,70 +1,63 @@
 
-import React, { useState } from 'react';
-import { Card, CardContent } from "@/components/ui/card";
-import { ChatInput } from "@/components/ui/chat-input";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import React, { useRef, useEffect } from 'react';
 import { useAtlasLink } from './AtlasLinkContext';
-import { RetroGrid } from '@/components/ui/retro-grid';
+import { ChatBubble, ChatBubbleAvatar, ChatBubbleMessage } from '@/components/ui/chat-bubble';
+import { ChatInput } from '@/components/ui/chat-input';
+import { Button } from '@/components/ui/button';
+import { Send } from 'lucide-react';
 
 const ChatTab: React.FC = () => {
-  const { celestialMode, messages, inputMessage, setInputMessage, handleSendMessage } = useAtlasLink();
-  const [darkChatTheme, setDarkChatTheme] = useState(true);
+  const { messages, inputMessage, setInputMessage, handleSendMessage } = useAtlasLink();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to bottom when new messages appear
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
 
   return (
-    <div className="p-4 h-full relative">
-      {/* Add RetroGrid with dark theme if not in celestial mode */}
-      {!celestialMode && darkChatTheme && (
-        <RetroGrid className="opacity-30" />
-      )}
+    <div className="flex flex-col h-full p-4 overflow-hidden">
+      <div className="flex-1 overflow-y-auto pb-4 space-y-4 pr-2">
+        {messages.map((message) => (
+          <ChatBubble 
+            key={message.id} 
+            variant={message.role === 'user' ? 'sent' : 'received'}
+          >
+            {message.role === 'assistant' && (
+              <ChatBubbleAvatar fallback="AI" />
+            )}
+            <ChatBubbleMessage variant={message.role === 'user' ? 'sent' : 'received'}>
+              {message.content}
+            </ChatBubbleMessage>
+          </ChatBubble>
+        ))}
+        <div ref={messagesEndRef} />
+      </div>
       
-      <Card className={cn(
-        "h-full flex flex-col relative z-10",
-        celestialMode 
-          ? "dark-apple-card" 
-          : darkChatTheme 
-            ? "dark-chat-card" 
-            : "apple-card"
-      )}>
-        <CardContent className="flex-1 p-4 flex flex-col">
-          <div className="chat-messages flex-1 overflow-y-auto mb-4">
-            {messages.map(message => (
-              <div key={message.id} className={cn(
-                "mb-4 p-3 rounded-2xl max-w-[80%]",
-                message.role === 'user' 
-                  ? "ml-auto bg-primary text-primary-foreground" 
-                  : darkChatTheme && !celestialMode
-                    ? "mr-auto bg-gray-800 text-gray-100" 
-                    : "mr-auto bg-gray-100 dark:bg-gray-800"
-              )}>
-                {message.content}
-              </div>
-            ))}
-          </div>
-          <div className="flex gap-2">
-            <ChatInput
-              value={inputMessage}
-              onChange={e => setInputMessage(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && handleSendMessage()}
-              placeholder="Ask me anything..."
-              className={cn("flex-1", darkChatTheme && !celestialMode ? "bg-gray-900 text-white border-gray-700" : "")}
-            />
-            <Button onClick={handleSendMessage} className={darkChatTheme && !celestialMode ? "dark-apple-button" : "apple-button"}>Send</Button>
-          </div>
-        </CardContent>
-      </Card>
-      
-      {/* Theme toggle button */}
-      {!celestialMode && (
+      <div className="flex items-center space-x-2 pt-4 border-t">
+        <ChatInput
+          value={inputMessage}
+          onChange={(e) => setInputMessage(e.target.value)}
+          onKeyDown={handleKeyPress}
+          placeholder="Message Atlas AI..."
+          className="flex-1"
+        />
         <Button 
-          variant="ghost" 
-          size="sm" 
-          onClick={() => setDarkChatTheme(!darkChatTheme)} 
-          className="absolute bottom-6 right-6 z-20 bg-gray-800 text-white hover:bg-gray-700"
+          onClick={handleSendMessage} 
+          size="icon"
+          disabled={!inputMessage.trim()}
+          aria-label="Send message"
         >
-          {darkChatTheme ? "Light Theme" : "Dark Theme"}
+          <Send className="h-4 w-4" />
         </Button>
-      )}
+      </div>
     </div>
   );
 };
