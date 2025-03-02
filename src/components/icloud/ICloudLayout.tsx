@@ -25,9 +25,8 @@ const ICloudLayout: React.FC<ICloudLayoutProps> = ({ children, activePage }) => 
     if (activePage) return activePage;
     
     const path = location.pathname;
-    if (path.startsWith('/chat')) return 'chat';
+    if (path.startsWith('/atlas')) return 'atlas';
     if (path.startsWith('/workflows')) return 'workflows';
-    if (path.startsWith('/atlas-link')) return 'atlas-link';
     if (path.startsWith('/settings')) return 'settings';
     return 'home';
   };

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -40,7 +41,8 @@ import {
   Phone,
   Headphones,
   BarChart2,
-  Key
+  Key,
+  Link2
 } from 'lucide-react';
 import { useTheme } from '@/context/ThemeContext';
 import { cn } from '@/lib/utils';
@@ -68,21 +70,30 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ activePage }) => {
       icon: <Home className="h-4.5 w-4.5" />
     },
     {
-      name: 'Chat',
-      path: '/chat',
-      icon: <MessageSquare className="h-4.5 w-4.5" />
+      name: 'Atlas',
+      path: '/atlas',
+      icon: <Sparkles className="h-4.5 w-4.5" />
     },
     {
       name: 'Workflows',
       path: '/workflows',
       icon: <Workflow className="h-4.5 w-4.5" />
+    }
+  ];
+
+  // Atlas submenu items - shown when Atlas is active
+  const atlasNavItems = activePage === 'atlas' ? [
+    {
+      name: 'Chat',
+      path: '/atlas',
+      icon: <MessageSquare className="h-4.5 w-4.5" />
     },
     {
       name: 'Atlas Link',
-      path: '/atlas-link',
-      icon: <Shield className="h-4.5 w-4.5" />
+      path: '/atlas',
+      icon: <Link2 className="h-4.5 w-4.5" />
     }
-  ];
+  ] : [];
 
   // Trinity Dodge navigation items
   const trinityNavItems = [
@@ -151,7 +162,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ activePage }) => {
                     <Link to={item.path} className={isActive(item.path) ? 'font-medium' : ''}>
                       {item.icon}
                       <span>{item.name}</span>
-                      {item.name === 'Chat' && (
+                      {item.name === 'Atlas' && (
                         <span className="ml-auto flex h-6 w-6 items-center justify-center rounded-full bg-blue-600/10 text-blue-600 text-xs">
                           1
                         </span>
@@ -163,6 +174,30 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ activePage }) => {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        
+        {/* Atlas Submenu - only shown when Atlas is active */}
+        {activePage === 'atlas' && (
+          <>
+            <SidebarSeparator />
+            <SidebarGroup>
+              <SidebarGroupLabel>Atlas Features</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {atlasNavItems.map((item) => (
+                    <SidebarMenuItem key={item.name}>
+                      <SidebarMenuButton>
+                        <div className="flex items-center">
+                          {item.icon}
+                          <span>{item.name}</span>
+                        </div>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </>
+        )}
         
         <SidebarSeparator />
         

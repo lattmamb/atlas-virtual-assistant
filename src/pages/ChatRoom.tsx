@@ -1,12 +1,8 @@
 
 import React, { useState, useEffect } from "react";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import AppSidebar from "@/components/AppSidebar";
 import ChatMessages from "@/components/chat/ChatMessages";
 import ChatInputForm from "@/components/chat/ChatInputForm";
 import { useChat } from "@/context/ChatContext";
-import AppleNavBar from "@/components/AppleNavBar";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { useTheme } from "@/context/ThemeContext";
 import { cn } from "@/lib/utils";
 import { GridPattern } from "@/components/ui/grid-pattern";
@@ -53,8 +49,7 @@ const ChatRoom = () => {
   } = useChat();
   
   const { currentTheme, isDarkMode } = useTheme();
-  const isMobile = useIsMobile();
-  const [showTimeline, setShowTimeline] = useState(!isMobile);
+  const [showTimeline, setShowTimeline] = useState(false);
   const [starredMessage, setStarredMessage] = useState<string | null>(null);
   const [typingStatus, setTypingStatus] = useState<string>("Ready");
   const { ref: scrollRef, scrollProgress } = useScrollAnimation();
@@ -141,183 +136,173 @@ const ChatRoom = () => {
   ];
 
   return (
-    <SidebarProvider defaultOpen={!isMobile}>
-      <div className={cn(
-        "flex h-screen w-full overflow-hidden",
-        `theme-${currentTheme}`
-      )}>
-        <div 
-          className="fixed inset-0 z-0 transition-all duration-700"
-          style={{ background: `var(--background-gradient)` }}
-        >
-          <GridPattern 
-            width={40} 
-            height={40} 
-            className={cn(
-              "absolute inset-0 fill-white/[0.01] stroke-white/[0.05]",
-              "[mask-image:radial-gradient(1000px_circle_at_center,white,transparent)]"
-            )}
-            strokeDasharray="1 3"
-          />
-          
-          {/* Apply background effects */}
-          <ChatBackgroundEffect isDarkMode={isDarkMode} />
-        </div>
+    <div className="flex flex-col h-full">
+      <div 
+        className="fixed inset-0 z-0 transition-all duration-700"
+        style={{ background: `var(--background-gradient)` }}
+      >
+        <GridPattern 
+          width={40} 
+          height={40} 
+          className={cn(
+            "absolute inset-0 fill-white/[0.01] stroke-white/[0.05]",
+            "[mask-image:radial-gradient(1000px_circle_at_center,white,transparent)]"
+          )}
+          strokeDasharray="1 3"
+        />
         
-        <AppSidebar activePage="chat" />
-        <main className="flex-1 flex flex-col overflow-hidden">
-          <AppleNavBar showAppGridButton={false} />
-          
-          {/* Apply Lamp effect to the header */}
-          <LampEffect subtle className="w-full pt-14">
-            <div className="max-w-4xl mx-auto w-full px-4 py-2 flex items-center justify-between">
-              <div className="text-sm text-muted-foreground flex items-center gap-2">
-                <div className="flex items-center gap-1">
-                  <Clock className="h-3 w-3" />
-                  <span className="text-xs opacity-70">
-                    {new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                  </span>
-                </div>
-                <div className="h-4 border-r border-gray-300 dark:border-gray-700" />
-                <GooeyText text={typingStatus} duration={0.5} className="italic" />
-                {isLoading && (
-                  <span className="inline-block animate-pulse ml-1">
-                    <Sparkles className="h-3 w-3 text-amber-400" />
-                  </span>
-                )}
-              </div>
-              
-              <div className="flex items-center gap-2">
-                <RainbowButton
-                  size="sm" 
-                  subtle 
-                  variant="outline"
-                  onClick={() => setShowTimeline(!showTimeline)}
-                >
-                  {showTimeline ? <MessageSquarePlus className="h-4 w-4 mr-1" /> : <PanelRightOpen className="h-4 w-4 mr-1" />}
-                  {showTimeline ? "Focus Chat" : "Show Timeline"}
-                </RainbowButton>
-              </div>
+        {/* Apply background effects */}
+        <ChatBackgroundEffect isDarkMode={isDarkMode} />
+      </div>
+      
+      {/* Apply Lamp effect to the header */}
+      <LampEffect subtle className="w-full">
+        <div className="max-w-4xl mx-auto w-full px-4 py-2 flex items-center justify-between">
+          <div className="text-sm text-muted-foreground flex items-center gap-2">
+            <div className="flex items-center gap-1">
+              <Clock className="h-3 w-3" />
+              <span className="text-xs opacity-70">
+                {new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+              </span>
             </div>
-          </LampEffect>
+            <div className="h-4 border-r border-gray-300 dark:border-gray-700" />
+            <GooeyText text={typingStatus} duration={0.5} className="italic" />
+            {isLoading && (
+              <span className="inline-block animate-pulse ml-1">
+                <Sparkles className="h-3 w-3 text-amber-400" />
+              </span>
+            )}
+          </div>
           
-          <div className="flex-1 flex h-full max-h-[calc(100vh-3rem)] overflow-hidden p-4 animate-fade-in">
-            <motion.div 
-              className="flex-1 flex flex-col overflow-hidden border rounded-lg hybrid"
-              style={{ borderColor: 'var(--widget-border)' }}
-              ref={scrollRef}
-              animate={{
-                scale: 1 - (scrollProgress * 0.03),
-                y: scrollProgress * 10,
-              }}
-              transition={{ duration: 0.1, ease: "easeOut" }}
+          <div className="flex items-center gap-2">
+            <RainbowButton
+              size="sm" 
+              subtle 
+              variant="outline"
+              onClick={() => setShowTimeline(!showTimeline)}
             >
-              <div className="flex-1 overflow-y-auto relative">
-                <ChatMessages 
-                  messages={messages} 
-                  customRenderer={renderMessage} 
-                />
-                
-                {messages.length === 0 && (
-                  <div className="absolute inset-0 flex items-center justify-center flex-col gap-3 text-center p-8">
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.2 }}
-                    >
-                      <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                        <Sparkles className="h-6 w-6 text-primary" />
-                      </div>
-                      <h3 className="text-lg font-medium">Welcome to Atlas Assistant</h3>
-                      <p className="text-sm text-muted-foreground max-w-sm mt-2">
-                        Ask me about Trinity Dodge in Taylorville, Illinois, or chat about anything you'd like to know.
-                      </p>
-                    </motion.div>
-                    
-                    <motion.div 
-                      className="mt-6 flex flex-wrap gap-2 justify-center"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.4 }}
-                    >
-                      {[
-                        "Tell me about the 2025 Dodge Ram",
-                        "What deals do you have?",
-                        "Schedule a test drive",
-                        "Show me your inventory"
-                      ].map((suggestion, i) => (
-                        <Button 
-                          key={i} 
-                          variant="outline" 
-                          size="sm" 
-                          className="text-sm"
-                          onClick={() => sendMessage(suggestion)}
-                        >
-                          {suggestion}
-                        </Button>
-                      ))}
-                    </motion.div>
+              {showTimeline ? <MessageSquarePlus className="h-4 w-4 mr-1" /> : <PanelRightOpen className="h-4 w-4 mr-1" />}
+              {showTimeline ? "Focus Chat" : "Show Timeline"}
+            </RainbowButton>
+          </div>
+        </div>
+      </LampEffect>
+      
+      <div className="flex-1 flex h-full overflow-hidden p-4 animate-fade-in">
+        <motion.div 
+          className="flex-1 flex flex-col overflow-hidden border rounded-lg hybrid"
+          style={{ borderColor: 'var(--widget-border)' }}
+          ref={scrollRef}
+          animate={{
+            scale: 1 - (scrollProgress * 0.03),
+            y: scrollProgress * 10,
+          }}
+          transition={{ duration: 0.1, ease: "easeOut" }}
+        >
+          <div className="flex-1 overflow-y-auto relative">
+            <ChatMessages 
+              messages={messages} 
+              customRenderer={renderMessage} 
+            />
+            
+            {messages.length === 0 && (
+              <div className="absolute inset-0 flex items-center justify-center flex-col gap-3 text-center p-8">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                    <Sparkles className="h-6 w-6 text-primary" />
                   </div>
-                )}
+                  <h3 className="text-lg font-medium">Welcome to Atlas Assistant</h3>
+                  <p className="text-sm text-muted-foreground max-w-sm mt-2">
+                    Ask me about Trinity Dodge in Taylorville, Illinois, or chat about anything you'd like to know.
+                  </p>
+                </motion.div>
+                
+                <motion.div 
+                  className="mt-6 flex flex-wrap gap-2 justify-center"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                >
+                  {[
+                    "Tell me about the 2025 Dodge Ram",
+                    "What deals do you have?",
+                    "Schedule a test drive",
+                    "Show me your inventory"
+                  ].map((suggestion, i) => (
+                    <Button 
+                      key={i} 
+                      variant="outline" 
+                      size="sm" 
+                      className="text-sm"
+                      onClick={() => sendMessage(suggestion)}
+                    >
+                      {suggestion}
+                    </Button>
+                  ))}
+                </motion.div>
+              </div>
+            )}
+          </div>
+          
+          <div className="p-4 border-t" style={{ borderColor: 'var(--widget-border)' }}>
+            <ChatInputForm 
+              isLoading={isLoading}
+              selectedProvider={selectedProvider}
+              sendMessage={sendMessage}
+              availableProviders={availableProviders}
+            />
+          </div>
+        </motion.div>
+        
+        {/* Timeline panel */}
+        <AnimatePresence>
+          {showTimeline && (
+            <motion.div 
+              className="w-72 ml-4 overflow-hidden border rounded-lg hybrid hidden md:flex md:flex-col"
+              style={{ borderColor: 'var(--widget-border)' }}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="p-3 border-b flex items-center justify-between" style={{ borderColor: 'var(--widget-border)' }}>
+                <h3 className="text-sm font-medium flex items-center gap-1.5">
+                  <Info className="h-3.5 w-3.5" />
+                  Conversation Timeline
+                </h3>
+                <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => setShowTimeline(false)}>
+                  <PanelRightOpen className="h-3.5 w-3.5" />
+                </Button>
               </div>
               
-              <div className="p-4 border-t" style={{ borderColor: 'var(--widget-border)' }}>
-                <ChatInputForm 
-                  isLoading={isLoading}
-                  selectedProvider={selectedProvider}
-                  sendMessage={sendMessage}
-                  availableProviders={availableProviders}
-                />
+              <div className="flex-1 overflow-y-auto p-3">
+                <ChatTimeline items={timelineItems} />
+              </div>
+              
+              <div className="p-3 border-t" style={{ borderColor: 'var(--widget-border)' }}>
+                <div className="grid grid-cols-4 gap-1">
+                  {messageActions.map((action, i) => (
+                    <Button 
+                      key={i} 
+                      variant="ghost" 
+                      size="icon" 
+                      className="h-8 w-full flex flex-col items-center justify-center gap-1"
+                      title={action.label}
+                    >
+                      {action.icon}
+                    </Button>
+                  ))}
+                </div>
               </div>
             </motion.div>
-            
-            {/* Timeline panel */}
-            <AnimatePresence>
-              {showTimeline && (
-                <motion.div 
-                  className="w-72 ml-4 overflow-hidden border rounded-lg hybrid hidden md:flex md:flex-col"
-                  style={{ borderColor: 'var(--widget-border)' }}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <div className="p-3 border-b flex items-center justify-between" style={{ borderColor: 'var(--widget-border)' }}>
-                    <h3 className="text-sm font-medium flex items-center gap-1.5">
-                      <Info className="h-3.5 w-3.5" />
-                      Conversation Timeline
-                    </h3>
-                    <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => setShowTimeline(false)}>
-                      <PanelRightOpen className="h-3.5 w-3.5" />
-                    </Button>
-                  </div>
-                  
-                  <div className="flex-1 overflow-y-auto p-3">
-                    <ChatTimeline items={timelineItems} />
-                  </div>
-                  
-                  <div className="p-3 border-t" style={{ borderColor: 'var(--widget-border)' }}>
-                    <div className="grid grid-cols-4 gap-1">
-                      {messageActions.map((action, i) => (
-                        <Button 
-                          key={i} 
-                          variant="ghost" 
-                          size="icon" 
-                          className="h-8 w-full flex flex-col items-center justify-center gap-1"
-                          title={action.label}
-                        >
-                          {action.icon}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </main>
+          )}
+        </AnimatePresence>
       </div>
-    </SidebarProvider>
+    </div>
   );
 };
 
