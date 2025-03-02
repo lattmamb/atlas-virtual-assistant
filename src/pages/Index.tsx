@@ -51,6 +51,12 @@ export default function Index() {
                 Workflows
               </Button>
             </Link>
+            <Link to="/chat">
+              <Button variant="ghost" size="sm" className="flex gap-2 items-center text-gray-300 hover:text-white hover:bg-white/10">
+                <MessageSquare size={16} />
+                Chat
+              </Button>
+            </Link>
             <Link to="/settings">
               <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white hover:bg-white/10">
                 <Settings size={16} />

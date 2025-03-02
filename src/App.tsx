@@ -8,6 +8,7 @@ import NotFound from "./pages/NotFound";
 import Settings from "./pages/Settings";
 import Workflows from "./pages/Workflows";
 import AtlasLink from "./pages/AtlasLink";
+import ChatRoom from "./pages/ChatRoom";
 import { Toaster } from "./components/ui/sonner";
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
         <Route path="/settings" element={<Settings />} />
         <Route path="/workflows" element={<Workflows />} />
         <Route path="/atlas-link" element={<AtlasLink />} />
+        <Route path="/chat" element={<ChatRoom />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Toaster richColors position="top-center" />
