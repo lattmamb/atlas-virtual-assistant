@@ -1,7 +1,7 @@
 
 "use client";
 import React from "react";
-import { SparklesCore } from "./sparkles";
+import { SparklesCore } from "@/components/ui/sparkles";
 
 export function SparklesPreview() {
   return (
@@ -49,7 +49,7 @@ export function SparklesPreviewDark() {
         />
       </div>
       <h1 className="md:text-7xl text-3xl lg:text-9xl font-bold text-center text-white relative z-20">
-        ATLAS AI
+        Build faster
       </h1>
     </div>
   );
@@ -66,20 +66,18 @@ export function SparklesPreviewColorful() {
           maxSize={1.4}
           particleDensity={100}
           className="w-full h-full"
-          particleColor="#007AFF"
+          particleColor="#00ff00"
           speed={0.5}
         />
       </div>
       <div className="flex flex-col items-center justify-center gap-4 relative z-20">
         <h1 className="md:text-7xl text-3xl lg:text-9xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400">
-          ATLAS
+          The Future
         </h1>
         <p className="text-neutral-300 cursor-default text-center">
-          The most advanced AI assistant
+          is brighter than you think
         </p>
       </div>
     </div>
   );
 }
-
-export { SparklesPreview, SparklesPreviewDark, SparklesPreviewColorful };
