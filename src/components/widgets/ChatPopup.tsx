@@ -14,7 +14,7 @@ const ChatPopup: React.FC<ChatPopupProps> = ({ isDarkMode, onClose }) => {
   return (
     <motion.div 
       className={cn(
-        "fixed bottom-20 right-4 z-40 w-80 md:w-96 h-96 shadow-2xl rounded-2xl overflow-hidden",
+        "fixed bottom-20 right-4 z-40 w-80 md:w-96 h-[500px] shadow-2xl rounded-2xl overflow-hidden",
         isDarkMode 
           ? "backdrop-blur-xl border border-white/10 bg-[#1a1a1a]/90"
           : "backdrop-blur-xl border border-black/10 bg-white/90",
@@ -31,8 +31,9 @@ const ChatPopup: React.FC<ChatPopupProps> = ({ isDarkMode, onClose }) => {
     >
       {onClose && (
         <motion.button
-          className="absolute top-2 right-2 z-50 p-1 rounded-full bg-gray-200 text-gray-700 
-                    hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
+          className="absolute top-2 right-2 z-50 p-1.5 rounded-full bg-gray-200/80 text-gray-700 
+                    hover:bg-gray-300/80 dark:bg-gray-700/80 dark:text-gray-200 dark:hover:bg-gray-600/80
+                    backdrop-blur-sm"
           onClick={onClose}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
@@ -40,7 +41,9 @@ const ChatPopup: React.FC<ChatPopupProps> = ({ isDarkMode, onClose }) => {
           <X className="h-4 w-4" />
         </motion.button>
       )}
-      <AtlasChatBot />
+      <div className="h-full overflow-hidden rounded-2xl">
+        <AtlasChatBot />
+      </div>
     </motion.div>
   );
 };

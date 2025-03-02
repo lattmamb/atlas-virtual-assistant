@@ -1,6 +1,21 @@
 
 /* Theme-specific styles */
 
+/* System Theme (will be auto-applied based on system preference) */
+.theme-system {
+  --background-primary: var(--system-background);
+  --background-secondary: var(--system-background-secondary);
+  --background-gradient: var(--system-gradient);
+  --widget-bg: var(--system-widget-bg);
+  --widget-border: var(--system-widget-border);
+  --widget-shadow: var(--system-widget-shadow);
+  --text-primary: var(--system-text);
+  --text-secondary: var(--system-text-secondary);
+  --accent-color: var(--system-accent);
+  --accent-hover: var(--system-accent-hover);
+  --glow-effect: var(--system-glow);
+}
+
 /* Dark Theme (Default) */
 .theme-dark {
   --background-primary: #1a1a1a;
@@ -110,12 +125,14 @@
 body {
   background-color: var(--background-secondary);
   color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .apple-widget {
   background-color: var(--widget-bg);
   border-color: var(--widget-border);
   box-shadow: var(--widget-shadow);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .accent-text {
@@ -134,12 +151,15 @@ body {
   box-shadow: 0 0 20px var(--glow-effect);
 }
 
-/* Glassmorphism */
+/* Apple Design Elements */
+
+/* Dynamic Glassmorphism - adapts to light/dark */
 .glass {
   backdrop-filter: blur(16px);
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
 }
 
 .dark .glass {
@@ -147,13 +167,14 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Neomorphism */
+/* Neo-morphism for subtle Apple-like depth */
 .neomorphic {
   background: var(--background-primary);
   box-shadow: 
     8px 8px 16px rgba(0, 0, 0, 0.1), 
     -8px -8px 16px rgba(255, 255, 255, 0.05);
   border-radius: 16px;
+  transition: all 0.3s ease;
 }
 
 .light .neomorphic {
@@ -162,7 +183,7 @@ body {
     -8px -8px 16px rgba(255, 255, 255, 0.5);
 }
 
-/* Hybrid style (combining glassmorphism and neomorphism) */
+/* Hybrid style (combining glassmorphism and neomorphism) for an Apple-like UI */
 .hybrid {
   backdrop-filter: blur(10px);
   background: rgba(255, 255, 255, 0.05);
@@ -171,6 +192,7 @@ body {
     8px 8px 16px rgba(0, 0, 0, 0.1), 
     -8px -8px 16px rgba(255, 255, 255, 0.05);
   border-radius: 16px;
+  transition: all 0.3s ease;
 }
 
 .light .hybrid {
@@ -178,4 +200,58 @@ body {
   box-shadow: 
     8px 8px 16px rgba(0, 0, 0, 0.05), 
     -8px -8px 16px rgba(255, 255, 255, 0.5);
+}
+
+/* Frosted Glass Elements (like iOS controls) */
+.frosted-glass {
+  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.dark .frosted-glass {
+  background: rgba(30, 30, 30, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* iOS Button styles */
+.ios-button {
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 500;
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.ios-button:hover {
+  background-color: var(--accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.ios-button:active {
+  transform: scale(0.98);
+}
+
+/* Subtle animations */
+@keyframes subtle-float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.subtle-float {
+  animation: subtle-float 4s ease-in-out infinite;
 }

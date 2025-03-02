@@ -16,10 +16,9 @@ import { Button } from '@/components/ui/button';
 import ThemeSwitcherDropdown from './ThemeSwitcherDropdown';
 import { useTheme } from '@/context/ThemeContext';
 import { toast } from 'sonner';
+import { motion } from 'framer-motion';
 
 interface AppleNavBarProps {
-  isDarkMode?: boolean;
-  onToggleDarkMode?: () => void;
   onToggleAppGrid?: () => void;
   showAppGridButton?: boolean;
   className?: string;
@@ -41,6 +40,9 @@ const AppleNavBar: React.FC<AppleNavBarProps> = ({
     });
   };
 
+  const MotionLink = motion(Link);
+  const MotionButton = motion(Button);
+
   return (
     <div className={cn(
       "fixed top-0 left-0 right-0 z-50 h-12 backdrop-blur-xl flex items-center justify-between px-4 border-b transition-all duration-300",
@@ -51,7 +53,12 @@ const AppleNavBar: React.FC<AppleNavBarProps> = ({
     )}>
       <div className="flex items-center">
         <SidebarTrigger className="mr-3" />
-        <Link to="/" className="flex items-center group perspective-tilt">
+        <MotionLink 
+          to="/" 
+          className="flex items-center group perspective-tilt"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
           <div className="relative w-6 h-6 mr-2 flex items-center justify-center">
             <Cloud 
               className={cn(
@@ -64,12 +71,12 @@ const AppleNavBar: React.FC<AppleNavBarProps> = ({
           <span className="font-medium hidden sm:inline transition-colors group-hover:text-blue-400 group-hover:animated-gradient-text">
             Atlas Assistant
           </span>
-        </Link>
+        </MotionLink>
       </div>
       
       <div className="flex items-center space-x-1 sm:space-x-2">
         {onSearch && (
-          <Button 
+          <MotionButton 
             variant="ghost" 
             size="icon"
             onClick={onSearch}
@@ -77,13 +84,15 @@ const AppleNavBar: React.FC<AppleNavBarProps> = ({
               "rounded-full w-8 h-8 glow-on-hover",
               isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100"
             )}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
           >
             <Search className="h-4 w-4" />
-          </Button>
+          </MotionButton>
         )}
         
         {showAppGridButton && (
-          <Button 
+          <MotionButton 
             variant="ghost" 
             size="icon"
             onClick={onToggleAppGrid}
@@ -91,12 +100,18 @@ const AppleNavBar: React.FC<AppleNavBarProps> = ({
               "rounded-full w-8 h-8 transition-transform hover:scale-110 active:scale-95 glow-on-hover",
               isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100"
             )}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
           >
             <Grid className="h-4 w-4" />
-          </Button>
+          </MotionButton>
         )}
         
-        <Link to="/chat">
+        <MotionLink 
+          to="/chat"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
           <Button 
             variant="ghost" 
             size="icon"
@@ -107,9 +122,13 @@ const AppleNavBar: React.FC<AppleNavBarProps> = ({
           >
             <MessageSquare className="h-4 w-4" />
           </Button>
-        </Link>
+        </MotionLink>
         
-        <Link to="/settings">
+        <MotionLink 
+          to="/settings"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
           <Button 
             variant="ghost" 
             size="icon"
@@ -120,11 +139,11 @@ const AppleNavBar: React.FC<AppleNavBarProps> = ({
           >
             <Settings className="h-4 w-4" />
           </Button>
-        </Link>
+        </MotionLink>
         
         <ThemeSwitcherDropdown />
         
-        <Button 
+        <MotionButton 
           variant="ghost" 
           size="icon"
           onClick={handleProfileClick}
@@ -134,9 +153,11 @@ const AppleNavBar: React.FC<AppleNavBarProps> = ({
             "hover:shadow-md hover:shadow-blue-500/20 hover:scale-110 active:scale-95",
             "border border-blue-400/30 glow-on-hover"
           )}
+          whileHover={{ scale: 1.1, y: -2 }}
+          whileTap={{ scale: 0.9 }}
         >
           <User className="h-4 w-4" />
-        </Button>
+        </MotionButton>
       </div>
     </div>
   );
