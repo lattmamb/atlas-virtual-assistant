@@ -19,6 +19,7 @@ interface CustomInstruction {
   created_at: string;
   updated_at: string;
   is_active: boolean;
+  user_id?: string;
 }
 
 const KnowledgeBase: React.FC<KnowledgeBaseProps> = ({ isDarkMode }) => {
@@ -46,7 +47,13 @@ const KnowledgeBase: React.FC<KnowledgeBaseProps> = ({ isDarkMode }) => {
         return;
       }
 
-      setInstructions(data as CustomInstruction[]);
+      // Convert the data to CustomInstruction type
+      const instructionsWithActiveFlag = data.map(item => ({
+        ...item,
+        is_active: item.is_active !== undefined ? item.is_active : true
+      })) as CustomInstruction[];
+
+      setInstructions(instructionsWithActiveFlag);
     } catch (error) {
       console.error('Error in fetchInstructions:', error);
       toast.error('An unexpected error occurred');
@@ -106,7 +113,13 @@ const KnowledgeBase: React.FC<KnowledgeBaseProps> = ({ isDarkMode }) => {
         setIsCreating(false);
         
         if (data && data[0]) {
-          setSelectedInstruction(data[0] as CustomInstruction);
+          // Convert to CustomInstruction type
+          const newInstruction = {
+            ...data[0],
+            is_active: true
+          } as CustomInstruction;
+          
+          setSelectedInstruction(newInstruction);
         }
       } else if (isEditing && selectedInstruction) {
         // Update existing instruction

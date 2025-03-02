@@ -1,14 +1,14 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { ChatInput } from "@/components/ui/chat-input";
 import { Textarea } from "@/components/ui/textarea";
-import { Calendar, Mail, Image, MessageSquare, Workflow, Users, Map, Menu, Moon, Sun, Home, Book, Store, Settings } from "lucide-react";
+import { Calendar, Mail, Image, MessageSquare, Workflow, Users, Map, Menu, Moon, Sun, Home, Book, Store, Settings, Key } from "lucide-react";
 import { cn } from "@/lib/utils";
 import KnowledgeBase from './KnowledgeBase';
 import GptStore from './GptStore';
+import ApiIntegrationManager from './ApiIntegrationManager';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface Message {
@@ -21,7 +21,7 @@ interface Message {
 const AtlasLink: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [celestialMode, setCelestialMode] = useState(false);
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'chat' | 'knowledge' | 'store' | 'settings'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'chat' | 'knowledge' | 'store' | 'api' | 'settings'>('dashboard');
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -178,6 +178,15 @@ const AtlasLink: React.FC = () => {
             </Button>
             
             <Button
+              variant={activeTab === 'api' ? "default" : "ghost"}
+              className="w-full justify-start"
+              onClick={() => setActiveTab('api')}
+            >
+              <Key className="mr-2 h-4 w-4" />
+              API Integrations
+            </Button>
+            
+            <Button
               variant={activeTab === 'settings' ? "default" : "ghost"}
               className="w-full justify-start"
               onClick={() => setActiveTab('settings')}
@@ -277,6 +286,7 @@ const AtlasLink: React.FC = () => {
             {activeTab === 'chat' && "AI Assistant"}
             {activeTab === 'knowledge' && "Knowledge Base"}
             {activeTab === 'store' && "GPT Store"}
+            {activeTab === 'api' && "API Integrations"}
             {activeTab === 'settings' && "Settings"}
           </h1>
           <div className="flex gap-2">
@@ -433,6 +443,12 @@ const AtlasLink: React.FC = () => {
             </div>
           )}
           
+          {activeTab === 'api' && (
+            <div className="p-4 h-full">
+              <ApiIntegrationManager isDarkMode={celestialMode} />
+            </div>
+          )}
+          
           {activeTab === 'settings' && (
             <div className="p-4 h-full">
               <Tabs defaultValue="api" className="h-full flex flex-col">
@@ -567,6 +583,14 @@ const AtlasLink: React.FC = () => {
             onClick={() => setActiveTab('store')}
           >
             <Store size={24} className={activeTab === 'store' ? "text-primary" : ""} />
+          </Button>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="tap-highlight no-select"
+            onClick={() => setActiveTab('api')}
+          >
+            <Key size={24} className={activeTab === 'api' ? "text-primary" : ""} />
           </Button>
           <Button 
             variant="ghost" 
