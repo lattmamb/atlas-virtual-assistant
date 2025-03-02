@@ -55,10 +55,7 @@ const ICloudLayout: React.FC<ICloudLayoutProps> = ({
         {isAppGridOpen && (
           <AppGrid
             onClose={() => setIsAppGridOpen(false)}
-            onAppClick={(app) => {
-              setIsAppGridOpen(false);
-              navigate(app.path);
-            }}
+            isDarkMode={isDarkMode}
           />
         )}
       </AnimatePresence>

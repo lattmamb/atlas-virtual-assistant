@@ -1,7 +1,7 @@
 
 import { useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
-import "./App.css";
+import "./styles/index.css";
 import "./styles/theme.css";
 import { ChatProvider } from "./context/ChatContext";
 import { ThemeProvider } from "./context/ThemeContext";
