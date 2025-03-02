@@ -132,6 +132,10 @@ export default {
 					"0%": { transform: "scaleY(1)" },
 					"50%": { transform: "scaleY(0.6)" },
 					"100%": { transform: "scaleY(1)" }
+				},
+				"grid": {
+					"0%": { transform: "translateY(-50%)" },
+					"100%": { transform: "translateY(0)" }
 				}
 			},
 			animation: {
@@ -149,7 +153,8 @@ export default {
 				"ripple": "ripple 1.5s ease-out",
 				"wave1": "wave 1.2s ease-in-out infinite 0.1s",
 				"wave2": "wave 1.2s ease-in-out infinite 0.2s",
-				"wave3": "wave 1.2s ease-in-out infinite 0.3s"
+				"wave3": "wave 1.2s ease-in-out infinite 0.3s",
+				"grid": "grid 15s linear infinite"
 			}
 		}
 	},
