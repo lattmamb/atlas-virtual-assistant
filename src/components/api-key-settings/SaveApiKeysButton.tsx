@@ -1,24 +1,41 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { Loader2 } from 'lucide-react';
+import { cn } from "@/lib/utils";
+import { useTheme } from '@/context/ThemeContext';
 
-interface SaveApiKeysButtonProps {
-  isLoading: boolean;
+export interface SaveApiKeysButtonProps {
   onClick: () => void;
+  isLoading?: boolean; // Make isLoading optional
+  text?: string; // Add text prop and make it optional
 }
 
-const SaveApiKeysButton = ({ isLoading, onClick }: SaveApiKeysButtonProps) => {
+const SaveApiKeysButton: React.FC<SaveApiKeysButtonProps> = ({ 
+  onClick, 
+  isLoading = false, // Default value
+  text = "Save API Keys" // Default value
+}) => {
+  const { isDarkMode } = useTheme();
+  
   return (
-    <div className="mt-6">
-      <Button onClick={onClick} disabled={isLoading}>
+    <div className="col-span-full mt-4 flex justify-end">
+      <Button
+        onClick={onClick}
+        disabled={isLoading}
+        className={cn(
+          "px-6 py-2 transition-all",
+          isDarkMode 
+            ? "bg-blue-600 hover:bg-blue-700" 
+            : "bg-blue-500 hover:bg-blue-600"
+        )}
+      >
         {isLoading ? (
           <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Saving...
+            <span className="mr-2">Saving...</span>
+            <span className="animate-spin">⟳</span>
           </>
         ) : (
-          "Save API Keys"
+          text
         )}
       </Button>
     </div>
