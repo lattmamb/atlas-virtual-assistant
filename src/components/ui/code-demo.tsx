@@ -1,13 +1,13 @@
 
 "use client";
 import React from "react";
-import { SparklesCore } from "@/components/ui/sparkles"
+import { SparklesCore } from "./sparkles";
 
 export function SparklesPreview() {
   return (
     <div className="h-[40rem] w-full bg-black flex flex-col items-center justify-center overflow-hidden rounded-md">
       <h1 className="md:text-7xl text-3xl lg:text-9xl font-bold text-center text-white relative z-20">
-        Acme
+        ATLAS
       </h1>
       <div className="w-[40rem] h-40 relative">
         {/* Gradients */}
@@ -49,7 +49,7 @@ export function SparklesPreviewDark() {
         />
       </div>
       <h1 className="md:text-7xl text-3xl lg:text-9xl font-bold text-center text-white relative z-20">
-        Build faster
+        ATLAS AI
       </h1>
     </div>
   );
@@ -66,34 +66,20 @@ export function SparklesPreviewColorful() {
           maxSize={1.4}
           particleDensity={100}
           className="w-full h-full"
-          particleColor="#00ff00"
+          particleColor="#007AFF"
           speed={0.5}
         />
       </div>
       <div className="flex flex-col items-center justify-center gap-4 relative z-20">
         <h1 className="md:text-7xl text-3xl lg:text-9xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400">
-          The Future
+          ATLAS
         </h1>
         <p className="text-neutral-300 cursor-default text-center">
-          is brighter than you think
+          The most advanced AI assistant
         </p>
       </div>
     </div>
   );
 }
 
-// Adding a NavbarDemo component since it was in the previous version
-export function NavbarDemo() {
-  return (
-    <nav className="bg-white border-b border-gray-200 py-4 px-6 flex items-center justify-between">
-      <div className="flex items-center space-x-4">
-        <span className="font-semibold text-xl">Trinity Dodge</span>
-      </div>
-      <div className="flex space-x-4">
-        <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-          Contact Us
-        </button>
-      </div>
-    </nav>
-  );
-}
+export { SparklesPreview, SparklesPreviewDark, SparklesPreviewColorful };

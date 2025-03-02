@@ -12,6 +12,7 @@ import Workflows from "./pages/Workflows";
 import AtlasLink from "./pages/AtlasLink";
 import ChatRoom from "./pages/ChatRoom";
 import { Toaster } from "./components/ui/sonner";
+import LoadingScreen from "./components/ui/LoadingScreen";
 
 function App() {
   const location = useLocation();
@@ -23,6 +24,7 @@ function App() {
   return (
     <ThemeProvider>
       <ChatProvider>
+        <LoadingScreen />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/settings" element={<Settings />} />
