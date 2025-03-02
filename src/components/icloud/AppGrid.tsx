@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { 
@@ -7,6 +6,7 @@ import {
   X
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { WidgetDrawer } from "./WidgetDrawer";
 
 interface AppGridProps {
   isDarkMode: boolean;
@@ -29,6 +29,26 @@ const AppGrid: React.FC<AppGridProps> = ({ isDarkMode, onClose }) => {
     { name: "Workflows", icon: <Workflow />, path: "/workflows" },
   ];
   
+  const renderWidgetWithDrawer = (widget: React.ReactNode, title: string, description?: string, drawerContent?: React.ReactNode) => {
+    return (
+      <div className="relative">
+        {widget}
+        <WidgetDrawer 
+          title={title}
+          description={description}
+        >
+          {drawerContent || (
+            <div className="min-h-[200px] flex items-center justify-center">
+              <p className="text-muted-foreground text-center">
+                Extended {title} content will appear here.
+              </p>
+            </div>
+          )}
+        </WidgetDrawer>
+      </div>
+    );
+  };
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (gridRef.current && !gridRef.current.contains(event.target as Node)) {
