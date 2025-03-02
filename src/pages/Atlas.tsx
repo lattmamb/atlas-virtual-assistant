@@ -4,7 +4,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { useTheme } from '@/context/ThemeContext';
 import { cn } from '@/lib/utils';
-import { Link2, MessageSquare, Workflow } from 'lucide-react';
+import { Link2, MessageSquare, Workflow, Store, Book, Key, Settings } from 'lucide-react';
 import AppSidebar from '@/components/AppSidebar';
 import AppleNavBar from '@/components/AppleNavBar';
 import ChatRoom from './ChatRoom';
@@ -14,7 +14,7 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 
 const Atlas = () => {
-  const [activeView, setActiveView] = useState<'chat' | 'link' | 'workflows'>('chat');
+  const [activeView, setActiveView] = useState<'chat' | 'link' | 'workflows' | 'store' | 'knowledge' | 'api' | 'settings'>('chat');
   const { isDarkMode } = useTheme();
   const isMobile = useIsMobile();
 
@@ -26,6 +26,14 @@ const Atlas = () => {
         return <AtlasLink />;
       case 'workflows':
         return <WorkflowDashboard />;
+      case 'store':
+        return <div className="flex items-center justify-center h-full">GPT Store Coming Soon</div>;
+      case 'knowledge':
+        return <div className="flex items-center justify-center h-full">Knowledge Base Coming Soon</div>;
+      case 'api':
+        return <div className="flex items-center justify-center h-full">API Integrations Coming Soon</div>;
+      case 'settings':
+        return <div className="flex items-center justify-center h-full">Settings Coming Soon</div>;
       default:
         return <ChatRoom />;
     }
@@ -44,7 +52,7 @@ const Atlas = () => {
           
           {/* Atlas Navigation Bar */}
           <div className="flex justify-center pt-14 pb-1 z-10 relative">
-            <div className="flex items-center gap-2 p-1 bg-black/10 dark:bg-white/10 backdrop-blur-md rounded-full">
+            <div className="flex items-center gap-2 p-1 bg-black/10 dark:bg-white/10 backdrop-blur-md rounded-full overflow-x-auto scrollbar-hide">
               <Button
                 variant={activeView === 'chat' ? "default" : "ghost"}
                 size="sm"
@@ -55,7 +63,7 @@ const Atlas = () => {
                 onClick={() => setActiveView('chat')}
               >
                 <MessageSquare className="h-4 w-4" />
-                <span>Atlas Chat</span>
+                <span>Chat</span>
               </Button>
               
               <Button
@@ -68,7 +76,7 @@ const Atlas = () => {
                 onClick={() => setActiveView('link')}
               >
                 <Link2 className="h-4 w-4" />
-                <span>Atlas Link</span>
+                <span>Link</span>
               </Button>
               
               <Button
@@ -82,6 +90,58 @@ const Atlas = () => {
               >
                 <Workflow className="h-4 w-4" />
                 <span>Workflows</span>
+              </Button>
+
+              <Button
+                variant={activeView === 'store' ? "default" : "ghost"}
+                size="sm"
+                className={cn(
+                  "rounded-full gap-1 transition-all",
+                  activeView === 'store' ? "shadow-sm" : "hover:bg-black/5 dark:hover:bg-white/5"
+                )}
+                onClick={() => setActiveView('store')}
+              >
+                <Store className="h-4 w-4" />
+                <span>Store</span>
+              </Button>
+
+              <Button
+                variant={activeView === 'knowledge' ? "default" : "ghost"}
+                size="sm"
+                className={cn(
+                  "rounded-full gap-1 transition-all",
+                  activeView === 'knowledge' ? "shadow-sm" : "hover:bg-black/5 dark:hover:bg-white/5"
+                )}
+                onClick={() => setActiveView('knowledge')}
+              >
+                <Book className="h-4 w-4" />
+                <span>Knowledge</span>
+              </Button>
+
+              <Button
+                variant={activeView === 'api' ? "default" : "ghost"}
+                size="sm"
+                className={cn(
+                  "rounded-full gap-1 transition-all",
+                  activeView === 'api' ? "shadow-sm" : "hover:bg-black/5 dark:hover:bg-white/5"
+                )}
+                onClick={() => setActiveView('api')}
+              >
+                <Key className="h-4 w-4" />
+                <span>API</span>
+              </Button>
+
+              <Button
+                variant={activeView === 'settings' ? "default" : "ghost"}
+                size="sm"
+                className={cn(
+                  "rounded-full gap-1 transition-all",
+                  activeView === 'settings' ? "shadow-sm" : "hover:bg-black/5 dark:hover:bg-white/5"
+                )}
+                onClick={() => setActiveView('settings')}
+              >
+                <Settings className="h-4 w-4" />
+                <span>Settings</span>
               </Button>
             </div>
           </div>
