@@ -1,10 +1,11 @@
+
 "use client"
 
 import * as React from "react"
 import { cn } from "@/lib/utils"
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
-import { ChevronLeft, ChevronRight, Keyboard, Menu } from "lucide-react"
+import { ChevronLeft, ChevronRight, Menu } from "lucide-react"
 
 // Configuration
 const SIDEBAR_WIDTH = "16rem"
@@ -134,7 +135,7 @@ function SidebarProvider({
     }
   }, [isMobile, open, openMobile, setOpen])
 
-  const state = React.useMemo(
+  const state: SidebarState = React.useMemo(
     () => (open ? "expanded" : "collapsed"),
     [open]
   )
@@ -453,32 +454,45 @@ function SidebarMenuButton({
   asChild?: boolean
 }) {
   const Comp = asChild ? React.Fragment : "button"
-  const childProps = asChild ? { children: children, className: undefined } : {}
+  const childProps = asChild ? { children, className: undefined } : {}
+
+  if (asChild) {
+    return (
+      <Comp>
+        <div
+          data-active={isActive}
+          className={cn(
+            "sidebar-menu-button group peer/menu-button relative flex w-full cursor-pointer select-none items-center gap-2 rounded-md px-3 py-2 outline-none transition-colors",
+            "text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground",
+            "focus-visible:bg-sidebar-accent focus-visible:text-sidebar-foreground",
+            "data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-foreground",
+            "group-data-[collapsible=icon]:data-[state=collapsed]:px-2 group-data-[collapsible=icon]:data-[state=collapsed]:py-2",
+            className
+          )}
+        >
+          {children}
+        </div>
+      </Comp>
+    )
+  }
 
   return (
-    <Comp {...childProps}>
-      <div
-        data-active={isActive}
-        className={cn(
-          "sidebar-menu-button group peer/menu-button relative flex w-full cursor-pointer select-none items-center gap-2 rounded-md px-3 py-2 outline-none transition-colors",
-          "text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground",
-          "focus-visible:bg-sidebar-accent focus-visible:text-sidebar-foreground",
-          "data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-foreground",
-          "group-data-[collapsible=icon]:data-[state=collapsed]:px-2 group-data-[collapsible=icon]:data-[state=collapsed]:py-2",
-          className
-        )}
-        {...props}
-      >
-        {asChild ? (
-          children
-        ) : (
-          <>
-            {children}
-            <span className="absolute inset-0" />
-          </>
-        )}
-      </div>
-    </Comp>
+    <button
+      type="button"
+      data-active={isActive}
+      className={cn(
+        "sidebar-menu-button group peer/menu-button relative flex w-full cursor-pointer select-none items-center gap-2 rounded-md px-3 py-2 outline-none transition-colors",
+        "text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground",
+        "focus-visible:bg-sidebar-accent focus-visible:text-sidebar-foreground",
+        "data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-foreground",
+        "group-data-[collapsible=icon]:data-[state=collapsed]:px-2 group-data-[collapsible=icon]:data-[state=collapsed]:py-2",
+        className
+      )}
+      {...props}
+    >
+      {children}
+      <span className="absolute inset-0" />
+    </button>
   )
 }
 
@@ -552,32 +566,45 @@ function SidebarMenuSubButton({
   asChild?: boolean
 }) {
   const Comp = asChild ? React.Fragment : "button"
-  const childProps = asChild ? { children: children, className: undefined } : {}
+  const childProps = asChild ? { children, className: undefined } : {}
+
+  if (asChild) {
+    return (
+      <Comp>
+        <div
+          data-active={isActive}
+          className={cn(
+            "sidebar-menu-sub-button group/submenu-button relative flex w-full cursor-pointer select-none items-center gap-2 rounded-md px-3 py-1.5 outline-none transition-colors",
+            "text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground",
+            "focus-visible:bg-sidebar-accent focus-visible:text-sidebar-foreground",
+            "data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-foreground",
+            "group-data-[collapsible=icon]:data-[state=collapsed]:h-8 group-data-[collapsible=icon]:data-[state=collapsed]:w-8 group-data-[collapsible=icon]:data-[state=collapsed]:justify-center group-data-[collapsible=icon]:data-[state=collapsed]:px-0 group-data-[collapsible=icon]:data-[state=collapsed]:py-0",
+            className
+          )}
+        >
+          {children}
+        </div>
+      </Comp>
+    )
+  }
 
   return (
-    <Comp {...childProps}>
-      <div
-        data-active={isActive}
-        className={cn(
-          "sidebar-menu-sub-button group/submenu-button relative flex w-full cursor-pointer select-none items-center gap-2 rounded-md px-3 py-1.5 outline-none transition-colors",
-          "text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground",
-          "focus-visible:bg-sidebar-accent focus-visible:text-sidebar-foreground",
-          "data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-foreground",
-          "group-data-[collapsible=icon]:data-[state=collapsed]:h-8 group-data-[collapsible=icon]:data-[state=collapsed]:w-8 group-data-[collapsible=icon]:data-[state=collapsed]:justify-center group-data-[collapsible=icon]:data-[state=collapsed]:px-0 group-data-[collapsible=icon]:data-[state=collapsed]:py-0",
-          className
-        )}
-        {...props}
-      >
-        {asChild ? (
-          children
-        ) : (
-          <>
-            {children}
-            <span className="absolute inset-0" />
-          </>
-        )}
-      </div>
-    </Comp>
+    <button
+      type="button"
+      data-active={isActive}
+      className={cn(
+        "sidebar-menu-sub-button group/submenu-button relative flex w-full cursor-pointer select-none items-center gap-2 rounded-md px-3 py-1.5 outline-none transition-colors",
+        "text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground",
+        "focus-visible:bg-sidebar-accent focus-visible:text-sidebar-foreground",
+        "data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-foreground",
+        "group-data-[collapsible=icon]:data-[state=collapsed]:h-8 group-data-[collapsible=icon]:data-[state=collapsed]:w-8 group-data-[collapsible=icon]:data-[state=collapsed]:justify-center group-data-[collapsible=icon]:data-[state=collapsed]:px-0 group-data-[collapsible=icon]:data-[state=collapsed]:py-0",
+        className
+      )}
+      {...props}
+    >
+      {children}
+      <span className="absolute inset-0" />
+    </button>
   )
 }
 
