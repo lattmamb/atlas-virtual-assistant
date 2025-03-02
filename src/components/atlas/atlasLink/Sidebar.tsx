@@ -40,6 +40,8 @@ const Sidebar: React.FC = () => {
             variant={activeTab === 'dashboard' ? "default" : "ghost"}
             className="w-full justify-start rounded-lg"
             onClick={() => setActiveTab('dashboard')}
+            aria-label="Dashboard"
+            aria-current={activeTab === 'dashboard' ? 'page' : undefined}
           >
             <Home className="mr-2 h-4 w-4" />
             Dashboard
@@ -49,6 +51,8 @@ const Sidebar: React.FC = () => {
             variant={activeTab === 'chat' ? "default" : "ghost"}
             className="w-full justify-start rounded-lg"
             onClick={() => setActiveTab('chat')}
+            aria-label="Chat"
+            aria-current={activeTab === 'chat' ? 'page' : undefined}
           >
             <MessageSquare className="mr-2 h-4 w-4" />
             Chat
@@ -58,6 +62,8 @@ const Sidebar: React.FC = () => {
             variant={activeTab === 'knowledge' ? "default" : "ghost"}
             className="w-full justify-start rounded-lg"
             onClick={() => setActiveTab('knowledge')}
+            aria-label="Knowledge Base"
+            aria-current={activeTab === 'knowledge' ? 'page' : undefined}
           >
             <Book className="mr-2 h-4 w-4" />
             Knowledge Base
@@ -67,6 +73,8 @@ const Sidebar: React.FC = () => {
             variant={activeTab === 'store' ? "default" : "ghost"}
             className="w-full justify-start rounded-lg"
             onClick={() => setActiveTab('store')}
+            aria-label="GPT Store"
+            aria-current={activeTab === 'store' ? 'page' : undefined}
           >
             <Store className="mr-2 h-4 w-4" />
             GPT Store
@@ -76,6 +84,8 @@ const Sidebar: React.FC = () => {
             variant={activeTab === 'api' ? "default" : "ghost"}
             className="w-full justify-start rounded-lg"
             onClick={() => setActiveTab('api')}
+            aria-label="API Integrations"
+            aria-current={activeTab === 'api' ? 'page' : undefined}
           >
             <Key className="mr-2 h-4 w-4" />
             API Integrations
@@ -85,6 +95,8 @@ const Sidebar: React.FC = () => {
             variant={activeTab === 'settings' ? "default" : "ghost"}
             className="w-full justify-start rounded-lg"
             onClick={() => setActiveTab('settings')}
+            aria-label="Settings"
+            aria-current={activeTab === 'settings' ? 'page' : undefined}
           >
             <Settings className="mr-2 h-4 w-4" />
             Settings
@@ -102,14 +114,22 @@ const Sidebar: React.FC = () => {
                 placeholder="OpenAI Key" 
                 value={apiKeys.openai}
                 onChange={e => setApiKeys({...apiKeys, openai: e.target.value})}
+                aria-label="OpenAI API Key"
               />
               <Input 
                 type="password" 
                 placeholder="HuggingFace Key" 
                 value={apiKeys.huggingface}
                 onChange={e => setApiKeys({...apiKeys, huggingface: e.target.value})}
+                aria-label="HuggingFace API Key"
               />
-              <Button onClick={handleSaveApiKeys} className="w-full apple-button">Save Keys</Button>
+              <Button 
+                onClick={handleSaveApiKeys} 
+                className="w-full apple-button"
+                aria-label="Save API Keys"
+              >
+                Save Keys
+              </Button>
             </CardContent>
           </Card>
         )}
@@ -129,6 +149,7 @@ const Sidebar: React.FC = () => {
                 size="sm"
                 disabled={!selectedInstruction}
                 className="w-full rounded-lg"
+                aria-label="Clear Instruction"
               >
                 Clear Instruction
               </Button>
@@ -143,7 +164,13 @@ const Sidebar: React.FC = () => {
             </CardHeader>
             <CardContent className="space-y-2">
               <p className="text-sm text-muted-foreground">{automationStatus}</p>
-              <Button onClick={handleScheduleAutomation} className="w-full apple-button">Schedule Task</Button>
+              <Button 
+                onClick={handleScheduleAutomation} 
+                className="w-full apple-button"
+                aria-label="Schedule Task"
+              >
+                Schedule Task
+              </Button>
             </CardContent>
           </Card>
         )}
@@ -152,6 +179,7 @@ const Sidebar: React.FC = () => {
           variant="outline" 
           onClick={toggleCelestialMode} 
           className="w-full flex items-center gap-2 rounded-lg"
+          aria-label={celestialMode ? "Switch to Normal Mode" : "Switch to Celestial Mode"}
         >
           {celestialMode ? <Sun size={18} /> : <Moon size={18} />}
           {celestialMode ? "Normal Mode" : "Celestial Mode"}

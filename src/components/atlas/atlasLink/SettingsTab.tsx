@@ -39,7 +39,6 @@ const SettingsTab: React.FC = () => {
         if (data["hugging face"] || data.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) {
           updatedKeys.huggingface = data["hugging face"] || data.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;
         }
-        // Remove the incorrect supabase property reference
         
         setApiKeys(updatedKeys);
       }
@@ -80,6 +79,16 @@ const SettingsTab: React.FC = () => {
     }
   };
 
+  const saveKeysEverywhere = () => {
+    // Save to localStorage
+    handleSaveApiKeys();
+    
+    // If user is logged in, also save to Supabase
+    if (user) {
+      handleSaveApiKeysWithSupabase();
+    }
+  };
+
   return (
     <div className="p-4 h-full">
       <Tabs defaultValue="api" className="h-full flex flex-col">
@@ -103,6 +112,7 @@ const SettingsTab: React.FC = () => {
                     placeholder="sk-..." 
                     value={apiKeys.openai || ""}
                     onChange={e => setApiKeys({...apiKeys, openai: e.target.value})}
+                    aria-label="OpenAI API Key"
                   />
                   <p className="text-xs text-muted-foreground">Used for chat and workflow automation</p>
                 </div>
@@ -114,11 +124,16 @@ const SettingsTab: React.FC = () => {
                     placeholder="hf_..." 
                     value={apiKeys.huggingface || ""}
                     onChange={e => setApiKeys({...apiKeys, huggingface: e.target.value})}
+                    aria-label="HuggingFace API Key"
                   />
                   <p className="text-xs text-muted-foreground">Used for additional AI models</p>
                 </div>
                 
-                <Button onClick={handleSaveApiKeysWithSupabase} className="w-full">Save API Keys</Button>
+                <Button onClick={saveKeysEverywhere} className="w-full">Save API Keys</Button>
+                
+                <div className="text-xs text-muted-foreground mt-4 p-2 bg-secondary/20 rounded">
+                  <p>API keys are stored locally on your device and synced with your account when signed in.</p>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
@@ -136,6 +151,7 @@ const SettingsTab: React.FC = () => {
                       variant={!celestialMode ? "default" : "outline"} 
                       onClick={() => setCelestialMode(false)}
                       className="flex-1"
+                      aria-label="Light Mode"
                     >
                       <Sun className="mr-2 h-4 w-4" />
                       Light
@@ -144,6 +160,7 @@ const SettingsTab: React.FC = () => {
                       variant={celestialMode ? "default" : "outline"} 
                       onClick={() => setCelestialMode(true)}
                       className="flex-1"
+                      aria-label="Dark Mode"
                     >
                       <Moon className="mr-2 h-4 w-4" />
                       Dark
@@ -164,12 +181,13 @@ const SettingsTab: React.FC = () => {
                   <>
                     <div className="space-y-2">
                       <label className="text-sm font-medium">Email</label>
-                      <Input value={user.email || ""} readOnly />
+                      <Input value={user.email || ""} readOnly aria-label="User Email" />
                     </div>
                     <Button 
                       variant="destructive" 
                       className="w-full flex items-center justify-center" 
                       onClick={signOut}
+                      aria-label="Sign Out"
                     >
                       <LogOut className="mr-2 h-4 w-4" />
                       Sign Out
