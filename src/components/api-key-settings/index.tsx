@@ -1,198 +1,223 @@
-
-import { useState, useEffect } from "react";
-import { useToast } from "@/components/ui/use-toast";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { supabase } from "@/integrations/supabase/client";
-import ApiKeyForm from "./ApiKeyForm";
-
-// Define a consistent type for API key display data
-interface ApiKeyDisplayData {
-  api_key?: string;
-  "hugging face"?: string;
-  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?: string;
-  anthropic?: string;
-  google?: string;
-  cohere?: string;
-  openrouter?: string;
-  // These are for UI display only
-  openai?: string;
-  huggingface?: string;
-}
+import React from 'react';
+import { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
+import { CheckCircle2, Copy, Loader2 } from 'lucide-react';
 
 const ApiKeySettings = () => {
-  const { toast } = useToast();
-  const [apiKeys, setApiKeys] = useState<ApiKeyDisplayData>({
-    api_key: "",
-    "hugging face": "",
-    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: "",
-    // UI display only
-    openai: "",
-    anthropic: "",
-    google: "",
-    cohere: "",
-    huggingface: "",
-    openrouter: "",
-  });
+  const [openAIKey, setOpenAIKey] = useState('');
+  const [anthropicKey, setAnthropicKey] = useState('');
+  const [hfKey, setHFKey] = useState('');
+  const [googleKey, setGoogleKey] = useState('');
+  const [cohereKey, setCohereKey] = useState('');
+  const [openRouterKey, setOpenRouterKey] = useState('');
+  const [id, setId] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
 
-  useEffect(() => {
-    const fetchApiKeys = async () => {
+  React.useEffect(() => {
+    const getApiKey = async () => {
+      setIsLoading(true);
       try {
-        const { data, error } = await supabase.from("api_keys").select("*");
+        let { data, error, status } = await supabase
+          .from('api_keys')
+          .select(`api_key, anthropic, "hugging face", google, cohere, openrouter, id`)
+          .single()
 
-        if (error) {
-          throw new Error(error.message);
+        if (error && status !== 406) {
+          throw error;
         }
 
-        if (data && data.length > 0) {
-          // Use the first row of data
-          const keysData: ApiKeyDisplayData = {};
-          
-          // Map database fields to our state
-          if (data[0].api_key) keysData.api_key = data[0].api_key;
-          if (data[0]["hugging face"]) keysData["hugging face"] = data[0]["hugging face"];
-          if (data[0].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) keysData.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 = data[0].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;
-          
-          // Additional provider keys - check if properties exist before accessing
-          if ('anthropic' in data[0] && data[0].anthropic) keysData.anthropic = data[0].anthropic;
-          if ('google' in data[0] && data[0].google) keysData.google = data[0].google;
-          if ('cohere' in data[0] && data[0].cohere) keysData.cohere = data[0].cohere;
-          if ('openrouter' in data[0] && data[0].openrouter) keysData.openrouter = data[0].openrouter;
-          
-          // For UI display - show the actual keys if we fetched them
-          if (data[0].api_key) keysData.openai = data[0].api_key;
-          if (data[0]["hugging face"]) {
-            keysData["hugging face"] = data[0]["hugging face"];
-            keysData.huggingface = data[0]["hugging face"];
+        if (data) {
+          const apiKeys = data;
+          setOpenAIKey(apiKeys.api_key || '');
+          setAnthropicKey(apiKeys.anthropic || '');
+          setHFKey(apiKeys["hugging face"] || '');
+          setGoogleKey(apiKeys.google || '');
+          setCohereKey(apiKeys.cohere || '');
+          if ('openrouter' in apiKeys && apiKeys.openrouter) {
+            setOpenRouterKey(apiKeys.openrouter as string);
           }
-          if ('openrouter' in data[0] && data[0].openrouter) keysData.openrouter = data[0].openrouter;
-          
-          setApiKeys(keysData);
+          setId(apiKeys.id || null);
         }
-      } catch (error) {
-        console.error("Error fetching API keys:", error);
+      } catch (error: any) {
         toast({
-          title: "Error fetching API keys",
-          description: "Please check your database connection.",
-          variant: "destructive",
-        });
+          title: "Error!",
+          description: error.message,
+        })
+      } finally {
+        setIsLoading(false);
       }
-    };
-
-    fetchApiKeys();
-  }, [toast]);
-
-  const handleSaveApiKeys = async (updatedKeys: ApiKeyDisplayData) => {
-    try {
-      // Prepare data for database update
-      const keysToUpdate: any = {
-        // Default values for required fields
-        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: updatedKeys.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 || updatedKeys["hugging face"] || "default_key",
-      };
-      
-      // Add the hugging face key if provided
-      if (updatedKeys["hugging face"]) {
-        keysToUpdate["hugging face"] = updatedKeys["hugging face"];
-      } else {
-        keysToUpdate["hugging face"] = "default_key";
-      }
-      
-      // Add the openai key if provided
-      if (updatedKeys.openai) {
-        keysToUpdate.api_key = updatedKeys.openai;
-      }
-      
-      // Add additional provider keys
-      if (updatedKeys.anthropic) {
-        keysToUpdate.anthropic = updatedKeys.anthropic;
-      }
-      
-      if (updatedKeys.google) {
-        keysToUpdate.google = updatedKeys.google;
-      }
-      
-      if (updatedKeys.cohere) {
-        keysToUpdate.cohere = updatedKeys.cohere;
-      }
-
-      if (updatedKeys.openrouter) {
-        keysToUpdate.openrouter = updatedKeys.openrouter;
-      }
-      
-      // If huggingface is provided but hugging face is not, use it
-      if (updatedKeys.huggingface && !updatedKeys["hugging face"]) {
-        keysToUpdate["hugging face"] = updatedKeys.huggingface;
-      }
-      
-      console.log("Saving API keys:", keysToUpdate);
-      
-      // Update the database
-      const { error } = await supabase.from("api_keys").upsert([keysToUpdate]);
-
-      if (error) {
-        console.error("Supabase error:", error);
-        throw new Error(error.message);
-      }
-
-      toast({
-        title: "API keys saved",
-        description: "Your API keys have been securely saved.",
-      });
-      
-      // Fetch the updated keys to confirm the save worked
-      const { data: updatedData, error: fetchError } = await supabase.from("api_keys").select("*");
-      
-      if (fetchError) {
-        throw new Error(fetchError.message);
-      }
-      
-      console.log("Updated data:", updatedData);
-      
-      if (updatedData && updatedData.length > 0) {
-        // Update local state with the saved keys
-        const savedKeys: ApiKeyDisplayData = {
-          ...updatedKeys, // Keep any UI-only keys
-          api_key: updatedData[0].api_key,
-          "hugging face": updatedData[0]["hugging face"],
-          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: updatedData[0].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,
-        };
-        
-        // Add additional provider keys if they exist in the response
-        if ('anthropic' in updatedData[0]) savedKeys.anthropic = updatedData[0].anthropic;
-        if ('google' in updatedData[0]) savedKeys.google = updatedData[0].google;
-        if ('cohere' in updatedData[0]) savedKeys.cohere = updatedData[0].cohere;
-        if ('openrouter' in updatedData[0]) savedKeys.openrouter = updatedData[0].openrouter;
-        
-        // For UI display
-        savedKeys.openai = updatedData[0].api_key;
-        
-        setApiKeys(savedKeys);
-      }
-      
-    } catch (error) {
-      console.error("Error saving API keys:", error);
-      toast({
-        title: "Error saving API keys",
-        description: "An error occurred while saving your API keys.",
-        variant: "destructive",
-      });
     }
+
+    getApiKey();
+  }, []);
+
+  const saveApiKeys = async () => {
+    setIsLoading(true);
+    try {
+      const result = await supabase.from('api_keys').upsert([
+        {
+          id: id || 1, // Default to 1 if no ID exists
+          api_key: openAIKey,
+          anthropic: anthropicKey,
+          "hugging face": hfKey,
+          google: googleKey,
+          cohere: cohereKey,
+          openrouter: openRouterKey,
+        }
+      ]);
+
+      if (result.error) {
+        throw result.error;
+      }
+      toast({
+        title: "Success!",
+        description: "API keys saved",
+      })
+    } catch (error: any) {
+      toast({
+        title: "Error!",
+        description: error.message,
+      })
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  const handleCopyToClipboard = () => {
+    navigator.clipboard.writeText(window.location.origin + '/api/chat')
+      .then(() => {
+        setIsCopied(true);
+        toast({
+          title: "Copied!",
+          description: "API endpoint copied to clipboard",
+        })
+        setTimeout(() => {
+          setIsCopied(false);
+        }, 3000);
+      })
+      .catch((err) => {
+        console.error("Failed to copy: ", err);
+        toast({
+          title: "Error!",
+          description: "Failed to copy API endpoint",
+        })
+      });
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>API Key Settings</CardTitle>
-        <CardDescription>
-          Configure your API keys for various language model providers.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <ApiKeyForm 
-          initialKeys={apiKeys} 
-          onSave={handleSaveApiKeys} 
-        />
-      </CardContent>
-    </Card>
+    <div className="container max-w-4xl mx-auto py-10">
+      <h1 className="text-3xl font-bold mb-6">API Key Settings</h1>
+      <div className="space-y-4">
+        <div>
+          <Label htmlFor="openai-key">OpenAI API Key</Label>
+          <Input
+            type="password"
+            id="openai-key"
+            placeholder="sk-..."
+            value={openAIKey}
+            onChange={(e) => setOpenAIKey(e.target.value)}
+          />
+        </div>
+        <div>
+          <Label htmlFor="anthropic-key">Anthropic API Key</Label>
+          <Input
+            type="password"
+            id="anthropic-key"
+            placeholder="sk-ant-..."
+            value={anthropicKey}
+            onChange={(e) => setAnthropicKey(e.target.value)}
+          />
+        </div>
+        <div>
+          <Label htmlFor="hf-key">Hugging Face API Key</Label>
+          <Input
+            type="password"
+            id="hf-key"
+            placeholder="hf_..."
+            value={hfKey}
+            onChange={(e) => setHFKey(e.target.value)}
+          />
+        </div>
+        <div>
+          <Label htmlFor="google-key">Google API Key</Label>
+          <Input
+            type="password"
+            id="google-key"
+            placeholder="AIza..."
+            value={googleKey}
+            onChange={(e) => setGoogleKey(e.target.value)}
+          />
+        </div>
+        <div>
+          <Label htmlFor="cohere-key">Cohere API Key</Label>
+          <Input
+            type="password"
+            id="cohere-key"
+            placeholder="xxxx-..."
+            value={cohereKey}
+            onChange={(e) => setCohereKey(e.target.value)}
+          />
+        </div>
+        <div>
+          <Label htmlFor="openrouter-key">OpenRouter API Key</Label>
+          <Input
+            type="password"
+            id="openrouter-key"
+            placeholder="sk-or-..."
+            value={openRouterKey}
+            onChange={(e) => setOpenRouterKey(e.target.value)}
+          />
+        </div>
+      </div>
+      <div className="mt-6">
+        <Button onClick={saveApiKeys} disabled={isLoading}>
+          {isLoading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Saving...
+            </>
+          ) : (
+            "Save API Keys"
+          )}
+        </Button>
+      </div>
+      <div className="mt-8 p-4 bg-gray-100 rounded-md">
+        <h2 className="text-xl font-semibold mb-4">API Endpoint</h2>
+        <p className="text-gray-700 mb-2">
+          Use the following endpoint to send requests to your chat model:
+        </p>
+        <div className="relative">
+          <Input
+            type="text"
+            value={window.location.origin + '/api/chat'}
+            readOnly
+            className="bg-gray-50 cursor-not-allowed"
+          />
+          <Button
+            onClick={handleCopyToClipboard}
+            disabled={isCopied}
+            className="absolute right-2 top-1/2 transform -translate-y-1/2"
+          >
+            {isCopied ? (
+              <>
+                <CheckCircle2 className="mr-2 h-4 w-4" />
+                Copied!
+              </>
+            ) : (
+              <>
+                <Copy className="mr-2 h-4 w-4" />
+                Copy
+              </>
+            )}
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 };
 

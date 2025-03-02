@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { ApiKeyProvider, Message, ChatContextType } from "@/lib/types";
+import { toast } from "sonner";
 
 // Create Context with default values
 const ChatContext = createContext<ChatContextType>({
@@ -22,6 +23,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState(false);
   const [selectedProvider, setSelectedProvider] = useState<ApiKeyProvider | null>("openai");
   const [availableProviders, setAvailableProviders] = useState<ApiKeyProvider[]>(["openai"]);
+  const [apiKeys, setApiKeys] = useState<Record<string, string>>({});
 
   useEffect(() => {
     // Fetch available providers on component mount
@@ -36,16 +38,36 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
         
         if (data && data.length > 0) {
           const providers: ApiKeyProvider[] = [];
+          const keys: Record<string, string> = {};
           
           // Check which providers have keys configured
-          if (data[0].api_key) providers.push("openai");
-          if ('anthropic' in data[0] && data[0].anthropic) providers.push("anthropic");
-          if (data[0]["hugging face"] || data[0].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) providers.push("huggingface");
-          if ('google' in data[0] && data[0].google) providers.push("google");
-          if ('cohere' in data[0] && data[0].cohere) providers.push("cohere");
-          if ('openrouter' in data[0] && data[0].openrouter) providers.push("openrouter");
+          if (data[0].api_key) {
+            providers.push("openai");
+            keys["openai"] = data[0].api_key;
+          }
+          if ('anthropic' in data[0] && data[0].anthropic) {
+            providers.push("anthropic");
+            keys["anthropic"] = data[0].anthropic as string;
+          }
+          if (data[0]["hugging face"] || data[0].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) {
+            providers.push("huggingface");
+            keys["huggingface"] = data[0]["hugging face"] || data[0].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 as string;
+          }
+          if ('google' in data[0] && data[0].google) {
+            providers.push("google");
+            keys["google"] = data[0].google as string;
+          }
+          if ('cohere' in data[0] && data[0].cohere) {
+            providers.push("cohere");
+            keys["cohere"] = data[0].cohere as string;
+          }
+          if ('openrouter' in data[0] && data[0].openrouter) {
+            providers.push("openrouter");
+            keys["openrouter"] = data[0].openrouter as string;
+          }
           
           setAvailableProviders(providers);
+          setApiKeys(keys);
           
           // Set default provider if available
           if (providers.length > 0 && !selectedProvider) {
@@ -85,25 +107,56 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     
     try {
-      // Placeholder for actual API call
-      // In a real implementation, this would send the message to the selected provider's API
-      
       let responseMessage = "";
       
       if (selectedProvider === "openrouter") {
-        // For OpenRouter, we'd fetch from their API
-        responseMessage = `This is a response from OpenRouter to: "${content}"`;
-        // In a real implementation, you would fetch from OpenRouter's API here
+        const apiKey = apiKeys["openrouter"];
+        
+        if (!apiKey) {
+          throw new Error("OpenRouter API key is not configured");
+        }
+        
+        // Make an actual call to OpenRouter API
+        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${apiKey}`,
+            "HTTP-Referer": window.location.origin,
+            "X-Title": "Atlas Assistant"
+          },
+          body: JSON.stringify({
+            model: "openai/gpt-3.5-turbo", // Default model
+            messages: [
+              { role: "system", content: "You are Atlas, a friendly and helpful AI assistant for Trinity Dodge in Taylorville, Illinois." },
+              ...messages.map(msg => ({ role: msg.role, content: msg.content })),
+              { role: "user", content }
+            ]
+          })
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error?.message || "Failed to get response from OpenRouter");
+        }
+        
+        const data = await response.json();
+        responseMessage = data.choices[0]?.message?.content || "No response from the model";
+        
+        // Log model used
+        console.log("Used model:", data.model);
       } else {
         // Simulate API response for other providers
         responseMessage = `This is a response from the ${selectedProvider} model to: "${content}"`;
+        // In a real implementation, you would fetch from the respective provider's API here
       }
       
       // Add assistant response
       addMessage(responseMessage, "assistant");
     } catch (error) {
       console.error("Error sending message:", error);
-      addMessage("Sorry, there was an error processing your request.", "assistant");
+      toast.error(`Error: ${error instanceof Error ? error.message : "Failed to process your request"}`);
+      addMessage("Sorry, there was an error processing your request. Please try again later.", "assistant");
     } finally {
       setIsLoading(false);
     }
