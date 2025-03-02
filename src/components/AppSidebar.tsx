@@ -1,102 +1,104 @@
 
 import React from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { 
-  Bot, 
-  Settings, 
-  Home, 
-  Workflow, 
-  MessageSquare,
-  ImageIcon,
-  Video,
-  Cube
-} from 'lucide-react';
-
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
+  Sidebar, 
+  SidebarContent, 
+  SidebarFooter, 
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
+  SidebarHeader,
+  SidebarHeaderTitle,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarSeparator
 } from '@/components/ui/sidebar';
+import { 
+  Home, 
+  MessageSquare, 
+  Workflow, 
+  Shield, 
+  Settings,
+  User,
+  LogOut
+} from 'lucide-react';
 
 const AppSidebar = () => {
   const location = useLocation();
   
-  // Navigation items
-  const mainNavItems = [
+  const isActive = (path: string) => {
+    return location.pathname === path;
+  };
+
+  // Primary navigation items
+  const primaryNavItems = [
     {
-      title: "Home",
-      path: "/",
-      icon: Home,
+      name: 'Home',
+      path: '/',
+      icon: <Home className="h-4 w-4" />
     },
     {
-      title: "Workflows",
-      path: "/workflows",
-      icon: Workflow,
+      name: 'Chat',
+      path: '/chat',
+      icon: <MessageSquare className="h-4 w-4" />
     },
     {
-      title: "Settings",
-      path: "/settings",
-      icon: Settings,
+      name: 'Workflows',
+      path: '/workflows',
+      icon: <Workflow className="h-4 w-4" />
+    },
+    {
+      name: 'Atlas Link',
+      path: '/atlas-link',
+      icon: <Shield className="h-4 w-4" />
     }
   ];
 
-  // Tool items
-  const toolItems = [
+  // Tools navigation items
+  const toolsNavItems = [
     {
-      title: "Chat",
-      path: "/",
-      icon: MessageSquare,
-    },
-    {
-      title: "Text to Image",
-      path: "#",
-      icon: ImageIcon,
-      comingSoon: true
-    },
-    {
-      title: "Text to Video",
-      path: "#",
-      icon: Video,
-      comingSoon: true
-    },
-    {
-      title: "3D Generator",
-      path: "#",
-      icon: Cube,
-      comingSoon: true
+      name: 'Settings',
+      path: '/settings',
+      icon: <Settings className="h-4 w-4" />
     }
   ];
 
   return (
     <Sidebar>
       <SidebarHeader>
-        <div className="flex items-center gap-2 py-1">
-          <Bot className="h-6 w-6 text-primary" />
-          <span className="font-semibold text-lg">Atlas Assistant</span>
-        </div>
+        <SidebarHeaderTitle>
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="2" 
+            strokeLinecap="round" 
+            strokeLinejoin="round" 
+            className="h-6 w-6"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 2a4.5 4.5 0 0 0 0 9 4.5 4.5 0 0 1 0 9 10 10 0 0 0 0-18Z" />
+            <path d="M12 2c-2 4-4 5-6 6 1.5 2 2 4 2 6s-.5 4-2 6c2-1 4-2 6-6 2 4 4 5 6 6-1.5-2-2-4-2-6s.5-4 2-6c-2 1-4 2-6 6Z" />
+          </svg>
+          <span>Atlas Assistant</span>
+        </SidebarHeaderTitle>
       </SidebarHeader>
+      
       <SidebarContent>
+        {/* Primary Navigation */}
         <SidebarGroup>
           <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {mainNavItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton 
-                    asChild
-                    isActive={location.pathname === item.path}
-                  >
+              {primaryNavItems.map((item) => (
+                <SidebarMenuItem key={item.name}>
+                  <SidebarMenuButton asChild isActive={isActive(item.path)}>
                     <Link to={item.path}>
-                      <item.icon className="h-4 w-4" />
-                      <span>{item.title}</span>
+                      {item.icon}
+                      <span>{item.name}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -107,23 +109,17 @@ const AppSidebar = () => {
         
         <SidebarSeparator />
         
+        {/* Tools Navigation */}
         <SidebarGroup>
           <SidebarGroupLabel>Tools</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {toolItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton 
-                    asChild
-                    isActive={location.pathname === item.path && !item.comingSoon}
-                    disabled={item.comingSoon}
-                  >
+              {toolsNavItems.map((item) => (
+                <SidebarMenuItem key={item.name}>
+                  <SidebarMenuButton asChild isActive={isActive(item.path)}>
                     <Link to={item.path}>
-                      <item.icon className="h-4 w-4" />
-                      <span>{item.title}</span>
-                      {item.comingSoon && (
-                        <span className="ml-auto text-xs opacity-60">Soon</span>
-                      )}
+                      {item.icon}
+                      <span>{item.name}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -132,13 +128,23 @@ const AppSidebar = () => {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      
       <SidebarFooter>
-        <div className="text-xs text-muted-foreground">
-          <p>Atlas Assistant v1.0</p>
-          <p>© 2024 Trinity Dodge</p>
-        </div>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton>
+              <User className="h-4 w-4" />
+              <span>Profile</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton>
+              <LogOut className="h-4 w-4" />
+              <span>Sign out</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarFooter>
-      <SidebarRail />
     </Sidebar>
   );
 };
