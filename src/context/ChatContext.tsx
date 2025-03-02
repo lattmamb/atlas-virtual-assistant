@@ -39,11 +39,11 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
           
           // Check which providers have keys configured
           if (data[0].api_key) providers.push("openai");
-          if (data[0].anthropic) providers.push("anthropic");
+          if ('anthropic' in data[0] && data[0].anthropic) providers.push("anthropic");
           if (data[0]["hugging face"] || data[0].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) providers.push("huggingface");
-          if (data[0].google) providers.push("google");
-          if (data[0].cohere) providers.push("cohere");
-          if (data[0].openrouter) providers.push("openrouter");
+          if ('google' in data[0] && data[0].google) providers.push("google");
+          if ('cohere' in data[0] && data[0].cohere) providers.push("cohere");
+          if ('openrouter' in data[0] && data[0].openrouter) providers.push("openrouter");
           
           setAvailableProviders(providers);
           

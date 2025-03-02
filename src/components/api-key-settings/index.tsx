@@ -10,13 +10,13 @@ interface ApiKeyDisplayData {
   api_key?: string;
   "hugging face"?: string;
   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?: string;
-  // These are for UI display only
-  openai?: string;
   anthropic?: string;
   google?: string;
   cohere?: string;
-  huggingface?: string;
   openrouter?: string;
+  // These are for UI display only
+  openai?: string;
+  huggingface?: string;
 }
 
 const ApiKeySettings = () => {
@@ -52,11 +52,11 @@ const ApiKeySettings = () => {
           if (data[0]["hugging face"]) keysData["hugging face"] = data[0]["hugging face"];
           if (data[0].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) keysData.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 = data[0].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;
           
-          // Additional provider keys
-          if (data[0].anthropic) keysData.anthropic = data[0].anthropic;
-          if (data[0].google) keysData.google = data[0].google;
-          if (data[0].cohere) keysData.cohere = data[0].cohere;
-          if (data[0].openrouter) keysData.openrouter = data[0].openrouter;
+          // Additional provider keys - check if properties exist before accessing
+          if ('anthropic' in data[0] && data[0].anthropic) keysData.anthropic = data[0].anthropic;
+          if ('google' in data[0] && data[0].google) keysData.google = data[0].google;
+          if ('cohere' in data[0] && data[0].cohere) keysData.cohere = data[0].cohere;
+          if ('openrouter' in data[0] && data[0].openrouter) keysData.openrouter = data[0].openrouter;
           
           // For UI display - show the actual keys if we fetched them
           if (data[0].api_key) keysData.openai = data[0].api_key;
@@ -64,7 +64,7 @@ const ApiKeySettings = () => {
             keysData["hugging face"] = data[0]["hugging face"];
             keysData.huggingface = data[0]["hugging face"];
           }
-          if (data[0].openrouter) keysData.openrouter = data[0].openrouter;
+          if ('openrouter' in data[0] && data[0].openrouter) keysData.openrouter = data[0].openrouter;
           
           setApiKeys(keysData);
         }
@@ -154,12 +154,16 @@ const ApiKeySettings = () => {
           api_key: updatedData[0].api_key,
           "hugging face": updatedData[0]["hugging face"],
           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: updatedData[0].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,
-          anthropic: updatedData[0].anthropic,
-          google: updatedData[0].google,
-          cohere: updatedData[0].cohere,
-          openrouter: updatedData[0].openrouter,
-          openai: updatedData[0].api_key,
         };
+        
+        // Add additional provider keys if they exist in the response
+        if ('anthropic' in updatedData[0]) savedKeys.anthropic = updatedData[0].anthropic;
+        if ('google' in updatedData[0]) savedKeys.google = updatedData[0].google;
+        if ('cohere' in updatedData[0]) savedKeys.cohere = updatedData[0].cohere;
+        if ('openrouter' in updatedData[0]) savedKeys.openrouter = updatedData[0].openrouter;
+        
+        // For UI display
+        savedKeys.openai = updatedData[0].api_key;
         
         setApiKeys(savedKeys);
       }
