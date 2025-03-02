@@ -76,6 +76,36 @@
   --glow-effect: rgba(52, 211, 153, 0.15);
 }
 
+/* Orange Theme */
+.theme-orange {
+  --background-primary: #7c2d12;
+  --background-secondary: #4c1d05;
+  --background-gradient: linear-gradient(to bottom, #7c2d12, #4c1d05);
+  --widget-bg: rgba(124, 45, 18, 0.4);
+  --widget-border: rgba(251, 146, 60, 0.2);
+  --widget-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --accent-color: #fb923c;
+  --accent-hover: #f97316;
+  --glow-effect: rgba(249, 115, 22, 0.15);
+}
+
+/* Red Theme */
+.theme-red {
+  --background-primary: #7f1d1d;
+  --background-secondary: #450a0a;
+  --background-gradient: linear-gradient(to bottom, #7f1d1d, #450a0a);
+  --widget-bg: rgba(127, 29, 29, 0.4);
+  --widget-border: rgba(252, 165, 165, 0.2);
+  --widget-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --accent-color: #f87171;
+  --accent-hover: #ef4444;
+  --glow-effect: rgba(239, 68, 68, 0.15);
+}
+
 /* Global theme application */
 body {
   background-color: var(--background-secondary);
@@ -102,4 +132,50 @@ body {
 
 .theme-glow {
   box-shadow: 0 0 20px var(--glow-effect);
+}
+
+/* Glassmorphism */
+.glass {
+  backdrop-filter: blur(16px);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.dark .glass {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Neomorphism */
+.neomorphic {
+  background: var(--background-primary);
+  box-shadow: 
+    8px 8px 16px rgba(0, 0, 0, 0.1), 
+    -8px -8px 16px rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+}
+
+.light .neomorphic {
+  box-shadow: 
+    8px 8px 16px rgba(0, 0, 0, 0.05), 
+    -8px -8px 16px rgba(255, 255, 255, 0.5);
+}
+
+/* Hybrid style (combining glassmorphism and neomorphism) */
+.hybrid {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    8px 8px 16px rgba(0, 0, 0, 0.1), 
+    -8px -8px 16px rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+}
+
+.light .hybrid {
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 
+    8px 8px 16px rgba(0, 0, 0, 0.05), 
+    -8px -8px 16px rgba(255, 255, 255, 0.5);
 }

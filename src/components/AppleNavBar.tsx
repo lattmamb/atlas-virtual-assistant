@@ -12,7 +12,7 @@ import {
   Search
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import ThemeSwitcher from './ThemeSwitcher';
+import ThemeSwitcherDropdown from './ThemeSwitcherDropdown';
 import { useTheme } from '@/context/ThemeContext';
 
 interface AppleNavBarProps {
@@ -112,7 +112,7 @@ const AppleNavBar: React.FC<AppleNavBarProps> = ({
           </Button>
         </Link>
         
-        <ThemeSwitcher />
+        <ThemeSwitcherDropdown />
         
         <Button 
           variant="ghost" 

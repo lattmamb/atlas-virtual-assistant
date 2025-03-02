@@ -22,7 +22,9 @@ import {
   Music,
   Search,
   Plus,
-  X
+  X,
+  Car,
+  CalendarClock
 } from 'lucide-react';
 import { GridPattern } from '@/components/ui/grid-pattern';
 import { cn } from '@/lib/utils';
@@ -30,6 +32,8 @@ import { toast } from "sonner";
 import { useTheme } from '@/context/ThemeContext';
 import ExpandedWeatherWidget from '@/components/widgets/ExpandedWeatherWidget';
 import InventoryWidget from '@/components/widgets/InventoryWidget';
+import TrinityCarsWidget from '@/components/widgets/TrinityCarsWidget';
+import TrinityEventsWidget from '@/components/widgets/TrinityEventsWidget';
 
 export default function Index() {
   const { currentTheme, isDarkMode } = useTheme();
@@ -39,7 +43,7 @@ export default function Index() {
   const [weatherData, setWeatherData] = useState({ temp: '72°', condition: 'Sunny', location: 'Taylorville, IL' });
   const [showWidgetSelector, setShowWidgetSelector] = useState(false);
   const [activeWidgets, setActiveWidgets] = useState<string[]>([
-    'time', 'photos', 'mail', 'calendar', 'notes', 'storage', 'music'
+    'trinity_cars', 'trinity_events', 'time', 'photos', 'mail', 'calendar', 'notes', 'storage', 'music'
   ]);
   
   const dateOptions: Intl.DateTimeFormatOptions = { weekday: 'long', month: 'long', day: 'numeric' };
@@ -72,6 +76,8 @@ export default function Index() {
   ];
   
   const availableWidgets = [
+    { id: 'trinity_cars', name: 'Trinity Vehicles', icon: <Car className="h-4 w-4" /> },
+    { id: 'trinity_events', name: 'Trinity Events', icon: <CalendarClock className="h-4 w-4" /> },
     { id: 'time', name: 'Time & Weather', icon: <Clock className="h-4 w-4" /> },
     { id: 'weather', name: 'Expanded Weather', icon: <Cloud className="h-4 w-4" /> },
     { id: 'inventory', name: 'Vehicle Inventory', icon: <Car className="h-4 w-4" /> },
@@ -281,11 +287,15 @@ export default function Index() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
             
+            {activeWidgets.includes('trinity_cars') && <TrinityCarsWidget />}
+            
+            {activeWidgets.includes('trinity_events') && <TrinityEventsWidget />}
+            
             {activeWidgets.includes('time') && (
               <AppleWidget 
                 title="Time & Weather"
                 icon={<Clock className="h-5 w-5 text-blue-400" />}
-                className="row-span-1"
+                className="row-span-1 glass"
                 onHeaderActionClick={handleRefreshWeather}
                 headerActionIcon={<Search className="h-4 w-4" />}
                 headerActionTooltip="Update Weather"
@@ -320,7 +330,7 @@ export default function Index() {
               <AppleWidget 
                 title="Photos"
                 icon={<Image className="h-5 w-5 text-blue-400" />}
-                className="row-span-1"
+                className="row-span-1 neomorphic"
                 headerActionIcon={<Grid className="h-4 w-4" />}
                 headerActionTooltip="View All Photos"
               >
@@ -353,7 +363,7 @@ export default function Index() {
               <AppleWidget 
                 title="Mail"
                 icon={<Mail className="h-5 w-5 text-blue-400" />}
-                className="row-span-1"
+                className="row-span-1 glass"
                 badge={emails.filter(email => !email.read).length}
               >
                 <div className="p-4">
@@ -390,7 +400,7 @@ export default function Index() {
               <AppleWidget 
                 title="Calendar"
                 icon={<Calendar className="h-5 w-5 text-blue-400" />}
-                className="row-span-1 md:col-span-2"
+                className="row-span-1 md:col-span-2 hybrid"
               >
                 <div className="p-4 flex flex-col h-full">
                   <div className="text-sm text-blue-300 mb-4">Upcoming Events</div>
@@ -423,7 +433,7 @@ export default function Index() {
               <AppleWidget 
                 title="Notes"
                 icon={<FileText className="h-5 w-5 text-blue-400" />}
-                className="row-span-1"
+                className="row-span-1 neomorphic"
               >
                 <div className="p-4">
                   <div className={cn(
@@ -454,7 +464,7 @@ export default function Index() {
               <AppleWidget 
                 title="iCloud Storage"
                 icon={<Cloud className="h-5 w-5 text-blue-400" />}
-                className="row-span-1"
+                className="row-span-1 glass"
               >
                 <div className="p-4">
                   <div className="mb-2 flex justify-between items-center">
@@ -500,7 +510,7 @@ export default function Index() {
               <AppleWidget 
                 title="Music"
                 icon={<Music className="h-5 w-5 text-blue-400" />}
-                className="row-span-1"
+                className="row-span-1 hybrid"
               >
                 <div className="p-4 flex flex-col h-full">
                   <div className="text-center">
@@ -554,6 +564,3 @@ export default function Index() {
     </div>
   );
 }
-
-// Add Car import
-import { Car } from 'lucide-react';
