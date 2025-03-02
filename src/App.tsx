@@ -1,7 +1,7 @@
 
 import { useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
-import "./styles/index.css";
+import "./App.css";
 import "./styles/theme.css";
 import { ChatProvider } from "./context/ChatContext";
 import { ThemeProvider } from "./context/ThemeContext";
@@ -43,9 +43,7 @@ function App() {
           toastOptions={{
             className: "frosted-glass",
             style: {
-              borderRadius: '16px', // More Apple-like rounded corners
-              padding: '12px',
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
+              borderRadius: '12px',
             }
           }}
         />

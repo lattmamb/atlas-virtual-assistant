@@ -8,21 +8,13 @@ import { useAtlasLink } from './AtlasLinkContext';
 import { RetroGrid } from '@/components/ui/retro-grid';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, ChevronDown } from 'lucide-react';
-import { useTheme } from '@/context/ThemeContext';
-import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 const ChatTab: React.FC = () => {
   const { celestialMode, messages, inputMessage, setInputMessage, handleSendMessage } = useAtlasLink();
-  const { isDarkMode } = useTheme();
-  const [darkChatTheme, setDarkChatTheme] = useState(isDarkMode);
+  const [darkChatTheme, setDarkChatTheme] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [showScrollButton, setShowScrollButton] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement>(null);
-
-  // Update dark theme when system preference changes
-  useEffect(() => {
-    setDarkChatTheme(isDarkMode);
-  }, [isDarkMode]);
 
   // Scroll to bottom of messages
   const scrollToBottom = () => {
@@ -51,17 +43,13 @@ const ChatTab: React.FC = () => {
       )}
       
       <Card className={cn(
-        "h-full flex flex-col relative z-10 overflow-hidden theme-transition",
+        "h-full flex flex-col relative z-10 overflow-hidden",
         celestialMode 
           ? "dark-apple-card" 
           : darkChatTheme 
             ? "dark-chat-card" 
             : "apple-card"
       )}>
-        <div className="absolute top-2 right-2 z-20">
-          <ThemeToggle iconOnly className="bg-opacity-80 backdrop-blur-sm" />
-        </div>
-        
         <CardContent className="flex-1 p-4 flex flex-col h-full">
           <div 
             ref={chatContainerRef}
@@ -88,7 +76,7 @@ const ChatTab: React.FC = () => {
                   }}
                 >
                   <div className={cn(
-                    "p-3 rounded-2xl theme-transition",
+                    "p-3 rounded-2xl",
                     message.role === 'user' 
                       ? "bg-primary text-primary-foreground rounded-tr-sm" 
                       : darkChatTheme && !celestialMode
@@ -126,7 +114,7 @@ const ChatTab: React.FC = () => {
               onChange={e => setInputMessage(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && !e.shiftKey && handleSendMessage()}
               placeholder="Ask me anything..."
-              className={cn("flex-1 theme-transition", 
+              className={cn("flex-1", 
                 darkChatTheme && !celestialMode 
                   ? "bg-gray-900 text-white border-gray-700" 
                   : "border-gray-200 dark:border-gray-700"
@@ -146,6 +134,18 @@ const ChatTab: React.FC = () => {
           </div>
         </CardContent>
       </Card>
+      
+      {/* Theme toggle button */}
+      {!celestialMode && (
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={() => setDarkChatTheme(!darkChatTheme)} 
+          className="absolute bottom-6 right-6 z-20 bg-gray-800/80 text-white hover:bg-gray-700/80 backdrop-blur-sm rounded-full"
+        >
+          {darkChatTheme ? "Light Chat" : "Dark Chat"}
+        </Button>
+      )}
     </div>
   );
 };

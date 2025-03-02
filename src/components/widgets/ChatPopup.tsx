@@ -1,43 +1,20 @@
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { AtlasChatBot } from '@/components/atlas/index';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
-import { SparklesCore } from '@/components/ui/sparkles';
-import { useTheme } from '@/context/ThemeContext';
-import { ThemeToggle } from '@/components/ui/theme-toggle';
-import { VoiceAssistant } from '@/components/ui/voice-assistant';
-import { AIPersonalization } from '@/components/ui/ai-personalization';
-import { triggerHaptic } from '@/lib/utils-haptic';
 
 interface ChatPopupProps {
-  isDarkMode?: boolean;
+  isDarkMode: boolean;
   onClose?: () => void;
 }
 
-const ChatPopup: React.FC<ChatPopupProps> = ({ onClose, isDarkMode: propIsDarkMode }) => {
-  const { isDarkMode: contextIsDarkMode } = useTheme();
-  
-  // Use prop if provided, otherwise use context
-  const isDarkMode = propIsDarkMode !== undefined ? propIsDarkMode : contextIsDarkMode;
-
-  // Add focus trapping for accessibility
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && onClose) {
-        onClose();
-      }
-    };
-    
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
-
+const ChatPopup: React.FC<ChatPopupProps> = ({ isDarkMode, onClose }) => {
   return (
     <motion.div 
       className={cn(
-        "fixed bottom-20 right-4 z-40 w-80 md:w-96 h-[500px] shadow-2xl rounded-2xl overflow-hidden theme-transition",
+        "fixed bottom-20 right-4 z-40 w-80 md:w-96 h-[500px] shadow-2xl rounded-2xl overflow-hidden",
         isDarkMode 
           ? "backdrop-blur-xl border border-white/10 bg-[#1a1a1a]/90"
           : "backdrop-blur-xl border border-black/10 bg-white/90",
@@ -52,49 +29,21 @@ const ChatPopup: React.FC<ChatPopupProps> = ({ onClose, isDarkMode: propIsDarkMo
         damping: 25 
       }}
     >
-      {/* Sparkles background effect for visual polish */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <SparklesCore
-          id="chatPopupSparkles"
-          background="transparent"
-          minSize={0.6}
-          maxSize={1.2}
-          particleColor={isDarkMode ? "#ffffff" : "#007AFF"}
-          particleDensity={30}
-          className="w-full h-full opacity-30"
-          speed={0.5}
-        />
-      </div>
-
-      <div className="absolute top-2 right-12 z-50">
-        <ThemeToggle iconOnly className="bg-opacity-80 backdrop-blur-sm" />
-      </div>
-
       {onClose && (
         <motion.button
           className="absolute top-2 right-2 z-50 p-1.5 rounded-full bg-gray-200/80 text-gray-700 
                     hover:bg-gray-300/80 dark:bg-gray-700/80 dark:text-gray-200 dark:hover:bg-gray-600/80
-                    backdrop-blur-sm theme-transition"
-          onClick={() => {
-            triggerHaptic();
-            onClose();
-          }}
+                    backdrop-blur-sm"
+          onClick={onClose}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          aria-label="Close chat"
         >
           <X className="h-4 w-4" />
         </motion.button>
       )}
-      <div className="h-full overflow-hidden rounded-2xl relative z-10">
+      <div className="h-full overflow-hidden rounded-2xl">
         <AtlasChatBot />
       </div>
-      
-      {/* AI Personalization component */}
-      <AIPersonalization />
-      
-      {/* Voice Assistant activation button */}
-      <VoiceAssistant />
     </motion.div>
   );
 };

@@ -1,10 +1,13 @@
 
-/* Import design system */
-@import './design-system/index.css';
+/* Import base styles and Tailwind directives */
+@import './base.css';
 
-/* Import legacy component styles */
+/* Import component styles */
 @import './components/icloud.css';
 @import './theme.css';
+
+/* Import animations */
+@import './animations.css';
 
 /* Import responsive styles */
 @import './responsive.css';
