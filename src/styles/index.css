@@ -6,8 +6,5 @@
 @import './components/icloud.css';
 @import './theme.css';
 
-/* Import legacy animations */
-@import './animations.css';
-
 /* Import responsive styles */
 @import './responsive.css';

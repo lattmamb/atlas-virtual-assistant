@@ -1,0 +1,65 @@
+
+/* Utility and general-purpose animations */
+@keyframes dot-pulse {
+  0%, 100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+/* Apple-style fluid animations */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.ripple-effect {
+  animation: ripple 1.5s ease-out;
+}
+
+@keyframes wave {
+  0% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.6);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+.wave1 {
+  animation: wave 1.2s ease-in-out infinite 0.1s;
+}
+
+.wave2 {
+  animation: wave 1.2s ease-in-out infinite 0.2s;
+}
+
+.wave3 {
+  animation: wave 1.2s ease-in-out infinite 0.3s;
+}
+
+@keyframes grid {
+  0% {
+    transform: translateY(-50%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.grid-animation {
+  animation: grid 15s linear infinite;
+}
