@@ -1,62 +1,34 @@
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { ChatProvider } from "@/context/ChatContext";
-import AtlasChatBot from "@/components/AtlasChatBot";
-import { supabase } from "@/integrations/supabase/client";
+import { useEffect } from "react";
+import { Route, Routes, useLocation } from "react-router-dom";
+import "./App.css";
+import { ChatContextProvider } from "./context/ChatContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Settings from "./pages/Settings";
-import WorkflowDashboard from "./components/workflow";
-import WorkflowBuilder from "./components/workflow/WorkflowBuilder";
+import Workflows from "./pages/Workflows";
+import AtlasLink from "./pages/AtlasLink";
+import { Toaster } from "./components/ui/sonner";
 
-const queryClient = new QueryClient();
-
-const App = () => {
-  const [isInitialized, setIsInitialized] = useState(false);
+function App() {
+  const location = useLocation();
 
   useEffect(() => {
-    setIsInitialized(true);
-  }, []);
-
-  if (!isInitialized) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="loading-dots">
-          <div className="dot"></div>
-          <div className="dot"></div>
-          <div className="dot"></div>
-        </div>
-      </div>
-    );
-  }
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <ChatProvider>
-          <div className="min-h-screen bg-background">
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/workflows" element={<WorkflowDashboard />} />
-                <Route path="/workflows/builder" element={<WorkflowBuilder />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-              <AtlasChatBot />
-            </BrowserRouter>
-          </div>
-        </ChatProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
+    <ChatContextProvider>
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/workflows" element={<Workflows />} />
+        <Route path="/atlas-link" element={<AtlasLink />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+      <Toaster richColors position="top-center" />
+    </ChatContextProvider>
   );
-};
+}
 
 export default App;

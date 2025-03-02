@@ -38,18 +38,78 @@
 
 /* Apple card styling */
 .apple-card {
-  border-radius: 12px;
-  transition: all 0.3s ease;
+  @apply rounded-xl shadow-md border border-white/20 bg-white/80 backdrop-blur-md p-4 transition-all duration-300;
 }
 
 /* Dark mode apple card */
 .dark-apple-card {
-  @apply bg-slate-800/90 backdrop-blur-lg border border-slate-700 shadow-lg;
-  border-radius: 12px;
+  @apply bg-slate-800/90 backdrop-blur-lg border border-slate-700 shadow-lg rounded-xl p-4;
 }
 
 /* Mobile optimized widget */
 .mobile-widget {
   @apply w-full relative my-2 max-w-full;
   transform: none !important;
+}
+
+/* Celestial mode effects */
+.celestial-bg {
+  @apply bg-gradient-to-br from-slate-900 to-slate-950;
+}
+
+.star {
+  @apply absolute rounded-full bg-white opacity-70;
+  animation: twinkle 3s infinite ease-in-out;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* Dashboard grid layout */
+.dashboard-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4;
+  height: calc(100vh - 80px);
+  overflow-y: auto;
+}
+
+/* Chat components */
+.chat-box {
+  @apply flex flex-col h-full overflow-hidden rounded-lg border border-slate-200;
+}
+
+.chat-messages {
+  @apply flex-1 overflow-y-auto p-3 space-y-3;
+}
+
+.chat-input-container {
+  @apply border-t p-2 flex items-center;
+}
+
+.user-message {
+  @apply bg-primary text-primary-foreground p-3 rounded-lg ml-auto max-w-[75%];
+}
+
+.ai-message {
+  @apply bg-muted p-3 rounded-lg mr-auto max-w-[75%];
+}
+
+/* Workflow canvas */
+.workflow-canvas {
+  @apply border border-dashed border-slate-300 rounded-lg p-4 h-48 flex items-center justify-center text-muted-foreground;
+}
+
+/* Social feed */
+.social-feed {
+  @apply space-y-3 overflow-y-auto max-h-48;
+}
+
+.social-post {
+  @apply bg-muted/50 p-3 rounded-lg text-sm;
+}
+
+/* Mobility map */
+.mobility-map {
+  @apply bg-slate-100 dark:bg-slate-800 rounded-lg p-4 h-48 flex items-center justify-center text-muted-foreground;
 }

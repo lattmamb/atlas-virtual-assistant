@@ -14,22 +14,34 @@
   }
   
   /* Improved widget placement for mobile */
-  .widget-container {
+  .dashboard-grid {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    width: 100%;
+    padding: 0.5rem;
+    height: auto;
+    padding-bottom: 5rem; /* Space for bottom nav */
   }
   
   /* Adjust button sizing for mobile */
   .mode-switcher-buttons {
-    @apply bottom-2 right-2 flex-col gap-1;
+    @apply bottom-16 right-2 flex-col gap-1;
   }
   
   /* Improve scrolling on mobile */
   .widget-scroll-container {
     -webkit-overflow-scrolling: touch;
     max-height: 70vh;
+  }
+  
+  /* Bottom navigation for mobile */
+  .mobile-navigation {
+    @apply fixed bottom-0 left-0 right-0 flex justify-around items-center p-2 bg-background/80 backdrop-blur-md border-t z-50;
+  }
+  
+  /* Main container padding to accommodate fixed elements */
+  .main-container {
+    @apply pb-16;
   }
 }
 
@@ -53,11 +65,37 @@
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
   }
+  
+  /* Haptic feedback utility classes */
+  .tap-highlight {
+    -webkit-tap-highlight-color: rgba(0,0,0,0.1);
+  }
+  
+  /* Prevent text selection on interactive elements */
+  .no-select {
+    user-select: none;
+  }
 }
 
 /* Handle different screen heights */
 @media (max-height: 700px) {
   .icloud-widget {
     max-height: 80vh !important;
+  }
+  
+  .dashboard-grid {
+    padding-bottom: 4rem;
+  }
+}
+
+/* Landscape orientation adjustments */
+@media (max-width: 896px) and (orientation: landscape) {
+  .dashboard-grid {
+    @apply grid grid-cols-2 gap-2;
+    max-height: calc(100vh - 60px);
+  }
+  
+  .mobile-navigation {
+    @apply py-1;
   }
 }
