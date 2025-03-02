@@ -10,6 +10,8 @@ import { Settings, MessageSquare, Workflow, Shield } from 'lucide-react';
 
 export default function Index() {
   const [showChat, setShowChat] = useState(false);
+  const [showAppGrid, setShowAppGrid] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
 
   return (
     <ICloudLayout>
@@ -40,7 +42,12 @@ export default function Index() {
           </div>
         </header>
 
-        <AppGrid />
+        {showAppGrid && (
+          <AppGrid 
+            isDarkMode={isDarkMode} 
+            onClose={() => setShowAppGrid(false)} 
+          />
+        )}
 
         <div className="fixed bottom-4 right-4 z-40">
           <Button 
