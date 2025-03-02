@@ -109,12 +109,6 @@ const Sidebar: React.FC = () => {
                 value={apiKeys.huggingface}
                 onChange={e => setApiKeys({...apiKeys, huggingface: e.target.value})}
               />
-              <Input 
-                type="password" 
-                placeholder="Supabase Key" 
-                value={apiKeys.supabase}
-                onChange={e => setApiKeys({...apiKeys, supabase: e.target.value})}
-              />
               <Button onClick={handleSaveApiKeys} className="w-full apple-button">Save Keys</Button>
             </CardContent>
           </Card>

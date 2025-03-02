@@ -1,5 +1,5 @@
 
-export type ActiveTab = 'dashboard' | 'chat' | 'workflow' | 'settings';
+export type ActiveTab = 'dashboard' | 'chat' | 'workflow' | 'settings' | 'knowledge' | 'store' | 'api';
 
 export interface ApiKeys {
   openai: string;
