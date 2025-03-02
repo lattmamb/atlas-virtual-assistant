@@ -47,9 +47,8 @@ const ApiKeySettings = () => {
         }
       } catch (error: any) {
         toast({
-          title: "Error fetching API keys",
-          description: error.message,
-        })
+          description: `Error fetching API keys: ${error.message}`
+        });
       } finally {
         setIsLoading(false);
       }
@@ -61,7 +60,7 @@ const ApiKeySettings = () => {
   const saveApiKeys = async () => {
     setIsLoading(true);
     try {
-      const apiKeyData: Partial<ApiKey> = {
+      const apiKeyData = {
         id: id ? String(id) : undefined,
         api_key: openAIKey,
         anthropic: anthropicKey,
@@ -72,20 +71,18 @@ const ApiKeySettings = () => {
         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: hfKey // Required field
       };
 
-      const result = await supabase.from('api_keys').upsert([apiKeyData]);
+      const result = await supabase.from('api_keys').upsert(apiKeyData);
 
       if (result.error) {
         throw result.error;
       }
       toast({
-        title: "Success!",
-        description: "API keys saved",
-      })
+        description: "API keys saved successfully"
+      });
     } catch (error: any) {
       toast({
-        title: "Error saving API keys",
-        description: error.message,
-      })
+        description: `Error saving API keys: ${error.message}`
+      });
     } finally {
       setIsLoading(false);
     }
@@ -96,9 +93,8 @@ const ApiKeySettings = () => {
       .then(() => {
         setIsCopied(true);
         toast({
-          title: "Copied!",
-          description: "API endpoint copied to clipboard",
-        })
+          description: "API endpoint copied to clipboard"
+        });
         setTimeout(() => {
           setIsCopied(false);
         }, 3000);
@@ -106,9 +102,8 @@ const ApiKeySettings = () => {
       .catch((err) => {
         console.error("Failed to copy: ", err);
         toast({
-          title: "Error copying",
-          description: "Failed to copy API endpoint",
-        })
+          description: "Failed to copy API endpoint"
+        });
       });
   };
 

@@ -9,6 +9,9 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Settings from "./pages/Settings";
 import Atlas from "./pages/Atlas";
+import AtlasLink from "./pages/AtlasLink";
+import ChatRoom from "./pages/ChatRoom";
+import Workflows from "./pages/Workflows";
 import { Toaster } from "./components/ui/sonner";
 import LoadingScreen from "./components/ui/LoadingScreen";
 import { AnimatePresence } from "framer-motion";
@@ -29,6 +32,9 @@ function App() {
             <Route path="/" element={<Index />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/atlas" element={<Atlas />} />
+            <Route path="/atlas-link" element={<AtlasLink />} />
+            <Route path="/chat" element={<ChatRoom />} />
+            <Route path="/workflows" element={<Workflows />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AnimatePresence>

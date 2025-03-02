@@ -10,7 +10,9 @@ import {
   Grid,
   Cloud,
   Search,
-  Sparkles
+  Sparkles,
+  Workflow,
+  Shield
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ThemeSwitcherDropdown from './ThemeSwitcherDropdown';
@@ -106,6 +108,40 @@ const AppleNavBar: React.FC<AppleNavBarProps> = ({
             <Grid className="h-4 w-4" />
           </MotionButton>
         )}
+        
+        <MotionLink 
+          to="/atlas-link"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          <Button 
+            variant="ghost" 
+            size="icon"
+            className={cn(
+              "rounded-full w-8 h-8 transition-transform hover:scale-110 active:scale-95 glow-on-hover",
+              isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100"
+            )}
+          >
+            <Shield className="h-4 w-4" />
+          </Button>
+        </MotionLink>
+        
+        <MotionLink 
+          to="/workflows"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          <Button 
+            variant="ghost" 
+            size="icon"
+            className={cn(
+              "rounded-full w-8 h-8 transition-transform hover:scale-110 active:scale-95 glow-on-hover",
+              isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100"
+            )}
+          >
+            <Workflow className="h-4 w-4" />
+          </Button>
+        </MotionLink>
         
         <MotionLink 
           to="/chat"
