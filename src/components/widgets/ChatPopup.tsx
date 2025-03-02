@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { AtlasChatBot } from '@/components/atlas/index';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
@@ -7,6 +7,9 @@ import { X } from 'lucide-react';
 import { SparklesCore } from '@/components/ui/sparkles';
 import { useTheme } from '@/context/ThemeContext';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { VoiceAssistant } from '@/components/ui/voice-assistant';
+import { AIPersonalization } from '@/components/ui/ai-personalization';
+import { triggerHaptic } from '@/lib/utils-haptic';
 
 interface ChatPopupProps {
   isDarkMode?: boolean;
@@ -18,6 +21,18 @@ const ChatPopup: React.FC<ChatPopupProps> = ({ onClose, isDarkMode: propIsDarkMo
   
   // Use prop if provided, otherwise use context
   const isDarkMode = propIsDarkMode !== undefined ? propIsDarkMode : contextIsDarkMode;
+
+  // Add focus trapping for accessibility
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && onClose) {
+        onClose();
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
 
   return (
     <motion.div 
@@ -60,9 +75,13 @@ const ChatPopup: React.FC<ChatPopupProps> = ({ onClose, isDarkMode: propIsDarkMo
           className="absolute top-2 right-2 z-50 p-1.5 rounded-full bg-gray-200/80 text-gray-700 
                     hover:bg-gray-300/80 dark:bg-gray-700/80 dark:text-gray-200 dark:hover:bg-gray-600/80
                     backdrop-blur-sm theme-transition"
-          onClick={onClose}
+          onClick={() => {
+            triggerHaptic();
+            onClose();
+          }}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
+          aria-label="Close chat"
         >
           <X className="h-4 w-4" />
         </motion.button>
@@ -70,6 +89,12 @@ const ChatPopup: React.FC<ChatPopupProps> = ({ onClose, isDarkMode: propIsDarkMo
       <div className="h-full overflow-hidden rounded-2xl relative z-10">
         <AtlasChatBot />
       </div>
+      
+      {/* AI Personalization component */}
+      <AIPersonalization />
+      
+      {/* Voice Assistant activation button */}
+      <VoiceAssistant />
     </motion.div>
   );
 };

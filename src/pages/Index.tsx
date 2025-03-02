@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import AppGrid from '@/components/icloud/AppGrid';
 import ICloudLayout from '@/components/icloud/ICloudLayout';
@@ -25,6 +24,8 @@ import WidgetsGrid from '@/components/widgets/WidgetsGrid';
 import { motion } from 'framer-motion';
 import { SparklesCore } from '@/components/ui/sparkles';
 import { toast } from "sonner";
+import { VoiceAssistant } from '@/components/ui/voice-assistant';
+import { AIPersonalization } from '@/components/ui/ai-personalization';
 
 export default function Index() {
   const { currentTheme, isDarkMode } = useTheme();
@@ -258,6 +259,12 @@ export default function Index() {
             onClose={() => setShowChat(false)}
           />
         )}
+        
+        {/* Add AI Personalization only when chat is not shown */}
+        {!showChat && <AIPersonalization />}
+        
+        {/* Add Voice Assistant for the main page */}
+        <VoiceAssistant />
       </ICloudLayout>
     </div>
   );
