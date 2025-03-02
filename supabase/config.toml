@@ -10,10 +10,7 @@ max_rows = 1000
 
 [auth]
 enable_signup = true
-enable_account_linking = true
-email_provider_enabled = true
 jwt_exp = 3600
-enable_confirmations = false
 
 [db]
 port = 54322

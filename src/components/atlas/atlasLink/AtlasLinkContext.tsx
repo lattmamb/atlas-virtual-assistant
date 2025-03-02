@@ -43,8 +43,7 @@ export const AtlasLinkProvider: React.FC<{ children: ReactNode }> = ({ children 
   const [inputMessage, setInputMessage] = useState('');
   const [apiKeys, setApiKeys] = useState<ApiKeys>({
     openai: '',
-    huggingface: '',
-    supabase: ''
+    huggingface: ''
   });
   const [automationStatus, setAutomationStatus] = useState('No tasks scheduled.');
   const [selectedInstruction, setSelectedInstruction] = useState<string | null>(null);
@@ -58,8 +57,8 @@ export const AtlasLinkProvider: React.FC<{ children: ReactNode }> = ({ children 
   };
   
   const handleScheduleAutomation = () => {
-    if (!apiKeys.supabase) {
-      alert('Please provide a Supabase Key for automation scheduling.');
+    if (!apiKeys.openai) {
+      alert('Please provide an OpenAI API Key for automation scheduling.');
       return;
     }
     
