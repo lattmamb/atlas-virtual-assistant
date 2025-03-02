@@ -13,7 +13,8 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarSeparator
+  SidebarSeparator,
+  useSidebar
 } from '@/components/ui/sidebar';
 import { 
   Home, 
@@ -22,11 +23,14 @@ import {
   Shield, 
   Settings,
   User,
-  LogOut
+  LogOut,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 
 const AppSidebar = () => {
   const location = useLocation();
+  const { state, toggleSidebar } = useSidebar();
   
   const isActive = (path: string) => {
     return location.pathname === path;
@@ -130,20 +134,33 @@ const AppSidebar = () => {
       </SidebarContent>
       
       <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton>
-              <User className="h-4 w-4" />
-              <span>Profile</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton>
-              <LogOut className="h-4 w-4" />
-              <span>Sign out</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+        <div className="flex justify-between items-center px-4">
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton>
+                <User className="h-4 w-4" />
+                <span>Profile</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton>
+                <LogOut className="h-4 w-4" />
+                <span>Sign out</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+          <button
+            className="flex h-6 w-6 items-center justify-center rounded-full border bg-background shadow-md"
+            onClick={toggleSidebar}
+            aria-label="Toggle sidebar"
+          >
+            {state === "expanded" ? (
+              <ChevronLeft className="h-3 w-3" />
+            ) : (
+              <ChevronRight className="h-3 w-3" />
+            )}
+          </button>
+        </div>
       </SidebarFooter>
     </Sidebar>
   );
