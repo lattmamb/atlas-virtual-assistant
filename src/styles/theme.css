@@ -1,0 +1,105 @@
+
+/* Theme-specific styles */
+
+/* Dark Theme (Default) */
+.theme-dark {
+  --background-primary: #1a1a1a;
+  --background-secondary: #111111;
+  --background-gradient: linear-gradient(to bottom, #1a1a1a, #0c0c0c);
+  --widget-bg: rgba(0, 0, 0, 0.3);
+  --widget-border: rgba(255, 255, 255, 0.1);
+  --widget-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --accent-color: #007AFF;
+  --accent-hover: #0066CC;
+  --glow-effect: rgba(0, 122, 255, 0.1);
+}
+
+/* Light Theme */
+.theme-light {
+  --background-primary: #f5f5f7;
+  --background-secondary: #ffffff;
+  --background-gradient: linear-gradient(to bottom, #f5f5f7, #e5e5e5);
+  --widget-bg: rgba(255, 255, 255, 0.5);
+  --widget-border: rgba(0, 0, 0, 0.1);
+  --widget-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+  --text-primary: #000000;
+  --text-secondary: rgba(0, 0, 0, 0.6);
+  --accent-color: #007AFF;
+  --accent-hover: #0066CC;
+  --glow-effect: rgba(0, 122, 255, 0.1);
+}
+
+/* Blue Theme */
+.theme-blue {
+  --background-primary: #0c2d48;
+  --background-secondary: #051923;
+  --background-gradient: linear-gradient(to bottom, #0c2d48, #051923);
+  --widget-bg: rgba(12, 45, 72, 0.4);
+  --widget-border: rgba(86, 177, 240, 0.2);
+  --widget-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --accent-color: #56b1f0;
+  --accent-hover: #3a9bd4;
+  --glow-effect: rgba(86, 177, 240, 0.15);
+}
+
+/* Purple Theme */
+.theme-purple {
+  --background-primary: #2e1065;
+  --background-secondary: #1c0942;
+  --background-gradient: linear-gradient(to bottom, #2e1065, #1c0942);
+  --widget-bg: rgba(46, 16, 101, 0.4);
+  --widget-border: rgba(167, 139, 250, 0.2);
+  --widget-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --accent-color: #a78bfa;
+  --accent-hover: #8b5cf6;
+  --glow-effect: rgba(167, 139, 250, 0.15);
+}
+
+/* Green Theme */
+.theme-green {
+  --background-primary: #064e3b;
+  --background-secondary: #022c22;
+  --background-gradient: linear-gradient(to bottom, #064e3b, #022c22);
+  --widget-bg: rgba(6, 78, 59, 0.4);
+  --widget-border: rgba(52, 211, 153, 0.2);
+  --widget-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --accent-color: #34d399;
+  --accent-hover: #10b981;
+  --glow-effect: rgba(52, 211, 153, 0.15);
+}
+
+/* Global theme application */
+body {
+  background-color: var(--background-secondary);
+  color: var(--text-primary);
+}
+
+.apple-widget {
+  background-color: var(--widget-bg);
+  border-color: var(--widget-border);
+  box-shadow: var(--widget-shadow);
+}
+
+.accent-text {
+  color: var(--accent-color);
+}
+
+.accent-bg {
+  background-color: var(--accent-color);
+}
+
+.accent-border {
+  border-color: var(--accent-color);
+}
+
+.theme-glow {
+  box-shadow: 0 0 20px var(--glow-effect);
+}

@@ -8,12 +8,12 @@ import {
   Settings, 
   User, 
   Grid,
-  Moon,
-  Sun,
   Cloud,
   Search
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import ThemeSwitcher from './ThemeSwitcher';
+import { useTheme } from '@/context/ThemeContext';
 
 interface AppleNavBarProps {
   isDarkMode?: boolean;
@@ -25,13 +25,13 @@ interface AppleNavBarProps {
 }
 
 const AppleNavBar: React.FC<AppleNavBarProps> = ({
-  isDarkMode = true,
-  onToggleDarkMode,
   onToggleAppGrid,
   showAppGridButton = true,
   className,
   onSearch
 }) => {
+  const { isDarkMode } = useTheme();
+
   return (
     <div className={cn(
       "fixed top-0 left-0 right-0 z-50 h-12 backdrop-blur-xl flex items-center justify-between px-4 border-b transition-all duration-300",
@@ -112,21 +112,7 @@ const AppleNavBar: React.FC<AppleNavBarProps> = ({
           </Button>
         </Link>
         
-        <Button 
-          variant="ghost" 
-          size="icon"
-          onClick={onToggleDarkMode}
-          className={cn(
-            "rounded-full w-8 h-8 transition-transform hover:scale-110 active:scale-95",
-            isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100"
-          )}
-        >
-          {isDarkMode ? (
-            <Sun className="h-4 w-4" />
-          ) : (
-            <Moon className="h-4 w-4" />
-          )}
-        </Button>
+        <ThemeSwitcher />
         
         <Button 
           variant="ghost" 

@@ -4,6 +4,7 @@
 
 /* Import component styles */
 @import './components/icloud.css';
+@import './theme.css';
 
 /* Import animations */
 @import './animations.css';

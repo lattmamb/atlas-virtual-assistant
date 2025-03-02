@@ -1,31 +1,25 @@
 
-import React, { useState } from "react";
+import React from "react";
 import WorkflowDashboard from "@/components/workflow";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/AppSidebar";
 import AppleNavBar from "@/components/AppleNavBar";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useTheme } from "@/context/ThemeContext";
 
 const Workflows = () => {
-  const [isDarkMode, setIsDarkMode] = useState(true);
   const isMobile = useIsMobile();
-
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-  };
+  const { currentTheme, isDarkMode } = useTheme();
 
   return (
     <SidebarProvider defaultOpen={!isMobile}>
       <div className={cn(
-        "flex h-screen w-full overflow-hidden",
-        isDarkMode ? "bg-[#111111] text-white" : "bg-gray-50 text-gray-800"
+        `flex h-screen w-full overflow-hidden theme-${currentTheme}`
       )}>
         <AppSidebar />
         <main className="flex-1 flex flex-col overflow-hidden">
           <AppleNavBar 
-            isDarkMode={isDarkMode}
-            onToggleDarkMode={toggleDarkMode}
             showAppGridButton={false}
           />
           
