@@ -13,6 +13,7 @@ import AtlasLink from "./pages/AtlasLink";
 import ChatRoom from "./pages/ChatRoom";
 import { Toaster } from "./components/ui/sonner";
 import LoadingScreen from "./components/ui/LoadingScreen";
+import { AnimatePresence } from "framer-motion";
 
 function App() {
   const location = useLocation();
@@ -25,15 +26,27 @@ function App() {
     <ThemeProvider>
       <ChatProvider>
         <LoadingScreen />
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/workflows" element={<Workflows />} />
-          <Route path="/atlas-link" element={<AtlasLink />} />
-          <Route path="/chat" element={<ChatRoom />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-        <Toaster richColors position="top-center" />
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<Index />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/workflows" element={<Workflows />} />
+            <Route path="/atlas-link" element={<AtlasLink />} />
+            <Route path="/chat" element={<ChatRoom />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AnimatePresence>
+        <Toaster 
+          richColors 
+          position="top-center" 
+          closeButton
+          toastOptions={{
+            className: "frosted-glass",
+            style: {
+              borderRadius: '12px',
+            }
+          }}
+        />
       </ChatProvider>
     </ThemeProvider>
   );

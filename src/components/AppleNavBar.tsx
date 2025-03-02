@@ -9,11 +9,13 @@ import {
   User, 
   Grid,
   Cloud,
-  Search
+  Search,
+  Sparkles
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ThemeSwitcherDropdown from './ThemeSwitcherDropdown';
 import { useTheme } from '@/context/ThemeContext';
+import { toast } from 'sonner';
 
 interface AppleNavBarProps {
   isDarkMode?: boolean;
@@ -32,6 +34,13 @@ const AppleNavBar: React.FC<AppleNavBarProps> = ({
 }) => {
   const { isDarkMode } = useTheme();
 
+  const handleProfileClick = () => {
+    toast.success('Profile feature coming soon!', {
+      description: 'Your Trinity Dodge profile will be available in the next update.',
+      duration: 3000,
+    });
+  };
+
   return (
     <div className={cn(
       "fixed top-0 left-0 right-0 z-50 h-12 backdrop-blur-xl flex items-center justify-between px-4 border-b transition-all duration-300",
@@ -42,7 +51,7 @@ const AppleNavBar: React.FC<AppleNavBarProps> = ({
     )}>
       <div className="flex items-center">
         <SidebarTrigger className="mr-3" />
-        <Link to="/" className="flex items-center group">
+        <Link to="/" className="flex items-center group perspective-tilt">
           <div className="relative w-6 h-6 mr-2 flex items-center justify-center">
             <Cloud 
               className={cn(
@@ -50,8 +59,9 @@ const AppleNavBar: React.FC<AppleNavBarProps> = ({
                 "group-hover:scale-110 group-hover:rotate-[360deg]"
               )} 
             />
+            <Sparkles className="absolute h-3 w-3 bottom-[1px] right-[1px] text-amber-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </div>
-          <span className="font-medium hidden sm:inline transition-colors group-hover:text-blue-400">
+          <span className="font-medium hidden sm:inline transition-colors group-hover:text-blue-400 group-hover:animated-gradient-text">
             Atlas Assistant
           </span>
         </Link>
@@ -64,7 +74,7 @@ const AppleNavBar: React.FC<AppleNavBarProps> = ({
             size="icon"
             onClick={onSearch}
             className={cn(
-              "rounded-full w-8 h-8",
+              "rounded-full w-8 h-8 glow-on-hover",
               isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100"
             )}
           >
@@ -78,7 +88,7 @@ const AppleNavBar: React.FC<AppleNavBarProps> = ({
             size="icon"
             onClick={onToggleAppGrid}
             className={cn(
-              "rounded-full w-8 h-8 transition-transform hover:scale-110 active:scale-95",
+              "rounded-full w-8 h-8 transition-transform hover:scale-110 active:scale-95 glow-on-hover",
               isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100"
             )}
           >
@@ -91,7 +101,7 @@ const AppleNavBar: React.FC<AppleNavBarProps> = ({
             variant="ghost" 
             size="icon"
             className={cn(
-              "rounded-full w-8 h-8 transition-transform hover:scale-110 active:scale-95",
+              "rounded-full w-8 h-8 transition-transform hover:scale-110 active:scale-95 glow-on-hover",
               isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100"
             )}
           >
@@ -104,7 +114,7 @@ const AppleNavBar: React.FC<AppleNavBarProps> = ({
             variant="ghost" 
             size="icon"
             className={cn(
-              "rounded-full w-8 h-8 transition-transform hover:scale-110 active:scale-95",
+              "rounded-full w-8 h-8 transition-transform hover:scale-110 active:scale-95 glow-on-hover",
               isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100"
             )}
           >
@@ -117,11 +127,12 @@ const AppleNavBar: React.FC<AppleNavBarProps> = ({
         <Button 
           variant="ghost" 
           size="icon"
+          onClick={handleProfileClick}
           className={cn(
             "rounded-full w-8 h-8 ml-1 transition-all",
             "bg-gradient-to-br from-blue-500 to-blue-600 text-white",
             "hover:shadow-md hover:shadow-blue-500/20 hover:scale-110 active:scale-95",
-            "border border-blue-400/30"
+            "border border-blue-400/30 glow-on-hover"
           )}
         >
           <User className="h-4 w-4" />

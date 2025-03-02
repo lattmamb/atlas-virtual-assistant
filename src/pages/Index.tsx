@@ -22,6 +22,9 @@ import HeaderSection from '@/components/widgets/HeaderSection';
 import WidgetSelector from '@/components/widgets/WidgetSelector';
 import BackgroundEffects from '@/components/widgets/BackgroundEffects';
 import WidgetsGrid from '@/components/widgets/WidgetsGrid';
+import { motion } from 'framer-motion';
+import { SparklesCore } from '@/components/ui/sparkles';
+import { toast } from "sonner";
 
 export default function Index() {
   const { currentTheme, isDarkMode } = useTheme();
@@ -38,6 +41,15 @@ export default function Index() {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 60000);
+    
+    // Welcome toast
+    setTimeout(() => {
+      toast.success("Welcome to Atlas Assistant", {
+        description: "Your Trinity Dodge AI platform is ready to assist you.",
+        icon: <Cloud className="h-5 w-5 text-blue-400" />,
+        duration: 5000,
+      });
+    }, 1500);
     
     return () => clearInterval(timer);
   }, []);
@@ -80,11 +92,59 @@ export default function Index() {
     } else {
       setActiveWidgets([...activeWidgets, widgetId]);
     }
+    
+    toast.info(`Widget ${activeWidgets.includes(widgetId) ? "removed" : "added"}`, {
+      description: `${availableWidgets.find(w => w.id === widgetId)?.name} has been ${activeWidgets.includes(widgetId) ? "removed from" : "added to"} your dashboard.`,
+      duration: 2000,
+    });
+  };
+  
+  const toggleChat = () => {
+    setShowChat(!showChat);
+  };
+  
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.3
+      }
+    }
+  };
+  
+  const item = {
+    hidden: { y: 20, opacity: 0 },
+    show: { 
+      y: 0, 
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 25
+      }
+    }
   };
   
   return (
     <div className={`min-h-screen w-full overflow-hidden theme-${currentTheme}`}>
       <BackgroundEffects currentTheme={currentTheme} />
+      
+      {isDarkMode && (
+        <div className="fixed inset-0 pointer-events-none z-0 opacity-50">
+          <SparklesCore
+            id="tsparticlesfullpage"
+            background="transparent"
+            minSize={0.6}
+            maxSize={1.4}
+            particleDensity={20}
+            className="w-full h-full"
+            particleColor="#FFFFFF"
+            speed={0.5}
+          />
+        </div>
+      )}
       
       <ICloudLayout>
         <div className="relative z-10 mt-4 mb-8">
@@ -110,57 +170,94 @@ export default function Index() {
             toggleWidget={toggleWidget}
           />
           
-          <WidgetsGrid>
-            {activeWidgets.includes('trinity_cars') && <TrinityCarsWidget />}
-            
-            {activeWidgets.includes('trinity_events') && <TrinityEventsWidget />}
-            
-            {activeWidgets.includes('time') && (
-              <TimeWeatherWidget
-                currentTime={currentTime}
-                weatherData={weatherData}
-              />
-            )}
-            
-            {activeWidgets.includes('weather') && (
-              <ExpandedWeatherWidget />
-            )}
-            
-            {activeWidgets.includes('inventory') && (
-              <InventoryWidget />
-            )}
-            
-            {activeWidgets.includes('photos') && (
-              <PhotosWidget photos={photos} />
-            )}
-            
-            {activeWidgets.includes('mail') && (
-              <MailWidget emails={emails} />
-            )}
-            
-            {activeWidgets.includes('calendar') && (
-              <CalendarWidget events={events} />
-            )}
-            
-            {activeWidgets.includes('notes') && (
-              <NotesWidget />
-            )}
-            
-            {activeWidgets.includes('storage') && (
-              <StorageWidget />
-            )}
-            
-            {activeWidgets.includes('music') && (
-              <MusicWidget />
-            )}
-          </WidgetsGrid>
+          <motion.div
+            variants={container}
+            initial="hidden"
+            animate="show"
+          >
+            <WidgetsGrid>
+              {activeWidgets.includes('trinity_cars') && (
+                <motion.div variants={item}>
+                  <TrinityCarsWidget />
+                </motion.div>
+              )}
+              
+              {activeWidgets.includes('trinity_events') && (
+                <motion.div variants={item}>
+                  <TrinityEventsWidget />
+                </motion.div>
+              )}
+              
+              {activeWidgets.includes('time') && (
+                <motion.div variants={item}>
+                  <TimeWeatherWidget
+                    currentTime={currentTime}
+                    weatherData={weatherData}
+                  />
+                </motion.div>
+              )}
+              
+              {activeWidgets.includes('weather') && (
+                <motion.div variants={item}>
+                  <ExpandedWeatherWidget />
+                </motion.div>
+              )}
+              
+              {activeWidgets.includes('inventory') && (
+                <motion.div variants={item}>
+                  <InventoryWidget />
+                </motion.div>
+              )}
+              
+              {activeWidgets.includes('photos') && (
+                <motion.div variants={item}>
+                  <PhotosWidget photos={photos} />
+                </motion.div>
+              )}
+              
+              {activeWidgets.includes('mail') && (
+                <motion.div variants={item}>
+                  <MailWidget emails={emails} />
+                </motion.div>
+              )}
+              
+              {activeWidgets.includes('calendar') && (
+                <motion.div variants={item}>
+                  <CalendarWidget events={events} />
+                </motion.div>
+              )}
+              
+              {activeWidgets.includes('notes') && (
+                <motion.div variants={item}>
+                  <NotesWidget />
+                </motion.div>
+              )}
+              
+              {activeWidgets.includes('storage') && (
+                <motion.div variants={item}>
+                  <StorageWidget />
+                </motion.div>
+              )}
+              
+              {activeWidgets.includes('music') && (
+                <motion.div variants={item}>
+                  <MusicWidget />
+                </motion.div>
+              )}
+            </WidgetsGrid>
+          </motion.div>
         </div>
         
         <div className="fixed bottom-4 right-4 z-40">
-          <ChatButton onClick={() => setShowChat(!showChat)} />
+          <ChatButton onClick={toggleChat} />
         </div>
 
-        {showChat && <ChatPopup isDarkMode={isDarkMode} />}
+        {showChat && (
+          <ChatPopup 
+            isDarkMode={isDarkMode} 
+            onClose={() => setShowChat(false)}
+          />
+        )}
       </ICloudLayout>
     </div>
   );
