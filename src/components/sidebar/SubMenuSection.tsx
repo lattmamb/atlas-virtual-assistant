@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { NavItem } from './types';
+import { NavItem, SubMenuSectionProps } from './types';
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -10,13 +10,7 @@ import {
   SidebarMenuButton,
 } from '@/components/ui/sidebar';
 
-interface SubMenuSectionProps {
-  label: string;
-  items: NavItem[];
-  onItemClick?: (name: string) => void;
-}
-
-const SubMenuSection: React.FC<SubMenuSectionProps> = ({ label, items, onItemClick }) => {
+const SubMenuSection: React.FC<SubMenuSectionProps> = ({ label, items, isActive, onItemClick }) => {
   return (
     <SidebarGroup>
       <SidebarGroupLabel>{label}</SidebarGroupLabel>
@@ -25,6 +19,7 @@ const SubMenuSection: React.FC<SubMenuSectionProps> = ({ label, items, onItemCli
           {items.map((item) => (
             <SidebarMenuItem key={item.name}>
               <SidebarMenuButton 
+                isActive={isActive ? isActive(item.path) : false}
                 onClick={() => {
                   console.log(`Switch to ${item.name}`);
                   if (onItemClick) onItemClick(item.name);
@@ -32,7 +27,7 @@ const SubMenuSection: React.FC<SubMenuSectionProps> = ({ label, items, onItemCli
               >
                 <div className="flex items-center">
                   {item.icon}
-                  <span>{item.name}</span>
+                  <span className="ml-2">{item.name}</span>
                 </div>
               </SidebarMenuButton>
             </SidebarMenuItem>

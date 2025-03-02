@@ -11,7 +11,10 @@ import {
   Car,
   Calendar,
   Sparkles,
-  Link2
+  Link2,
+  Store,
+  Book,
+  Key
 } from 'lucide-react';
 
 // Primary navigation items
@@ -41,18 +44,38 @@ export const getPrimaryNavItems = (): NavItem[] => [
 export const getAtlasNavItems = (): NavItem[] => [
   {
     name: 'Chat',
-    path: '/atlas',
+    path: '/atlas?view=chat',
     icon: <MessageSquare className="h-4.5 w-4.5" />
   },
   {
-    name: 'Atlas Link',
-    path: '/atlas',
+    name: 'Link',
+    path: '/atlas?view=link',
     icon: <Link2 className="h-4.5 w-4.5" />
   },
   {
     name: 'Workflows',
-    path: '/atlas',
+    path: '/atlas?view=workflows',
     icon: <Workflow className="h-4.5 w-4.5" />
+  },
+  {
+    name: 'Store',
+    path: '/atlas?view=store',
+    icon: <Store className="h-4.5 w-4.5" />
+  },
+  {
+    name: 'Knowledge',
+    path: '/atlas?view=knowledge',
+    icon: <Book className="h-4.5 w-4.5" />
+  },
+  {
+    name: 'API',
+    path: '/atlas?view=api',
+    icon: <Key className="h-4.5 w-4.5" />
+  },
+  {
+    name: 'Settings',
+    path: '/atlas?view=settings',
+    icon: <Settings className="h-4.5 w-4.5" />
   }
 ];
 

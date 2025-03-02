@@ -16,3 +16,10 @@ export interface SidebarSectionProps {
   items: NavItem[];
   isActive: (path: string) => boolean;
 }
+
+export interface SubMenuSectionProps {
+  label: string;
+  items: NavItem[];
+  isActive?: (path: string) => boolean;
+  onItemClick?: (name: string) => void;
+}

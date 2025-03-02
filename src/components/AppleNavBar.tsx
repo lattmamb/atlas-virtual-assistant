@@ -23,6 +23,7 @@ import { motion } from 'framer-motion';
 interface AppleNavBarProps {
   onToggleAppGrid?: () => void;
   showAppGridButton?: boolean;
+  hideMainNav?: boolean;
   className?: string;
   onSearch?: () => void;
 }
@@ -30,6 +31,7 @@ interface AppleNavBarProps {
 const AppleNavBar: React.FC<AppleNavBarProps> = ({
   onToggleAppGrid,
   showAppGridButton = true,
+  hideMainNav = false,
   className,
   onSearch
 }) => {
@@ -76,125 +78,165 @@ const AppleNavBar: React.FC<AppleNavBarProps> = ({
         </MotionLink>
       </div>
       
-      <div className="flex items-center space-x-1 sm:space-x-2">
-        {onSearch && (
-          <MotionButton 
-            variant="ghost" 
-            size="icon"
-            onClick={onSearch}
-            className={cn(
-              "rounded-full w-8 h-8 glow-on-hover",
-              isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100"
-            )}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            <Search className="h-4 w-4" />
-          </MotionButton>
-        )}
-        
-        {showAppGridButton && (
-          <MotionButton 
-            variant="ghost" 
-            size="icon"
-            onClick={onToggleAppGrid}
-            className={cn(
-              "rounded-full w-8 h-8 transition-transform hover:scale-110 active:scale-95 glow-on-hover",
-              isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100"
-            )}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            <Grid className="h-4 w-4" />
-          </MotionButton>
-        )}
-        
-        <MotionLink 
-          to="/atlas-link"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-        >
-          <Button 
-            variant="ghost" 
-            size="icon"
-            className={cn(
-              "rounded-full w-8 h-8 transition-transform hover:scale-110 active:scale-95 glow-on-hover",
-              isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100"
-            )}
-          >
-            <Shield className="h-4 w-4" />
-          </Button>
-        </MotionLink>
-        
-        <MotionLink 
-          to="/workflows"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-        >
-          <Button 
-            variant="ghost" 
-            size="icon"
-            className={cn(
-              "rounded-full w-8 h-8 transition-transform hover:scale-110 active:scale-95 glow-on-hover",
-              isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100"
-            )}
-          >
-            <Workflow className="h-4 w-4" />
-          </Button>
-        </MotionLink>
-        
-        <MotionLink 
-          to="/chat"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-        >
-          <Button 
-            variant="ghost" 
-            size="icon"
-            className={cn(
-              "rounded-full w-8 h-8 transition-transform hover:scale-110 active:scale-95 glow-on-hover",
-              isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100"
-            )}
-          >
-            <MessageSquare className="h-4 w-4" />
-          </Button>
-        </MotionLink>
-        
-        <MotionLink 
-          to="/settings"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-        >
-          <Button 
-            variant="ghost" 
-            size="icon"
-            className={cn(
-              "rounded-full w-8 h-8 transition-transform hover:scale-110 active:scale-95 glow-on-hover",
-              isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100"
-            )}
-          >
-            <Settings className="h-4 w-4" />
-          </Button>
-        </MotionLink>
-        
-        <ThemeSwitcherDropdown />
-        
-        <MotionButton 
-          variant="ghost" 
-          size="icon"
-          onClick={handleProfileClick}
-          className={cn(
-            "rounded-full w-8 h-8 ml-1 transition-all",
-            "bg-gradient-to-br from-blue-500 to-blue-600 text-white",
-            "hover:shadow-md hover:shadow-blue-500/20 hover:scale-110 active:scale-95",
-            "border border-blue-400/30 glow-on-hover"
+      {!hideMainNav && (
+        <div className="flex items-center space-x-1 sm:space-x-2">
+          {onSearch && (
+            <MotionButton 
+              variant="ghost" 
+              size="icon"
+              onClick={onSearch}
+              className={cn(
+                "rounded-full w-8 h-8 glow-on-hover",
+                isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100"
+              )}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <Search className="h-4 w-4" />
+            </MotionButton>
           )}
-          whileHover={{ scale: 1.1, y: -2 }}
-          whileTap={{ scale: 0.9 }}
-        >
-          <User className="h-4 w-4" />
-        </MotionButton>
-      </div>
+          
+          {showAppGridButton && (
+            <MotionButton 
+              variant="ghost" 
+              size="icon"
+              onClick={onToggleAppGrid}
+              className={cn(
+                "rounded-full w-8 h-8 transition-transform hover:scale-110 active:scale-95 glow-on-hover",
+                isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100"
+              )}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <Grid className="h-4 w-4" />
+            </MotionButton>
+          )}
+          
+          <MotionLink 
+            to="/atlas-link"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <Button 
+              variant="ghost" 
+              size="icon"
+              className={cn(
+                "rounded-full w-8 h-8 transition-transform hover:scale-110 active:scale-95 glow-on-hover",
+                isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100"
+              )}
+            >
+              <Shield className="h-4 w-4" />
+            </Button>
+          </MotionLink>
+          
+          <MotionLink 
+            to="/workflows"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <Button 
+              variant="ghost" 
+              size="icon"
+              className={cn(
+                "rounded-full w-8 h-8 transition-transform hover:scale-110 active:scale-95 glow-on-hover",
+                isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100"
+              )}
+            >
+              <Workflow className="h-4 w-4" />
+            </Button>
+          </MotionLink>
+          
+          <MotionLink 
+            to="/chat"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <Button 
+              variant="ghost" 
+              size="icon"
+              className={cn(
+                "rounded-full w-8 h-8 transition-transform hover:scale-110 active:scale-95 glow-on-hover",
+                isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100"
+              )}
+            >
+              <MessageSquare className="h-4 w-4" />
+            </Button>
+          </MotionLink>
+          
+          <MotionLink 
+            to="/settings"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <Button 
+              variant="ghost" 
+              size="icon"
+              className={cn(
+                "rounded-full w-8 h-8 transition-transform hover:scale-110 active:scale-95 glow-on-hover",
+                isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100"
+              )}
+            >
+              <Settings className="h-4 w-4" />
+            </Button>
+          </MotionLink>
+          
+          <ThemeSwitcherDropdown />
+          
+          <MotionButton 
+            variant="ghost" 
+            size="icon"
+            onClick={handleProfileClick}
+            className={cn(
+              "rounded-full w-8 h-8 ml-1 transition-all",
+              "bg-gradient-to-br from-blue-500 to-blue-600 text-white",
+              "hover:shadow-md hover:shadow-blue-500/20 hover:scale-110 active:scale-95",
+              "border border-blue-400/30 glow-on-hover"
+            )}
+            whileHover={{ scale: 1.1, y: -2 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <User className="h-4 w-4" />
+          </MotionButton>
+        </div>
+      )}
+      
+      {hideMainNav && (
+        <div className="flex items-center space-x-2">
+          {showAppGridButton && (
+            <MotionButton 
+              variant="ghost" 
+              size="icon"
+              onClick={onToggleAppGrid}
+              className={cn(
+                "rounded-full w-8 h-8 glow-on-hover",
+                isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100"
+              )}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <Grid className="h-4 w-4" />
+            </MotionButton>
+          )}
+          
+          <ThemeSwitcherDropdown />
+          
+          <MotionButton 
+            variant="ghost" 
+            size="icon"
+            onClick={handleProfileClick}
+            className={cn(
+              "rounded-full w-8 h-8 ml-1 transition-all",
+              "bg-gradient-to-br from-blue-500 to-blue-600 text-white",
+              "hover:shadow-md hover:shadow-blue-500/20 hover:scale-110 active:scale-95",
+              "border border-blue-400/30 glow-on-hover"
+            )}
+            whileHover={{ scale: 1.1, y: -2 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <User className="h-4 w-4" />
+          </MotionButton>
+        </div>
+      )}
     </div>
   );
 };

@@ -66,6 +66,11 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ activePage }) => {
             <SubMenuSection 
               label="Atlas Features" 
               items={getAtlasNavItems()} 
+              isActive={isActive}
+              onItemClick={(name) => {
+                console.log(`Clicked on ${name}`);
+                // Handle navigation within Atlas
+              }}
             />
           </>
         )}
