@@ -8,7 +8,6 @@ import { ThemeProvider } from "./context/ThemeContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Settings from "./pages/Settings";
-import Workflows from "./pages/Workflows";
 import Atlas from "./pages/Atlas";
 import { Toaster } from "./components/ui/sonner";
 import LoadingScreen from "./components/ui/LoadingScreen";
@@ -29,7 +28,6 @@ function App() {
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<Index />} />
             <Route path="/settings" element={<Settings />} />
-            <Route path="/workflows" element={<Workflows />} />
             <Route path="/atlas" element={<Atlas />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

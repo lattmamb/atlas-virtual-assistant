@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -21,10 +20,8 @@ import {
   Home, 
   MessageSquare, 
   Workflow, 
-  Shield, 
   Settings,
   User,
-  LogOut,
   ChevronLeft,
   ChevronRight,
   HelpCircle,
@@ -32,16 +29,6 @@ import {
   Car,
   Calendar,
   Sparkles,
-  FileText,
-  Clock,
-  Users,
-  BadgeCheck,
-  CreditCard,
-  FileQuestion,
-  Phone,
-  Headphones,
-  BarChart2,
-  Key,
   Link2
 } from 'lucide-react';
 import { useTheme } from '@/context/ThemeContext';
@@ -92,6 +79,11 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ activePage }) => {
       name: 'Atlas Link',
       path: '/atlas',
       icon: <Link2 className="h-4.5 w-4.5" />
+    },
+    {
+      name: 'Workflows',
+      path: '/atlas',
+      icon: <Workflow className="h-4.5 w-4.5" />
     }
   ] : [];
 
@@ -185,7 +177,11 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ activePage }) => {
                 <SidebarMenu>
                   {atlasNavItems.map((item) => (
                     <SidebarMenuItem key={item.name}>
-                      <SidebarMenuButton>
+                      <SidebarMenuButton 
+                        onClick={() => {
+                          console.log(`Switch to ${item.name}`);
+                        }}
+                      >
                         <div className="flex items-center">
                           {item.icon}
                           <span>{item.name}</span>

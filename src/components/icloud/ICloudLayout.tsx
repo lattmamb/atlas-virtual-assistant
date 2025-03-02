@@ -3,10 +3,8 @@ import React, { useState, ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { SidebarProvider } from '@/components/ui/sidebar';
-import { Grid, MessageSquare, Plus } from 'lucide-react';
 import AppSidebar from '@/components/AppSidebar';
 import AppleNavBar from '@/components/AppleNavBar';
-import { GridPattern } from '@/components/ui/grid-pattern';
 import { useLocation } from 'react-router-dom';
 
 interface ICloudLayoutProps {
@@ -26,7 +24,6 @@ const ICloudLayout: React.FC<ICloudLayoutProps> = ({ children, activePage }) => 
     
     const path = location.pathname;
     if (path.startsWith('/atlas')) return 'atlas';
-    if (path.startsWith('/workflows')) return 'workflows';
     if (path.startsWith('/settings')) return 'settings';
     return 'home';
   };

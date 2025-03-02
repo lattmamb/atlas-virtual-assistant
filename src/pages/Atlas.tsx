@@ -4,24 +4,30 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { useTheme } from '@/context/ThemeContext';
 import { cn } from '@/lib/utils';
-import { Link, Link2, MessageSquare, Shield } from 'lucide-react';
+import { Link2, MessageSquare, Workflow } from 'lucide-react';
 import AppSidebar from '@/components/AppSidebar';
 import AppleNavBar from '@/components/AppleNavBar';
 import ChatRoom from './ChatRoom';
 import AtlasLink from './AtlasLink';
+import WorkflowDashboard from '@/components/workflow';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 
 const Atlas = () => {
-  const [activeView, setActiveView] = useState<'chat' | 'link'>('chat');
+  const [activeView, setActiveView] = useState<'chat' | 'link' | 'workflows'>('chat');
   const { isDarkMode } = useTheme();
   const isMobile = useIsMobile();
 
   const renderContent = () => {
-    if (activeView === 'chat') {
-      return <ChatRoom />;
-    } else {
-      return <AtlasLink />;
+    switch (activeView) {
+      case 'chat':
+        return <ChatRoom />;
+      case 'link':
+        return <AtlasLink />;
+      case 'workflows':
+        return <WorkflowDashboard />;
+      default:
+        return <ChatRoom />;
     }
   };
 
@@ -63,6 +69,19 @@ const Atlas = () => {
               >
                 <Link2 className="h-4 w-4" />
                 <span>Atlas Link</span>
+              </Button>
+              
+              <Button
+                variant={activeView === 'workflows' ? "default" : "ghost"}
+                size="sm"
+                className={cn(
+                  "rounded-full gap-1 transition-all",
+                  activeView === 'workflows' ? "shadow-sm" : "hover:bg-black/5 dark:hover:bg-white/5"
+                )}
+                onClick={() => setActiveView('workflows')}
+              >
+                <Workflow className="h-4 w-4" />
+                <span>Workflows</span>
               </Button>
             </div>
           </div>
