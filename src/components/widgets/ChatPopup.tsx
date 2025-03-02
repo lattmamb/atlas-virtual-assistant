@@ -4,6 +4,7 @@ import { AtlasChatBot } from '@/components/atlas/index';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
+import { LampEffect } from '@/components/ui/LampEffect';
 
 interface ChatPopupProps {
   isDarkMode: boolean;
@@ -29,6 +30,8 @@ const ChatPopup: React.FC<ChatPopupProps> = ({ isDarkMode, onClose }) => {
         damping: 25 
       }}
     >
+      <LampEffect subtle className="absolute inset-0 -z-10" />
+      
       {onClose && (
         <motion.button
           className="absolute top-2 right-2 z-50 p-1.5 rounded-full bg-gray-200/80 text-gray-700 

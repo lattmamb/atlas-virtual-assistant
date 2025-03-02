@@ -105,3 +105,100 @@
 .sidebar-exit {
   animation: sidebar-slide-out 0.3s ease-out forwards;
 }
+
+/* Gemini-style scroll animations */
+@keyframes gemini-wave {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+.animate-gemini-wave {
+  animation: gemini-wave 8s ease-in-out infinite;
+}
+
+/* Gooey text animations */
+@keyframes gooey-morph {
+  0% {
+    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+  }
+  34% {
+    border-radius: 70% 30% 50% 50% / 30% 30% 70% 70%;
+  }
+  67% {
+    border-radius: 40% 60% 30% 70% / 60% 30% 70% 40%;
+  }
+  100% {
+    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+  }
+}
+
+.animate-gooey {
+  animation: gooey-morph 8s ease-in-out infinite;
+}
+
+/* Lamp effect animation */
+@keyframes lamp-glow {
+  0%, 100% {
+    opacity: 0.7;
+    filter: blur(20px) brightness(1.05);
+  }
+  50% {
+    opacity: 1;
+    filter: blur(25px) brightness(1.2);
+  }
+}
+
+.animate-lamp-glow {
+  animation: lamp-glow 5s ease-in-out infinite;
+}
+
+/* Star border animation */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 6s linear infinite;
+}
+
+@keyframes expand {
+  0% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-expand {
+  animation: expand 0.3s ease-out forwards;
+}
+
+/* Rainbow gradient animation */
+@keyframes gradient-x {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient-x {
+  animation: gradient-x 15s ease infinite;
+  background-size: 200% 200%;
+}
