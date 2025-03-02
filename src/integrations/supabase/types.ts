@@ -9,6 +9,42 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      api_integrations: {
+        Row: {
+          api_key: string
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+          service: string
+          status: string
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          api_key: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          service: string
+          status?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          api_key?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          service?: string
+          status?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       api_keys: {
         Row: {
           anthropic: string | null
@@ -86,6 +122,7 @@ export type Database = {
           content: string
           created_at: string | null
           id: string
+          is_active: boolean | null
           title: string
           updated_at: string | null
           user_id: string | null
@@ -94,6 +131,7 @@ export type Database = {
           content: string
           created_at?: string | null
           id?: string
+          is_active?: boolean | null
           title: string
           updated_at?: string | null
           user_id?: string | null
@@ -102,6 +140,7 @@ export type Database = {
           content?: string
           created_at?: string | null
           id?: string
+          is_active?: boolean | null
           title?: string
           updated_at?: string | null
           user_id?: string | null
