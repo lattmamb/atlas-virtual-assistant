@@ -25,7 +25,7 @@ const Sidebar: React.FC = () => {
 
   return (
     <div className={cn(
-      "md:w-72 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-r z-20 transition-transform duration-300",
+      "md:w-72 apple-glass border-r z-20 transition-transform duration-300",
       "flex flex-col justify-between",
       sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
     )}>
@@ -38,7 +38,7 @@ const Sidebar: React.FC = () => {
         <div className="space-y-1">
           <Button
             variant={activeTab === 'dashboard' ? "default" : "ghost"}
-            className="w-full justify-start"
+            className="w-full justify-start rounded-lg"
             onClick={() => setActiveTab('dashboard')}
           >
             <Home className="mr-2 h-4 w-4" />
@@ -47,7 +47,7 @@ const Sidebar: React.FC = () => {
           
           <Button
             variant={activeTab === 'chat' ? "default" : "ghost"}
-            className="w-full justify-start"
+            className="w-full justify-start rounded-lg"
             onClick={() => setActiveTab('chat')}
           >
             <MessageSquare className="mr-2 h-4 w-4" />
@@ -56,7 +56,7 @@ const Sidebar: React.FC = () => {
           
           <Button
             variant={activeTab === 'knowledge' ? "default" : "ghost"}
-            className="w-full justify-start"
+            className="w-full justify-start rounded-lg"
             onClick={() => setActiveTab('knowledge')}
           >
             <Book className="mr-2 h-4 w-4" />
@@ -65,7 +65,7 @@ const Sidebar: React.FC = () => {
           
           <Button
             variant={activeTab === 'store' ? "default" : "ghost"}
-            className="w-full justify-start"
+            className="w-full justify-start rounded-lg"
             onClick={() => setActiveTab('store')}
           >
             <Store className="mr-2 h-4 w-4" />
@@ -74,7 +74,7 @@ const Sidebar: React.FC = () => {
           
           <Button
             variant={activeTab === 'api' ? "default" : "ghost"}
-            className="w-full justify-start"
+            className="w-full justify-start rounded-lg"
             onClick={() => setActiveTab('api')}
           >
             <Key className="mr-2 h-4 w-4" />
@@ -83,7 +83,7 @@ const Sidebar: React.FC = () => {
           
           <Button
             variant={activeTab === 'settings' ? "default" : "ghost"}
-            className="w-full justify-start"
+            className="w-full justify-start rounded-lg"
             onClick={() => setActiveTab('settings')}
           >
             <Settings className="mr-2 h-4 w-4" />
@@ -92,7 +92,7 @@ const Sidebar: React.FC = () => {
         </div>
         
         {activeTab === 'settings' && (
-          <Card>
+          <Card className={celestialMode ? "dark-apple-card" : "apple-card"}>
             <CardHeader className="pb-2">
               <CardTitle className="text-base">API Keys</CardTitle>
             </CardHeader>
@@ -115,13 +115,13 @@ const Sidebar: React.FC = () => {
                 value={apiKeys.supabase}
                 onChange={e => setApiKeys({...apiKeys, supabase: e.target.value})}
               />
-              <Button onClick={handleSaveApiKeys} className="w-full">Save Keys</Button>
+              <Button onClick={handleSaveApiKeys} className="w-full apple-button">Save Keys</Button>
             </CardContent>
           </Card>
         )}
         
         {activeTab === 'chat' && (
-          <Card>
+          <Card className={celestialMode ? "dark-apple-card" : "apple-card"}>
             <CardHeader className="pb-2">
               <CardTitle className="text-base">Active Instructions</CardTitle>
             </CardHeader>
@@ -134,7 +134,7 @@ const Sidebar: React.FC = () => {
                 variant="outline" 
                 size="sm"
                 disabled={!selectedInstruction}
-                className="w-full"
+                className="w-full rounded-lg"
               >
                 Clear Instruction
               </Button>
@@ -143,13 +143,13 @@ const Sidebar: React.FC = () => {
         )}
         
         {activeTab === 'dashboard' && (
-          <Card>
+          <Card className={celestialMode ? "dark-apple-card" : "apple-card"}>
             <CardHeader className="pb-2">
               <CardTitle className="text-base">Workflow Automations</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
               <p className="text-sm text-muted-foreground">{automationStatus}</p>
-              <Button onClick={handleScheduleAutomation} className="w-full">Schedule Task</Button>
+              <Button onClick={handleScheduleAutomation} className="w-full apple-button">Schedule Task</Button>
             </CardContent>
           </Card>
         )}
@@ -157,7 +157,7 @@ const Sidebar: React.FC = () => {
         <Button 
           variant="outline" 
           onClick={toggleCelestialMode} 
-          className="w-full flex items-center gap-2"
+          className="w-full flex items-center gap-2 rounded-lg"
         >
           {celestialMode ? <Sun size={18} /> : <Moon size={18} />}
           {celestialMode ? "Normal Mode" : "Celestial Mode"}

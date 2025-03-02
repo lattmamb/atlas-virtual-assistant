@@ -13,7 +13,10 @@ const Dashboard: React.FC = () => {
   return (
     <div className="dashboard-grid overscroll-bounce">
       {/* Calendar Tile */}
-      <Card className={celestialMode ? "dark-apple-card" : "apple-card"}>
+      <Card className={cn(
+        celestialMode ? "dark-apple-card" : "apple-card",
+        "hover-scale"
+      )}>
         <div className="flex items-center gap-2 mb-3">
           <Calendar className="h-5 w-5 text-primary" />
           <h3 className="font-medium">Calendar</h3>
@@ -24,7 +27,10 @@ const Dashboard: React.FC = () => {
       </Card>
       
       {/* Mail Tile */}
-      <Card className={celestialMode ? "dark-apple-card" : "apple-card"}>
+      <Card className={cn(
+        celestialMode ? "dark-apple-card" : "apple-card",
+        "hover-scale"
+      )}>
         <div className="flex items-center gap-2 mb-3">
           <Mail className="h-5 w-5 text-primary" />
           <h3 className="font-medium">Mail</h3>
@@ -35,7 +41,10 @@ const Dashboard: React.FC = () => {
       </Card>
       
       {/* Photos Tile */}
-      <Card className={celestialMode ? "dark-apple-card" : "apple-card"}>
+      <Card className={cn(
+        celestialMode ? "dark-apple-card" : "apple-card",
+        "hover-scale"
+      )}>
         <div className="flex items-center gap-2 mb-3">
           <Image className="h-5 w-5 text-primary" />
           <h3 className="font-medium">Photos</h3>
@@ -48,21 +57,27 @@ const Dashboard: React.FC = () => {
       {/* Atlas AI Assistant */}
       <Card className={cn(
         "h-[300px] flex flex-col col-span-2 row-span-2",
-        celestialMode ? "dark-apple-card" : "apple-card"
+        celestialMode ? "dark-apple-card" : "apple-card",
+        "hover-scale"
       )}>
         <div className="flex items-center gap-2 mb-3">
           <MessageSquare className="h-5 w-5 text-primary" />
           <h3 className="font-medium">Atlas AI Assistant</h3>
         </div>
-        <div className="chat-box flex-1">
-          <div className="chat-messages">
+        <div className="chat-box flex-1 flex flex-col">
+          <div className="chat-messages flex-1 overflow-y-auto mb-2">
             {messages.map(message => (
-              <div key={message.id} className={message.role === 'user' ? 'user-message' : 'ai-message'}>
+              <div key={message.id} className={cn(
+                "mb-2 p-2 rounded-lg max-w-[80%]",
+                message.role === 'user' 
+                  ? "ml-auto bg-primary text-white" 
+                  : "mr-auto bg-gray-100 dark:bg-gray-800"
+              )}>
                 {message.content}
               </div>
             ))}
           </div>
-          <div className="chat-input-container">
+          <div className="chat-input-container flex">
             <ChatInput
               value={inputMessage}
               onChange={e => setInputMessage(e.target.value)}
@@ -70,13 +85,16 @@ const Dashboard: React.FC = () => {
               placeholder="Ask me anything..."
               className="flex-1"
             />
-            <Button size="sm" onClick={handleSendMessage} className="ml-2">Send</Button>
+            <Button size="sm" onClick={handleSendMessage} className="ml-2 apple-button">Send</Button>
           </div>
         </div>
       </Card>
       
       {/* Workflow Builder */}
-      <Card className={celestialMode ? "dark-apple-card" : "apple-card"}>
+      <Card className={cn(
+        celestialMode ? "dark-apple-card" : "apple-card",
+        "hover-scale"
+      )}>
         <div className="flex items-center gap-2 mb-3">
           <Workflow className="h-5 w-5 text-primary" />
           <h3 className="font-medium">Workflow Builder</h3>
@@ -87,7 +105,10 @@ const Dashboard: React.FC = () => {
       </Card>
       
       {/* Social Feed */}
-      <Card className={celestialMode ? "dark-apple-card" : "apple-card"}>
+      <Card className={cn(
+        celestialMode ? "dark-apple-card" : "apple-card",
+        "hover-scale"
+      )}>
         <div className="flex items-center gap-2 mb-3">
           <Users className="h-5 w-5 text-primary" />
           <h3 className="font-medium">Social Feed</h3>
@@ -99,7 +120,10 @@ const Dashboard: React.FC = () => {
       </Card>
       
       {/* Mobility & Charging */}
-      <Card className={celestialMode ? "dark-apple-card" : "apple-card"}>
+      <Card className={cn(
+        celestialMode ? "dark-apple-card" : "apple-card",
+        "hover-scale"
+      )}>
         <div className="flex items-center gap-2 mb-3">
           <Map className="h-5 w-5 text-primary" />
           <h3 className="font-medium">Mobility & Charging</h3>

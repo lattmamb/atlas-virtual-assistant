@@ -8,11 +8,11 @@ const TopBar: React.FC = () => {
   const { activeTab, toggleSidebar } = useAtlasLink();
 
   return (
-    <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b p-3 flex items-center justify-between z-10">
+    <div className="apple-glass border-b p-3 flex items-center justify-between z-10">
       <Button variant="ghost" size="icon" onClick={toggleSidebar} className="md:hidden">
         <Menu />
       </Button>
-      <h1 className="text-xl font-semibold">
+      <h1 className="text-xl font-medium">
         {activeTab === 'dashboard' && "Atlas Link Dashboard"}
         {activeTab === 'chat' && "AI Assistant"}
         {activeTab === 'knowledge' && "Knowledge Base"}

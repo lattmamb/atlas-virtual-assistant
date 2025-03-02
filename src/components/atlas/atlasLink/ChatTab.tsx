@@ -19,10 +19,10 @@ const ChatTab: React.FC = () => {
           <div className="chat-messages flex-1 overflow-y-auto mb-4">
             {messages.map(message => (
               <div key={message.id} className={cn(
-                "mb-4 p-3 rounded-lg max-w-[80%]",
+                "mb-4 p-3 rounded-2xl max-w-[80%]",
                 message.role === 'user' 
                   ? "ml-auto bg-primary text-primary-foreground" 
-                  : "mr-auto bg-muted"
+                  : "mr-auto bg-gray-100 dark:bg-gray-800"
               )}>
                 {message.content}
               </div>
@@ -36,7 +36,7 @@ const ChatTab: React.FC = () => {
               placeholder="Ask me anything..."
               className="flex-1"
             />
-            <Button onClick={handleSendMessage}>Send</Button>
+            <Button onClick={handleSendMessage} className="apple-button">Send</Button>
           </div>
         </CardContent>
       </Card>
