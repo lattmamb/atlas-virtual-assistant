@@ -14,6 +14,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarSeparator,
+  SidebarCollapseToggle,
   useSidebar
 } from '@/components/ui/sidebar';
 import { 
@@ -25,15 +26,25 @@ import {
   User,
   LogOut,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  HelpCircle,
+  Bell,
+  Car,
+  Calendar,
+  Sparkles
 } from 'lucide-react';
+import { useTheme } from '@/context/ThemeContext';
+import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
 
 const AppSidebar = () => {
   const location = useLocation();
   const { state, toggleSidebar } = useSidebar();
+  const { isDarkMode } = useTheme();
   
   const isActive = (path: string) => {
-    return location.pathname === path;
+    return location.pathname === path || 
+           (path !== '/' && location.pathname.startsWith(path));
   };
 
   // Primary navigation items
@@ -41,23 +52,37 @@ const AppSidebar = () => {
     {
       name: 'Home',
       path: '/',
-      icon: <Home className="h-4 w-4" />
+      icon: <Home className="h-4.5 w-4.5" />
     },
     {
       name: 'Chat',
       path: '/chat',
-      icon: <MessageSquare className="h-4 w-4" />
+      icon: <MessageSquare className="h-4.5 w-4.5" />
     },
     {
       name: 'Workflows',
       path: '/workflows',
-      icon: <Workflow className="h-4 w-4" />
+      icon: <Workflow className="h-4.5 w-4.5" />
     },
     {
       name: 'Atlas Link',
       path: '/atlas-link',
-      icon: <Shield className="h-4 w-4" />
+      icon: <Shield className="h-4.5 w-4.5" />
     }
+  ];
+
+  // Trinity Dodge navigation items
+  const trinityNavItems = [
+    {
+      name: 'Inventory',
+      path: '/inventory',
+      icon: <Car className="h-4.5 w-4.5" />
+    },
+    {
+      name: 'Test Drive',
+      path: '/test-drive',
+      icon: <Calendar className="h-4.5 w-4.5" />
+    },
   ];
 
   // Tools navigation items
@@ -65,33 +90,43 @@ const AppSidebar = () => {
     {
       name: 'Settings',
       path: '/settings',
-      icon: <Settings className="h-4 w-4" />
+      icon: <Settings className="h-4.5 w-4.5" />
+    },
+    {
+      name: 'Notifications',
+      path: '/notifications',
+      icon: <Bell className="h-4.5 w-4.5" />
+    },
+    {
+      name: 'Help',
+      path: '/help',
+      icon: <HelpCircle className="h-4.5 w-4.5" />
     }
   ];
 
   return (
-    <Sidebar>
-      <SidebarHeader>
+    <Sidebar
+      variant="sidebar"
+      collapsible="offcanvas"
+      className={cn(
+        "border-r border-border/40 shadow-sm",
+        isDarkMode ? "bg-black/90 backdrop-blur-xl" : "bg-white/90 backdrop-blur-xl"
+      )}
+    >
+      <SidebarHeader className="border-b border-border/40">
         <SidebarHeaderTitle>
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="2" 
-            strokeLinecap="round" 
-            strokeLinejoin="round" 
-            className="h-6 w-6"
+          <motion.div 
+            className="mr-2 flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white"
+            whileHover={{ rotate: 180 }}
+            transition={{ duration: 0.5 }}
           >
-            <circle cx="12" cy="12" r="10" />
-            <path d="M12 2a4.5 4.5 0 0 0 0 9 4.5 4.5 0 0 1 0 9 10 10 0 0 0 0-18Z" />
-            <path d="M12 2c-2 4-4 5-6 6 1.5 2 2 4 2 6s-.5 4-2 6c2-1 4-2 6-6 2 4 4 5 6 6-1.5-2-2-4-2-6s.5-4 2-6c-2 1-4 2-6 6Z" />
-          </svg>
-          <span>Atlas Assistant</span>
+            <Sparkles className="h-3.5 w-3.5" />
+          </motion.div>
+          <span className="text-lg font-medium">Atlas Assistant</span>
         </SidebarHeaderTitle>
       </SidebarHeader>
       
-      <SidebarContent>
+      <SidebarContent className="pt-4">
         {/* Primary Navigation */}
         <SidebarGroup>
           <SidebarGroupLabel>Navigation</SidebarGroupLabel>
@@ -100,7 +135,33 @@ const AppSidebar = () => {
               {primaryNavItems.map((item) => (
                 <SidebarMenuItem key={item.name}>
                   <SidebarMenuButton asChild isActive={isActive(item.path)}>
-                    <Link to={item.path}>
+                    <Link to={item.path} className={isActive(item.path) ? 'font-medium' : ''}>
+                      {item.icon}
+                      <span>{item.name}</span>
+                      {item.name === 'Chat' && (
+                        <span className="ml-auto flex h-6 w-6 items-center justify-center rounded-full bg-blue-600/10 text-blue-600 text-xs">
+                          1
+                        </span>
+                      )}
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        
+        <SidebarSeparator />
+        
+        {/* Trinity Dodge Navigation */}
+        <SidebarGroup>
+          <SidebarGroupLabel>Trinity Dodge</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {trinityNavItems.map((item) => (
+                <SidebarMenuItem key={item.name}>
+                  <SidebarMenuButton asChild isActive={isActive(item.path)}>
+                    <Link to={item.path} className={isActive(item.path) ? 'font-medium' : ''}>
                       {item.icon}
                       <span>{item.name}</span>
                     </Link>
@@ -121,7 +182,7 @@ const AppSidebar = () => {
               {toolsNavItems.map((item) => (
                 <SidebarMenuItem key={item.name}>
                   <SidebarMenuButton asChild isActive={isActive(item.path)}>
-                    <Link to={item.path}>
+                    <Link to={item.path} className={isActive(item.path) ? 'font-medium' : ''}>
                       {item.icon}
                       <span>{item.name}</span>
                     </Link>
@@ -133,33 +194,19 @@ const AppSidebar = () => {
         </SidebarGroup>
       </SidebarContent>
       
-      <SidebarFooter>
-        <div className="flex justify-between items-center px-4">
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton>
-                <User className="h-4 w-4" />
-                <span>Profile</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton>
-                <LogOut className="h-4 w-4" />
-                <span>Sign out</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-          <button
-            className="flex h-6 w-6 items-center justify-center rounded-full border bg-background shadow-md"
-            onClick={toggleSidebar}
-            aria-label="Toggle sidebar"
-          >
-            {state === "expanded" ? (
-              <ChevronLeft className="h-3 w-3" />
-            ) : (
-              <ChevronRight className="h-3 w-3" />
-            )}
-          </button>
+      <SidebarFooter className="border-t border-border/40">
+        <div className="flex justify-between items-center px-2 py-2">
+          <div className="flex items-center gap-2 px-2">
+            <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-blue-500 to-blue-600 text-white flex items-center justify-center">
+              <User className="h-4 w-4" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-sm font-medium">Trinity Dodge</span>
+              <span className="text-xs text-muted-foreground">Taylorville, IL</span>
+            </div>
+          </div>
+          
+          <SidebarCollapseToggle className="text-muted-foreground" />
         </div>
       </SidebarFooter>
     </Sidebar>

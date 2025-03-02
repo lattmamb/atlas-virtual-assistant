@@ -34,12 +34,8 @@ const ICloudLayout: React.FC<ICloudLayoutProps> = ({ children }) => {
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* Navigation Bar */}
           <AppleNavBar 
-            isDarkMode={isDarkMode} 
-            onToggleDarkMode={toggleDarkMode}
+            showAppGridButton={true}
             onToggleAppGrid={() => setIsAppGridOpen(!isAppGridOpen)}
-            onSearch={() => {
-              // Handle search in the future
-            }}
           />
 
           {/* Content Area with Proper Spacing for NavBar */}

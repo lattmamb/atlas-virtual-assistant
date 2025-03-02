@@ -43,6 +43,36 @@
   .main-container {
     @apply pb-16;
   }
+  
+  /* Chat page specific mobile styles */
+  .chat-page-mobile {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
+  /* Make chat input stand out on mobile */
+  .chat-input-mobile {
+    position: sticky;
+    bottom: 0;
+    margin: 0 -0.5rem;
+    padding: 0.5rem;
+    background-color: var(--background);
+    border-top: 1px solid var(--border);
+    z-index: 10;
+  }
+  
+  /* Avoid covering the input with the keyboard on mobile */
+  .chat-messages-container {
+    max-height: calc(100vh - 150px);
+  }
+  
+  /* Improve floating action buttons on mobile */
+  .floating-chat-actions {
+    position: fixed;
+    bottom: 80px;
+    right: 16px;
+    z-index: 100;
+  }
 }
 
 /* Better support for touch controls on mobile */
@@ -75,6 +105,17 @@
   .no-select {
     user-select: none;
   }
+  
+  /* Improve chat interaction on mobile */
+  .chat-message {
+    max-width: 85% !important;
+  }
+  
+  /* Make message actions more accessible on touch */
+  .message-action-button {
+    @apply min-h-[36px] min-w-[36px];
+    opacity: 1 !important;
+  }
 }
 
 /* Handle different screen heights */
@@ -85,6 +126,11 @@
   
   .dashboard-grid {
     padding-bottom: 4rem;
+  }
+  
+  /* Adjust chat container height */
+  .chat-container-compact {
+    max-height: calc(100vh - 110px);
   }
 }
 
@@ -97,5 +143,18 @@
   
   .mobile-navigation {
     @apply py-1;
+  }
+  
+  /* Optimize chat for landscape */
+  .chat-container-landscape {
+    @apply flex flex-row gap-2;
+  }
+  
+  .chat-messages-landscape {
+    @apply flex-1;
+  }
+  
+  .chat-sidebar-landscape {
+    @apply w-64 h-[calc(100vh-80px)];
   }
 }
