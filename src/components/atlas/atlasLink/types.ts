@@ -10,6 +10,7 @@ export interface ApiKeys {
   openai: string;
   huggingface: string;
   supabase: string;
+  openrouter?: string;
 }
 
 export type ActiveTab = 'dashboard' | 'chat' | 'knowledge' | 'store' | 'api' | 'settings';

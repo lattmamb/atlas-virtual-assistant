@@ -13,6 +13,7 @@ interface ApiKeysState {
   google?: string;
   cohere?: string;
   huggingface?: string;
+  openrouter?: string;
 }
 
 interface ApiKeyFormProps {
@@ -48,6 +49,14 @@ const ApiKeyForm = ({ initialKeys, onSave }: ApiKeyFormProps) => {
         keyValue={apiKeys.openai || ""}
         onKeyChange={(value) => handleApiKeyChange("openai", value)}
         placeholder="sk-..."
+      />
+
+      <ApiKeyProvider 
+        providerId="openrouter"
+        providerName="OpenRouter"
+        keyValue={apiKeys.openrouter || ""}
+        onKeyChange={(value) => handleApiKeyChange("openrouter", value)}
+        placeholder="sk-or-..."
       />
 
       <ApiKeyProvider 

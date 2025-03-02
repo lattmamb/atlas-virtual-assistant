@@ -38,6 +38,17 @@ const SettingsTab: React.FC = () => {
                 </div>
                 
                 <div className="space-y-2">
+                  <label className="text-sm font-medium">OpenRouter API Key</label>
+                  <Input 
+                    type="password" 
+                    placeholder="sk-or-..." 
+                    value={apiKeys.openrouter || ""}
+                    onChange={e => setApiKeys({...apiKeys, openrouter: e.target.value})}
+                  />
+                  <p className="text-xs text-muted-foreground">Provides access to multiple AI models</p>
+                </div>
+                
+                <div className="space-y-2">
                   <label className="text-sm font-medium">HuggingFace API Key</label>
                   <Input 
                     type="password" 

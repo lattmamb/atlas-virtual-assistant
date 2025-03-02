@@ -16,6 +16,7 @@ interface ApiKeyDisplayData {
   google?: string;
   cohere?: string;
   huggingface?: string;
+  openrouter?: string;
 }
 
 const ApiKeySettings = () => {
@@ -30,6 +31,7 @@ const ApiKeySettings = () => {
     google: "",
     cohere: "",
     huggingface: "",
+    openrouter: "",
   });
 
   useEffect(() => {
@@ -54,6 +56,7 @@ const ApiKeySettings = () => {
           if (data[0].anthropic) keysData.anthropic = data[0].anthropic;
           if (data[0].google) keysData.google = data[0].google;
           if (data[0].cohere) keysData.cohere = data[0].cohere;
+          if (data[0].openrouter) keysData.openrouter = data[0].openrouter;
           
           // For UI display - show the actual keys if we fetched them
           if (data[0].api_key) keysData.openai = data[0].api_key;
@@ -61,6 +64,7 @@ const ApiKeySettings = () => {
             keysData["hugging face"] = data[0]["hugging face"];
             keysData.huggingface = data[0]["hugging face"];
           }
+          if (data[0].openrouter) keysData.openrouter = data[0].openrouter;
           
           setApiKeys(keysData);
         }
@@ -109,6 +113,10 @@ const ApiKeySettings = () => {
       if (updatedKeys.cohere) {
         keysToUpdate.cohere = updatedKeys.cohere;
       }
+
+      if (updatedKeys.openrouter) {
+        keysToUpdate.openrouter = updatedKeys.openrouter;
+      }
       
       // If huggingface is provided but hugging face is not, use it
       if (updatedKeys.huggingface && !updatedKeys["hugging face"]) {
@@ -149,6 +157,7 @@ const ApiKeySettings = () => {
           anthropic: updatedData[0].anthropic,
           google: updatedData[0].google,
           cohere: updatedData[0].cohere,
+          openrouter: updatedData[0].openrouter,
           openai: updatedData[0].api_key,
         };
         

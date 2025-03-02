@@ -43,6 +43,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
           if (data[0]["hugging face"] || data[0].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) providers.push("huggingface");
           if (data[0].google) providers.push("google");
           if (data[0].cohere) providers.push("cohere");
+          if (data[0].openrouter) providers.push("openrouter");
           
           setAvailableProviders(providers);
           
@@ -87,11 +88,19 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Placeholder for actual API call
       // In a real implementation, this would send the message to the selected provider's API
       
-      // Simulate API response delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      let responseMessage = "";
+      
+      if (selectedProvider === "openrouter") {
+        // For OpenRouter, we'd fetch from their API
+        responseMessage = `This is a response from OpenRouter to: "${content}"`;
+        // In a real implementation, you would fetch from OpenRouter's API here
+      } else {
+        // Simulate API response for other providers
+        responseMessage = `This is a response from the ${selectedProvider} model to: "${content}"`;
+      }
       
       // Add assistant response
-      addMessage(`This is a response from the ${selectedProvider} model to: "${content}"`, "assistant");
+      addMessage(responseMessage, "assistant");
     } catch (error) {
       console.error("Error sending message:", error);
       addMessage("Sorry, there was an error processing your request.", "assistant");

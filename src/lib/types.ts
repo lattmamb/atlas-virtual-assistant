@@ -1,5 +1,4 @@
-
-export type ApiKeyProvider = "openai" | "anthropic" | "cohere" | "huggingface" | "google" | "hugging face";
+export type ApiKeyProvider = "openai" | "anthropic" | "cohere" | "huggingface" | "google" | "hugging face" | "openrouter";
 
 export interface ApiKey {
   id?: string;
@@ -11,6 +10,7 @@ export interface ApiKey {
   anthropic?: string;
   google?: string;
   cohere?: string;
+  openrouter?: string;
 }
 
 export interface User {
