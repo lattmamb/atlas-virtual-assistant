@@ -39,7 +39,7 @@ const SettingsTab: React.FC = () => {
         if (data["hugging face"] || data.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) {
           updatedKeys.huggingface = data["hugging face"] || data.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;
         }
-        if (data.supabase) updatedKeys.supabase = data.supabase;
+        // Remove the incorrect supabase property reference
         
         setApiKeys(updatedKeys);
       }
@@ -116,17 +116,6 @@ const SettingsTab: React.FC = () => {
                     onChange={e => setApiKeys({...apiKeys, huggingface: e.target.value})}
                   />
                   <p className="text-xs text-muted-foreground">Used for additional AI models</p>
-                </div>
-                
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Supabase API Key</label>
-                  <Input 
-                    type="password" 
-                    placeholder="eyJ..." 
-                    value={apiKeys.supabase || ""}
-                    onChange={e => setApiKeys({...apiKeys, supabase: e.target.value})}
-                  />
-                  <p className="text-xs text-muted-foreground">Used for data storage</p>
                 </div>
                 
                 <Button onClick={handleSaveApiKeysWithSupabase} className="w-full">Save API Keys</Button>
