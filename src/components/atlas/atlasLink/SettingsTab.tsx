@@ -1,93 +1,14 @@
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Sun, Moon, LogOut } from "lucide-react";
+import { Sun, Moon } from "lucide-react";
 import { useAtlasLink } from './AtlasLinkContext';
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
-import { useAuth } from '@/context/AuthContext';
 
 const SettingsTab: React.FC = () => {
   const { celestialMode, setCelestialMode, apiKeys, setApiKeys, handleSaveApiKeys } = useAtlasLink();
-  const { user, signOut } = useAuth();
-
-  useEffect(() => {
-    if (user) {
-      fetchApiKeys();
-    }
-  }, [user]);
-
-  const fetchApiKeys = async () => {
-    try {
-      const { data, error } = await supabase
-        .from("api_keys")
-        .select("*")
-        .maybeSingle();
-
-      if (error) {
-        console.error("Error fetching API keys:", error);
-        return;
-      }
-
-      if (data) {
-        const updatedKeys = { ...apiKeys };
-        
-        if (data.api_key) updatedKeys.openai = data.api_key;
-        if (data["hugging face"] || data.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) {
-          updatedKeys.huggingface = data["hugging face"] || data.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;
-        }
-        
-        setApiKeys(updatedKeys);
-      }
-    } catch (error) {
-      console.error("Error in fetchApiKeys:", error);
-    }
-  };
-
-  const handleSaveApiKeysWithSupabase = async () => {
-    try {
-      if (!user) {
-        toast.error("Please sign in to save API keys");
-        return;
-      }
-
-      const keysToUpdate = {
-        api_key: apiKeys.openai || null,
-        "hugging face": apiKeys.huggingface || null,
-        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: apiKeys.huggingface || "default_key",
-        user_id: user.id,
-      };
-
-      const { error } = await supabase.from("api_keys").upsert([keysToUpdate]);
-
-      if (error) {
-        console.error("Error saving API keys:", error);
-        toast.error("Failed to save API keys");
-        return;
-      }
-
-      toast.success("API keys saved successfully");
-      // Call the original handleSaveApiKeys for any local state updates
-      handleSaveApiKeys();
-
-    } catch (error) {
-      console.error("Error in handleSaveApiKeysWithSupabase:", error);
-      toast.error("An unexpected error occurred");
-    }
-  };
-
-  const saveKeysEverywhere = () => {
-    // Save to localStorage
-    handleSaveApiKeys();
-    
-    // If user is logged in, also save to Supabase
-    if (user) {
-      handleSaveApiKeysWithSupabase();
-    }
-  };
 
   return (
     <div className="p-4 h-full">
@@ -110,9 +31,8 @@ const SettingsTab: React.FC = () => {
                   <Input 
                     type="password" 
                     placeholder="sk-..." 
-                    value={apiKeys.openai || ""}
+                    value={apiKeys.openai}
                     onChange={e => setApiKeys({...apiKeys, openai: e.target.value})}
-                    aria-label="OpenAI API Key"
                   />
                   <p className="text-xs text-muted-foreground">Used for chat and workflow automation</p>
                 </div>
@@ -122,18 +42,24 @@ const SettingsTab: React.FC = () => {
                   <Input 
                     type="password" 
                     placeholder="hf_..." 
-                    value={apiKeys.huggingface || ""}
+                    value={apiKeys.huggingface}
                     onChange={e => setApiKeys({...apiKeys, huggingface: e.target.value})}
-                    aria-label="HuggingFace API Key"
                   />
                   <p className="text-xs text-muted-foreground">Used for additional AI models</p>
                 </div>
                 
-                <Button onClick={saveKeysEverywhere} className="w-full">Save API Keys</Button>
-                
-                <div className="text-xs text-muted-foreground mt-4 p-2 bg-secondary/20 rounded">
-                  <p>API keys are stored locally on your device and synced with your account when signed in.</p>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Supabase API Key</label>
+                  <Input 
+                    type="password" 
+                    placeholder="eyJ..." 
+                    value={apiKeys.supabase}
+                    onChange={e => setApiKeys({...apiKeys, supabase: e.target.value})}
+                  />
+                  <p className="text-xs text-muted-foreground">Used for data storage</p>
                 </div>
+                
+                <Button onClick={handleSaveApiKeys} className="w-full">Save API Keys</Button>
               </CardContent>
             </Card>
           </TabsContent>
@@ -151,7 +77,6 @@ const SettingsTab: React.FC = () => {
                       variant={!celestialMode ? "default" : "outline"} 
                       onClick={() => setCelestialMode(false)}
                       className="flex-1"
-                      aria-label="Light Mode"
                     >
                       <Sun className="mr-2 h-4 w-4" />
                       Light
@@ -160,7 +85,6 @@ const SettingsTab: React.FC = () => {
                       variant={celestialMode ? "default" : "outline"} 
                       onClick={() => setCelestialMode(true)}
                       className="flex-1"
-                      aria-label="Dark Mode"
                     >
                       <Moon className="mr-2 h-4 w-4" />
                       Dark
@@ -177,25 +101,7 @@ const SettingsTab: React.FC = () => {
                 <CardTitle>Account Settings</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {user ? (
-                  <>
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Email</label>
-                      <Input value={user.email || ""} readOnly aria-label="User Email" />
-                    </div>
-                    <Button 
-                      variant="destructive" 
-                      className="w-full flex items-center justify-center" 
-                      onClick={signOut}
-                      aria-label="Sign Out"
-                    >
-                      <LogOut className="mr-2 h-4 w-4" />
-                      Sign Out
-                    </Button>
-                  </>
-                ) : (
-                  <p className="text-muted-foreground">Please sign in to view account settings</p>
-                )}
+                <p className="text-muted-foreground">Account settings coming soon...</p>
               </CardContent>
             </Card>
           </TabsContent>

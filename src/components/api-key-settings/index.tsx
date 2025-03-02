@@ -4,7 +4,6 @@ import { useToast } from "@/components/ui/use-toast";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import ApiKeyForm from "./ApiKeyForm";
-import { useAuth } from "@/context/AuthContext";
 
 // Define a consistent type for API key display data
 interface ApiKeyDisplayData {
@@ -21,7 +20,6 @@ interface ApiKeyDisplayData {
 
 const ApiKeySettings = () => {
   const { toast } = useToast();
-  const { user } = useAuth();
   const [apiKeys, setApiKeys] = useState<ApiKeyDisplayData>({
     api_key: "",
     "hugging face": "",
@@ -35,71 +33,56 @@ const ApiKeySettings = () => {
   });
 
   useEffect(() => {
-    if (user) {
-      fetchApiKeys();
-    }
-  }, [user]);
+    const fetchApiKeys = async () => {
+      try {
+        const { data, error } = await supabase.from("api_keys").select("*");
 
-  const fetchApiKeys = async () => {
-    try {
-      const { data, error } = await supabase
-        .from("api_keys")
-        .select("*")
-        .maybeSingle();
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      if (data) {
-        // Use the first row of data
-        const keysData: ApiKeyDisplayData = {};
-        
-        // Map database fields to our state
-        if (data.api_key) keysData.api_key = data.api_key;
-        if (data["hugging face"]) keysData["hugging face"] = data["hugging face"];
-        if (data.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) keysData.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 = data.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;
-        
-        // Additional provider keys
-        if (data.anthropic) keysData.anthropic = data.anthropic;
-        if (data.google) keysData.google = data.google;
-        if (data.cohere) keysData.cohere = data.cohere;
-        
-        // For UI display - show the actual keys if we fetched them
-        if (data.api_key) keysData.openai = data.api_key;
-        if (data["hugging face"]) {
-          keysData["hugging face"] = data["hugging face"];
-          keysData.huggingface = data["hugging face"];
+        if (error) {
+          throw new Error(error.message);
         }
-        
-        setApiKeys(keysData);
+
+        if (data && data.length > 0) {
+          // Use the first row of data
+          const keysData: ApiKeyDisplayData = {};
+          
+          // Map database fields to our state
+          if (data[0].api_key) keysData.api_key = data[0].api_key;
+          if (data[0]["hugging face"]) keysData["hugging face"] = data[0]["hugging face"];
+          if (data[0].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) keysData.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 = data[0].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;
+          
+          // Additional provider keys
+          if (data[0].anthropic) keysData.anthropic = data[0].anthropic;
+          if (data[0].google) keysData.google = data[0].google;
+          if (data[0].cohere) keysData.cohere = data[0].cohere;
+          
+          // For UI display - show the actual keys if we fetched them
+          if (data[0].api_key) keysData.openai = data[0].api_key;
+          if (data[0]["hugging face"]) {
+            keysData["hugging face"] = data[0]["hugging face"];
+            keysData.huggingface = data[0]["hugging face"];
+          }
+          
+          setApiKeys(keysData);
+        }
+      } catch (error) {
+        console.error("Error fetching API keys:", error);
+        toast({
+          title: "Error fetching API keys",
+          description: "Please check your database connection.",
+          variant: "destructive",
+        });
       }
-    } catch (error) {
-      console.error("Error fetching API keys:", error);
-      toast({
-        title: "Error fetching API keys",
-        description: "Please check your database connection.",
-        variant: "destructive",
-      });
-    }
-  };
+    };
+
+    fetchApiKeys();
+  }, [toast]);
 
   const handleSaveApiKeys = async (updatedKeys: ApiKeyDisplayData) => {
     try {
-      if (!user) {
-        toast({
-          title: "Authentication required",
-          description: "Please sign in to save API keys",
-          variant: "destructive",
-        });
-        return;
-      }
-
       // Prepare data for database update
       const keysToUpdate: any = {
         // Default values for required fields
         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: updatedKeys.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 || updatedKeys["hugging face"] || "default_key",
-        user_id: user.id,
       };
       
       // Add the hugging face key if provided
@@ -148,7 +131,29 @@ const ApiKeySettings = () => {
       });
       
       // Fetch the updated keys to confirm the save worked
-      fetchApiKeys();
+      const { data: updatedData, error: fetchError } = await supabase.from("api_keys").select("*");
+      
+      if (fetchError) {
+        throw new Error(fetchError.message);
+      }
+      
+      console.log("Updated data:", updatedData);
+      
+      if (updatedData && updatedData.length > 0) {
+        // Update local state with the saved keys
+        const savedKeys: ApiKeyDisplayData = {
+          ...updatedKeys, // Keep any UI-only keys
+          api_key: updatedData[0].api_key,
+          "hugging face": updatedData[0]["hugging face"],
+          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: updatedData[0].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,
+          anthropic: updatedData[0].anthropic,
+          google: updatedData[0].google,
+          cohere: updatedData[0].cohere,
+          openai: updatedData[0].api_key,
+        };
+        
+        setApiKeys(savedKeys);
+      }
       
     } catch (error) {
       console.error("Error saving API keys:", error);

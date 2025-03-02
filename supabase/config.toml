@@ -1,18 +1,1 @@
-
 project_id = "htgsisrvdqycxynxzwft"
-
-[api]
-enabled = true
-port = 54321
-schemas = ["public", "storage"]
-extra_search_path = ["public", "extensions"]
-max_rows = 1000
-
-[auth]
-enable_signup = true
-jwt_exp = 3600
-
-[db]
-port = 54322
-shadow_port = 54320
-major_version = 15

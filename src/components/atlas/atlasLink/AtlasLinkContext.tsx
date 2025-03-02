@@ -1,7 +1,6 @@
 
-import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import React, { createContext, useState, useContext, ReactNode } from 'react';
 import { Message, ApiKeys, ActiveTab } from './types';
-import { toast } from "sonner";
 
 interface AtlasLinkContextType {
   sidebarOpen: boolean;
@@ -29,33 +28,6 @@ interface AtlasLinkContextType {
 
 const AtlasLinkContext = createContext<AtlasLinkContextType | undefined>(undefined);
 
-// Helper function to load API keys from localStorage
-const loadApiKeysFromStorage = (): ApiKeys => {
-  try {
-    const openai = localStorage.getItem('atlas_openai_key') || '';
-    const huggingface = localStorage.getItem('atlas_huggingface_key') || '';
-    
-    return { openai, huggingface };
-  } catch (error) {
-    console.error('Error loading API keys from localStorage:', error);
-    return { openai: '', huggingface: '' };
-  }
-};
-
-// Helper function to save API keys to localStorage
-const saveApiKeysToStorage = (keys: ApiKeys) => {
-  try {
-    if (keys.openai) {
-      localStorage.setItem('atlas_openai_key', keys.openai);
-    }
-    if (keys.huggingface) {
-      localStorage.setItem('atlas_huggingface_key', keys.huggingface);
-    }
-  } catch (error) {
-    console.error('Error saving API keys to localStorage:', error);
-  }
-};
-
 export const AtlasLinkProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [celestialMode, setCelestialMode] = useState(false);
@@ -69,28 +41,25 @@ export const AtlasLinkProvider: React.FC<{ children: ReactNode }> = ({ children 
     }
   ]);
   const [inputMessage, setInputMessage] = useState('');
-  const [apiKeys, setApiKeys] = useState<ApiKeys>(loadApiKeysFromStorage());
+  const [apiKeys, setApiKeys] = useState<ApiKeys>({
+    openai: '',
+    huggingface: '',
+    supabase: ''
+  });
   const [automationStatus, setAutomationStatus] = useState('No tasks scheduled.');
   const [selectedInstruction, setSelectedInstruction] = useState<string | null>(null);
-
-  // Load API keys on initial mount
-  useEffect(() => {
-    const storedApiKeys = loadApiKeysFromStorage();
-    setApiKeys(storedApiKeys);
-  }, []);
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
   
   const toggleCelestialMode = () => setCelestialMode(!celestialMode);
   
   const handleSaveApiKeys = () => {
-    saveApiKeysToStorage(apiKeys);
-    toast.success('API Keys saved securely to your device!');
+    alert('API Keys saved securely!');
   };
   
   const handleScheduleAutomation = () => {
-    if (!apiKeys.openai) {
-      toast.error('Please provide an OpenAI API Key for automation scheduling.');
+    if (!apiKeys.supabase) {
+      alert('Please provide a Supabase Key for automation scheduling.');
       return;
     }
     
@@ -130,7 +99,7 @@ export const AtlasLinkProvider: React.FC<{ children: ReactNode }> = ({ children 
     setTimeout(() => {
       const aiResponse = !apiKeys.openai
         ? 'Please provide an OpenAI API key in the sidebar first.'
-        : `You said "${messageToSend}". This is a placeholder response. I can help you with car sales at Trinity Dodge in Taylorville, Illinois. How can I assist you today?`;
+        : `AI: You said "${messageToSend}". This is a placeholder response.`;
       
       addMessage(aiResponse, 'assistant');
     }, 600);

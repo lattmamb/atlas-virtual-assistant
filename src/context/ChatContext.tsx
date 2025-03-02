@@ -2,8 +2,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { ApiKeyProvider, Message, ChatContextType } from "@/lib/types";
-import { useAuth } from "@/context/AuthContext";
-import { toast } from "sonner";
 
 // Create Context with default values
 const ChatContext = createContext<ChatContextType>({
@@ -24,45 +22,42 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState(false);
   const [selectedProvider, setSelectedProvider] = useState<ApiKeyProvider | null>("openai");
   const [availableProviders, setAvailableProviders] = useState<ApiKeyProvider[]>(["openai"]);
-  const { user } = useAuth();
 
   useEffect(() => {
     // Fetch available providers on component mount
-    if (user) {
-      fetchApiKeys();
-    }
-  }, [user]);
-
-  const fetchApiKeys = async () => {
-    try {
-      const { data, error } = await supabase.from("api_keys").select("*");
-      
-      if (error) {
-        console.error("Error fetching API keys:", error);
-        return;
-      }
-      
-      if (data && data.length > 0) {
-        const providers: ApiKeyProvider[] = [];
+    const fetchApiKeys = async () => {
+      try {
+        const { data, error } = await supabase.from("api_keys").select("*");
         
-        // Check which providers have keys configured
-        if (data[0].api_key) providers.push("openai");
-        if (data[0].anthropic) providers.push("anthropic");
-        if (data[0]["hugging face"] || data[0].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) providers.push("huggingface");
-        if (data[0].google) providers.push("google");
-        if (data[0].cohere) providers.push("cohere");
-        
-        setAvailableProviders(providers);
-        
-        // Set default provider if available
-        if (providers.length > 0 && !selectedProvider) {
-          setSelectedProvider(providers[0]);
+        if (error) {
+          console.error("Error fetching API keys:", error);
+          return;
         }
+        
+        if (data && data.length > 0) {
+          const providers: ApiKeyProvider[] = [];
+          
+          // Check which providers have keys configured
+          if (data[0].api_key) providers.push("openai");
+          if (data[0].anthropic) providers.push("anthropic");
+          if (data[0]["hugging face"] || data[0].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) providers.push("huggingface");
+          if (data[0].google) providers.push("google");
+          if (data[0].cohere) providers.push("cohere");
+          
+          setAvailableProviders(providers);
+          
+          // Set default provider if available
+          if (providers.length > 0 && !selectedProvider) {
+            setSelectedProvider(providers[0]);
+          }
+        }
+      } catch (error) {
+        console.error("Error in fetchApiKeys:", error);
       }
-    } catch (error) {
-      console.error("Error in fetchApiKeys:", error);
-    }
-  };
+    };
+    
+    fetchApiKeys();
+  }, []);
 
   const addMessage = (content: string, role: "user" | "assistant" | "system") => {
     const newMessage: Message = {
@@ -89,26 +84,20 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     
     try {
-      // In the future, this will call a Supabase Edge Function to handle API requests
-      const apiResponse = await processWithAI(content, selectedProvider);
+      // Placeholder for actual API call
+      // In a real implementation, this would send the message to the selected provider's API
+      
+      // Simulate API response delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
       // Add assistant response
-      addMessage(apiResponse, "assistant");
+      addMessage(`This is a response from the ${selectedProvider} model to: "${content}"`, "assistant");
     } catch (error) {
       console.error("Error sending message:", error);
-      toast.error("Sorry, there was an error processing your request.");
       addMessage("Sorry, there was an error processing your request.", "assistant");
     } finally {
       setIsLoading(false);
     }
-  };
-
-  // Placeholder function for future API integration
-  const processWithAI = async (content: string, provider: ApiKeyProvider | null): Promise<string> => {
-    // Simulate API response delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    return `This is a response from the ${provider} model to: "${content}". In the future, this will use a real API call to process your request.`;
   };
 
   const value = {

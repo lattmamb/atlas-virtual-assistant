@@ -1,6 +1,4 @@
 
-export type ActiveTab = 'dashboard' | 'chat' | 'settings' | 'knowledge' | 'store' | 'api';
-
 export interface Message {
   id: string;
   content: string;
@@ -11,4 +9,7 @@ export interface Message {
 export interface ApiKeys {
   openai: string;
   huggingface: string;
+  supabase: string;
 }
+
+export type ActiveTab = 'dashboard' | 'chat' | 'knowledge' | 'store' | 'api' | 'settings';
