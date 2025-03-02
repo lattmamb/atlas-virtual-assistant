@@ -82,4 +82,18 @@ export function SparklesPreviewColorful() {
   );
 }
 
-export { SparklesPreview, SparklesPreviewDark, SparklesPreviewColorful };
+// Adding a NavbarDemo component since it was in the previous version
+export function NavbarDemo() {
+  return (
+    <nav className="bg-white border-b border-gray-200 py-4 px-6 flex items-center justify-between">
+      <div className="flex items-center space-x-4">
+        <span className="font-semibold text-xl">Trinity Dodge</span>
+      </div>
+      <div className="flex space-x-4">
+        <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+          Contact Us
+        </button>
+      </div>
+    </nav>
+  );
+}
