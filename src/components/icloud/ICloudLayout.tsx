@@ -1,54 +1,72 @@
 
-import React, { useState, ReactNode } from 'react';
+import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { SidebarProvider } from '@/components/ui/sidebar';
-import { Grid, MessageSquare, Plus } from 'lucide-react';
-import AppSidebar from '@/components/AppSidebar';
-import AppleNavBar from '@/components/AppleNavBar';
-import { GridPattern } from '@/components/ui/grid-pattern';
+import { useNavigate } from 'react-router-dom';
+import { useTheme } from '@/context/ThemeContext';
+import AppleNavBar from '../AppleNavBar';
+import AppGrid from './AppGrid';
+import { AnimatePresence } from 'framer-motion';
 
 interface ICloudLayoutProps {
-  children: ReactNode;
+  children: React.ReactNode;
+  className?: string;
+  showNavbar?: boolean;
+  showAppGridButton?: boolean;
 }
 
-const ICloudLayout: React.FC<ICloudLayoutProps> = ({ children }) => {
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(true);
-  const [isAppGridOpen, setIsAppGridOpen] = useState<boolean>(false);
-  const isMobile = useIsMobile();
-  
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
+const ICloudLayout: React.FC<ICloudLayoutProps> = ({
+  children,
+  className,
+  showNavbar = true,
+  showAppGridButton = true
+}) => {
+  const [isAppGridOpen, setIsAppGridOpen] = useState(false);
+  const navigate = useNavigate();
+  const { isDarkMode } = useTheme();
+
+  const toggleAppGrid = () => {
+    setIsAppGridOpen(!isAppGridOpen);
+  };
+
+  const handleSearch = () => {
+    // Placeholder for search functionality
+    console.log('Search clicked');
   };
 
   return (
-    <SidebarProvider defaultOpen={!isMobile}>
-      <div className={cn(
-        'min-h-screen font-sans transition-all duration-500 relative flex w-full',
-        isDarkMode ? 'bg-[#111111] text-white' : 'bg-gray-50 text-gray-800'
-      )}>
-        {/* Sidebar */}
-        <AppSidebar />
+    <div
+      className={cn(
+        'relative w-full h-screen flex flex-col',
+        isDarkMode
+          ? 'bg-gradient-to-b from-slate-900 to-slate-950 text-white'
+          : 'bg-gradient-to-b from-slate-50 to-white text-slate-900',
+        className
+      )}
+    >
+      {showNavbar && (
+        <AppleNavBar
+          onToggleAppGrid={toggleAppGrid}
+          showAppGridButton={showAppGridButton}
+          onSearch={handleSearch}
+        />
+      )}
 
-        {/* Main Content Area */}
-        <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Navigation Bar */}
-          <AppleNavBar 
-            isDarkMode={isDarkMode} 
-            onToggleDarkMode={toggleDarkMode}
-            onToggleAppGrid={() => setIsAppGridOpen(!isAppGridOpen)}
-            onSearch={() => {
-              // Handle search in the future
+      <AnimatePresence>
+        {isAppGridOpen && (
+          <AppGrid
+            onClose={() => setIsAppGridOpen(false)}
+            onAppClick={(app) => {
+              setIsAppGridOpen(false);
+              navigate(app.path);
             }}
           />
+        )}
+      </AnimatePresence>
 
-          {/* Content Area with Proper Spacing for NavBar */}
-          <main className="flex-1 overflow-auto p-2 md:p-6 pt-14">
-            {children}
-          </main>
-        </div>
-      </div>
-    </SidebarProvider>
+      <main className={cn('flex-1 overflow-auto', showNavbar && 'pt-12')}>
+        {children}
+      </main>
+    </div>
   );
 };
 

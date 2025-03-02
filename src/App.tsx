@@ -43,7 +43,9 @@ function App() {
           toastOptions={{
             className: "frosted-glass",
             style: {
-              borderRadius: '12px',
+              borderRadius: '16px', // More Apple-like rounded corners
+              padding: '12px',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
             }
           }}
         />

@@ -4,6 +4,7 @@ import { AtlasChatBot } from '@/components/atlas/index';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
+import { SparklesCore } from '@/components/ui/sparkles';
 
 interface ChatPopupProps {
   isDarkMode: boolean;
@@ -29,6 +30,20 @@ const ChatPopup: React.FC<ChatPopupProps> = ({ isDarkMode, onClose }) => {
         damping: 25 
       }}
     >
+      {/* Sparkles background effect for visual polish */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <SparklesCore
+          id="chatPopupSparkles"
+          background="transparent"
+          minSize={0.6}
+          maxSize={1.2}
+          particleColor={isDarkMode ? "#ffffff" : "#007AFF"}
+          particleDensity={30}
+          className="w-full h-full opacity-30"
+          speed={0.5}
+        />
+      </div>
+
       {onClose && (
         <motion.button
           className="absolute top-2 right-2 z-50 p-1.5 rounded-full bg-gray-200/80 text-gray-700 
@@ -41,7 +56,7 @@ const ChatPopup: React.FC<ChatPopupProps> = ({ isDarkMode, onClose }) => {
           <X className="h-4 w-4" />
         </motion.button>
       )}
-      <div className="h-full overflow-hidden rounded-2xl">
+      <div className="h-full overflow-hidden rounded-2xl relative z-10">
         <AtlasChatBot />
       </div>
     </motion.div>
