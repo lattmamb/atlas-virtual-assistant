@@ -1,13 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Save, Book, PenLine, Trash2 } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { Sparkles, Save, Trash, Plus, FileEdit } from "lucide-react";
 
 interface KnowledgeBaseProps {
   isDarkMode: boolean;
@@ -18,14 +17,17 @@ interface CustomInstruction {
   title: string;
   content: string;
   created_at: string;
+  updated_at: string;
+  is_active: boolean;
 }
 
 const KnowledgeBase: React.FC<KnowledgeBaseProps> = ({ isDarkMode }) => {
   const [instructions, setInstructions] = useState<CustomInstruction[]>([]);
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
   const [selectedInstruction, setSelectedInstruction] = useState<CustomInstruction | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
 
   useEffect(() => {
     fetchInstructions();
@@ -40,7 +42,7 @@ const KnowledgeBase: React.FC<KnowledgeBaseProps> = ({ isDarkMode }) => {
 
       if (error) {
         console.error('Error fetching instructions:', error);
-        toast.error('Failed to load custom instructions');
+        toast.error('Failed to load instructions');
         return;
       }
 
@@ -51,194 +53,286 @@ const KnowledgeBase: React.FC<KnowledgeBaseProps> = ({ isDarkMode }) => {
     }
   };
 
-  const saveInstruction = async () => {
-    if (!title.trim() || !content.trim()) {
-      toast.error('Please provide both a title and content');
-      return;
-    }
-
-    try {
-      if (isEditing && selectedInstruction) {
-        // Update existing instruction
-        const { error } = await supabase
-          .from('custom_instructions')
-          .update({ title, content })
-          .eq('id', selectedInstruction.id);
-
-        if (error) {
-          throw error;
-        }
-
-        toast.success('Instruction updated successfully');
-      } else {
-        // Create new instruction
-        const { error } = await supabase
-          .from('custom_instructions')
-          .insert([{ title, content }]);
-
-        if (error) {
-          throw error;
-        }
-
-        toast.success('Instruction saved successfully');
-      }
-
-      // Reset form and refresh instructions
-      setTitle("");
-      setContent("");
-      setIsEditing(false);
-      setSelectedInstruction(null);
-      fetchInstructions();
-    } catch (error) {
-      console.error('Error saving instruction:', error);
-      toast.error('Failed to save instruction');
-    }
-  };
-
-  const deleteInstruction = async (id: string) => {
-    try {
-      const { error } = await supabase
-        .from('custom_instructions')
-        .delete()
-        .eq('id', id);
-
-      if (error) {
-        throw error;
-      }
-
-      toast.success('Instruction deleted successfully');
-      fetchInstructions();
-      
-      if (selectedInstruction?.id === id) {
-        setSelectedInstruction(null);
-        setTitle("");
-        setContent("");
-        setIsEditing(false);
-      }
-    } catch (error) {
-      console.error('Error deleting instruction:', error);
-      toast.error('Failed to delete instruction');
-    }
-  };
-
-  const selectInstruction = (instruction: CustomInstruction) => {
+  const handleSelectInstruction = (instruction: CustomInstruction) => {
     setSelectedInstruction(instruction);
-    setTitle(instruction.title);
-    setContent(instruction.content);
-    setIsEditing(true);
+    setIsEditing(false);
+    setIsCreating(false);
   };
 
-  const resetForm = () => {
+  const handleEditClick = () => {
+    if (!selectedInstruction) return;
+    
+    setTitle(selectedInstruction.title);
+    setContent(selectedInstruction.content);
+    setIsEditing(true);
+    setIsCreating(false);
+  };
+
+  const handleCreateClick = () => {
     setTitle("");
     setContent("");
     setSelectedInstruction(null);
     setIsEditing(false);
+    setIsCreating(true);
+  };
+
+  const handleSaveClick = async () => {
+    if (!title.trim() || !content.trim()) {
+      toast.error('Title and content are required');
+      return;
+    }
+
+    try {
+      if (isCreating) {
+        // Create new instruction
+        const { data, error } = await supabase
+          .from('custom_instructions')
+          .insert([
+            { 
+              title, 
+              content, 
+              is_active: true 
+            }
+          ])
+          .select();
+
+        if (error) {
+          console.error('Error creating instruction:', error);
+          toast.error('Failed to create instruction');
+          return;
+        }
+
+        toast.success('Instruction created successfully');
+        setIsCreating(false);
+        
+        if (data && data[0]) {
+          setSelectedInstruction(data[0] as CustomInstruction);
+        }
+      } else if (isEditing && selectedInstruction) {
+        // Update existing instruction
+        const { error } = await supabase
+          .from('custom_instructions')
+          .update({ 
+            title, 
+            content, 
+            updated_at: new Date().toISOString() 
+          })
+          .eq('id', selectedInstruction.id);
+
+        if (error) {
+          console.error('Error updating instruction:', error);
+          toast.error('Failed to update instruction');
+          return;
+        }
+
+        toast.success('Instruction updated successfully');
+        setIsEditing(false);
+        
+        // Update the selected instruction with new values
+        setSelectedInstruction({
+          ...selectedInstruction,
+          title,
+          content,
+          updated_at: new Date().toISOString()
+        });
+      }
+
+      // Refresh instructions list
+      fetchInstructions();
+    } catch (error) {
+      console.error('Error saving instruction:', error);
+      toast.error('An unexpected error occurred');
+    }
+  };
+
+  const handleDeleteClick = async () => {
+    if (!selectedInstruction) return;
+
+    if (!confirm('Are you sure you want to delete this instruction?')) {
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('custom_instructions')
+        .delete()
+        .eq('id', selectedInstruction.id);
+
+      if (error) {
+        console.error('Error deleting instruction:', error);
+        toast.error('Failed to delete instruction');
+        return;
+      }
+
+      toast.success('Instruction deleted successfully');
+      setSelectedInstruction(null);
+      fetchInstructions();
+    } catch (error) {
+      console.error('Error deleting instruction:', error);
+      toast.error('An unexpected error occurred');
+    }
+  };
+
+  const handleCancelClick = () => {
+    setIsEditing(false);
+    setIsCreating(false);
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
   };
 
   return (
-    <div className="flex flex-col md:flex-row w-full gap-4 h-full">
-      <div className="md:w-1/3 h-full overflow-hidden flex flex-col">
-        <Card className={cn(
-          "h-full flex flex-col",
-          isDarkMode 
-            ? "dark-apple-card"
-            : "apple-card"
-        )}>
-          <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2">
-              <Book className="h-5 w-5" />
-              Saved Instructions
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex-1 overflow-y-auto">
+    <div className="flex flex-col lg:flex-row h-full gap-4">
+      {/* Sidebar with instruction list */}
+      <Card className={cn(
+        "w-full lg:w-1/3 h-full overflow-hidden",
+        isDarkMode ? "dark-apple-card" : "apple-card"
+      )}>
+        <CardHeader className="pb-2">
+          <div className="flex justify-between items-center">
+            <CardTitle>Instructions</CardTitle>
+            <Button size="sm" onClick={handleCreateClick} className="flex items-center gap-1">
+              <Plus className="h-4 w-4" />
+              New
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent className="px-2 overflow-y-auto" style={{ maxHeight: "calc(100% - 80px)" }}>
+          <div className="space-y-2">
             {instructions.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center mt-4">
-                No custom instructions yet. Create your first one!
-              </p>
+              <div className="text-center py-6 text-muted-foreground">
+                No instructions found. Create your first one!
+              </div>
             ) : (
-              <ul className="space-y-2">
-                {instructions.map((instruction) => (
-                  <li 
-                    key={instruction.id} 
-                    className={cn(
-                      "p-3 rounded-md cursor-pointer flex items-center justify-between group",
-                      selectedInstruction?.id === instruction.id 
-                        ? "bg-primary/10" 
-                        : "hover:bg-muted/50"
-                    )}
-                    onClick={() => selectInstruction(instruction)}
-                  >
-                    <div className="overflow-hidden">
-                      <h4 className="font-medium text-sm truncate">{instruction.title}</h4>
-                      <p className="text-xs text-muted-foreground truncate">{instruction.content.substring(0, 50)}...</p>
+              instructions.map((instruction) => (
+                <div
+                  key={instruction.id}
+                  className={cn(
+                    "p-3 rounded-lg cursor-pointer transition-colors",
+                    selectedInstruction?.id === instruction.id
+                      ? "bg-primary/10"
+                      : "hover:bg-muted"
+                  )}
+                  onClick={() => handleSelectInstruction(instruction)}
+                >
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h3 className="font-medium truncate">{instruction.title}</h3>
+                      <p className="text-xs text-muted-foreground">
+                        Updated: {formatDate(instruction.updated_at || instruction.created_at)}
+                      </p>
                     </div>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="opacity-0 group-hover:opacity-100 transition-opacity"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        deleteInstruction(instruction.id);
-                      }}
-                    >
-                      <Trash2 className="h-4 w-4 text-muted-foreground" />
-                    </Button>
-                  </li>
-                ))}
-              </ul>
+                    {instruction.is_active && (
+                      <div className="bg-primary/20 text-primary text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                        <Sparkles className="h-3 w-3" />
+                        Active
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))
             )}
-          </CardContent>
-        </Card>
-      </div>
-      
-      <div className="md:w-2/3 h-full overflow-hidden flex flex-col">
-        <Card className={cn(
-          "h-full flex flex-col",
-          isDarkMode 
-            ? "dark-apple-card"
-            : "apple-card"
-        )}>
-          <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2">
-              <PenLine className="h-5 w-5" />
-              {isEditing ? 'Edit Instruction' : 'Create New Instruction'}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex-1 flex flex-col">
-            <div className="mb-4">
-              <label htmlFor="title" className="block text-sm font-medium mb-1">Title</label>
-              <Input
-                id="title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="Give your instruction a name"
-                className="w-full"
-              />
-            </div>
-            <div className="flex-1 flex flex-col">
-              <label htmlFor="content" className="block text-sm font-medium mb-1">Custom Instruction</label>
-              <Textarea
-                id="content"
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                placeholder="Enter your custom instruction or prompt for Atlas AI..."
-                className="flex-1 resize-none"
-              />
-            </div>
-            <div className="flex justify-end gap-2 mt-4">
-              {isEditing && (
-                <Button variant="outline" onClick={resetForm}>
-                  Cancel
-                </Button>
-              )}
-              <Button onClick={saveInstruction} className="flex items-center gap-2">
-                <Save className="h-4 w-4" />
-                {isEditing ? 'Update' : 'Save'}
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Main content area */}
+      <Card className={cn(
+        "w-full lg:w-2/3 h-full overflow-hidden",
+        isDarkMode ? "dark-apple-card" : "apple-card"
+      )}>
+        {isEditing || isCreating ? (
+          <>
+            <CardHeader className="pb-2">
+              <div className="flex justify-between items-center">
+                <CardTitle>{isCreating ? "Create New Instruction" : "Edit Instruction"}</CardTitle>
+                <div className="flex gap-2">
+                  <Button size="sm" variant="outline" onClick={handleCancelClick}>
+                    Cancel
+                  </Button>
+                  <Button size="sm" onClick={handleSaveClick} className="flex items-center gap-1">
+                    <Save className="h-4 w-4" />
+                    Save
+                  </Button>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <label htmlFor="title" className="block text-sm font-medium mb-1">
+                  Title
+                </label>
+                <input
+                  id="title"
+                  type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  className="w-full p-2 rounded-md border border-input bg-background"
+                  placeholder="Instruction title"
+                />
+              </div>
+              <div>
+                <label htmlFor="content" className="block text-sm font-medium mb-1">
+                  Content
+                </label>
+                <Textarea
+                  id="content"
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  className="w-full min-h-[300px] p-2 rounded-md border border-input bg-background"
+                  placeholder="Enter your custom instructions here..."
+                />
+              </div>
+            </CardContent>
+          </>
+        ) : selectedInstruction ? (
+          <>
+            <CardHeader className="pb-2">
+              <div className="flex justify-between items-center">
+                <CardTitle>{selectedInstruction.title}</CardTitle>
+                <div className="flex gap-2">
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    onClick={handleDeleteClick} 
+                    className="flex items-center gap-1 text-destructive"
+                  >
+                    <Trash className="h-4 w-4" />
+                    Delete
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    onClick={handleEditClick} 
+                    className="flex items-center gap-1"
+                  >
+                    <FileEdit className="h-4 w-4" />
+                    Edit
+                  </Button>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="overflow-y-auto prose prose-sm max-w-none" style={{ maxHeight: "calc(100% - 80px)" }}>
+              <div className="whitespace-pre-wrap">{selectedInstruction.content}</div>
+            </CardContent>
+          </>
+        ) : (
+          <div className="flex flex-col items-center justify-center h-full text-center p-6">
+            <h3 className="text-xl font-medium mb-2">Select or Create an Instruction</h3>
+            <p className="text-muted-foreground mb-4">
+              Custom instructions help Atlas AI understand your preferences and needs.
+            </p>
+            <Button onClick={handleCreateClick} className="flex items-center gap-2">
+              <Plus className="h-4 w-4" />
+              Create New Instruction
+            </Button>
+          </div>
+        )}
+      </Card>
     </div>
   );
 };
