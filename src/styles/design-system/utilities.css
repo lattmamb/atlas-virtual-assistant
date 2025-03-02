@@ -70,4 +70,34 @@
   .celestial-bg {
     @apply bg-black;
   }
+
+  /* Theme transition utilities */
+  .theme-transition {
+    transition: background-color 0.5s ease, 
+                color 0.5s ease, 
+                border-color 0.5s ease, 
+                box-shadow 0.5s ease,
+                opacity 0.5s ease;
+  }
+
+  .subtle-shadow {
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+  }
+
+  .glossy {
+    position: relative;
+  }
+
+  .glossy::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60%;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), transparent);
+    border-radius: inherit;
+    z-index: 0;
+    pointer-events: none;
+  }
 }

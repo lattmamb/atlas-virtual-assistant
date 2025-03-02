@@ -10,6 +10,8 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useTheme } from "@/context/ThemeContext";
 import { cn } from "@/lib/utils";
 import { GridPattern } from "@/components/ui/grid-pattern";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { motion } from "framer-motion";
 
 const ChatRoom = () => {
   const { 
@@ -26,7 +28,7 @@ const ChatRoom = () => {
   return (
     <SidebarProvider defaultOpen={!isMobile}>
       <div className={cn(
-        "flex h-screen w-full overflow-hidden",
+        "flex h-screen w-full overflow-hidden theme-transition",
         `theme-${currentTheme}`
       )}>
         <div 
@@ -50,18 +52,29 @@ const ChatRoom = () => {
         
         <AppSidebar />
         <main className="flex-1 flex flex-col overflow-hidden">
-          <AppleNavBar 
-            showAppGridButton={false}
-          />
+          <div className="flex items-center justify-between p-2 z-10 theme-transition">
+            <AppleNavBar 
+              showAppGridButton={false}
+            />
+            <div className="fixed top-4 right-4 z-50">
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.3 }}
+              >
+                <ThemeToggle />
+              </motion.div>
+            </div>
+          </div>
           
           <div className="flex-1 flex flex-col h-full max-h-[calc(100vh-3rem)] overflow-hidden p-4 pt-14 animate-fade-in">
-            <div className="flex-1 overflow-hidden border rounded-lg flex flex-col hybrid"
+            <div className="flex-1 overflow-hidden border rounded-lg flex flex-col hybrid theme-transition"
               style={{ borderColor: 'var(--widget-border)' }}>
               <div className="flex-1 overflow-y-auto">
                 <ChatMessages messages={messages} />
               </div>
               
-              <div className="p-4 border-t" style={{ borderColor: 'var(--widget-border)' }}>
+              <div className="p-4 border-t theme-transition" style={{ borderColor: 'var(--widget-border)' }}>
                 <ChatInputForm 
                   isLoading={isLoading}
                   selectedProvider={selectedProvider}
