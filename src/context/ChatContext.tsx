@@ -1,7 +1,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { ApiKeyProvider, Message, ChatContextType } from "@/lib/types";
+import { ApiKeyProvider, Message, ChatContextType, ApiKey } from "@/lib/types";
 import { toast } from "sonner";
 
 // Create Context with default values
@@ -40,30 +40,32 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
           const providers: ApiKeyProvider[] = [];
           const keys: Record<string, string> = {};
           
+          const apiKeyData = data[0] as ApiKey;
+          
           // Check which providers have keys configured
-          if (data[0].api_key) {
+          if (apiKeyData.api_key) {
             providers.push("openai");
-            keys["openai"] = data[0].api_key;
+            keys["openai"] = apiKeyData.api_key;
           }
-          if ('anthropic' in data[0] && data[0].anthropic) {
+          if ('anthropic' in apiKeyData && apiKeyData.anthropic) {
             providers.push("anthropic");
-            keys["anthropic"] = data[0].anthropic as string;
+            keys["anthropic"] = apiKeyData.anthropic;
           }
-          if (data[0]["hugging face"] || data[0].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) {
+          if (apiKeyData["hugging face"] || apiKeyData.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) {
             providers.push("huggingface");
-            keys["huggingface"] = data[0]["hugging face"] || data[0].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 as string;
+            keys["huggingface"] = apiKeyData["hugging face"] || apiKeyData.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 || "";
           }
-          if ('google' in data[0] && data[0].google) {
+          if ('google' in apiKeyData && apiKeyData.google) {
             providers.push("google");
-            keys["google"] = data[0].google as string;
+            keys["google"] = apiKeyData.google;
           }
-          if ('cohere' in data[0] && data[0].cohere) {
+          if ('cohere' in apiKeyData && apiKeyData.cohere) {
             providers.push("cohere");
-            keys["cohere"] = data[0].cohere as string;
+            keys["cohere"] = apiKeyData.cohere;
           }
-          if ('openrouter' in data[0] && data[0].openrouter) {
+          if ('openrouter' in apiKeyData && apiKeyData.openrouter) {
             providers.push("openrouter");
-            keys["openrouter"] = data[0].openrouter as string;
+            keys["openrouter"] = apiKeyData.openrouter;
           }
           
           setAvailableProviders(providers);

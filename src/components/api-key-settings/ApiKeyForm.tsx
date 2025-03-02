@@ -2,30 +2,18 @@
 import { useState } from "react";
 import ApiKeyProvider from "./ApiKeyProvider";
 import SaveButton from "./SaveButton";
-
-// Define a type for the API keys
-interface ApiKeysState {
-  api_key?: string;
-  "hugging face"?: string;
-  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?: string;
-  openai?: string;
-  anthropic?: string;
-  google?: string;
-  cohere?: string;
-  huggingface?: string;
-  openrouter?: string;
-}
+import { ApiKey } from "@/lib/types";
 
 interface ApiKeyFormProps {
-  initialKeys: ApiKeysState;
-  onSave: (keys: ApiKeysState) => Promise<void>;
+  initialKeys: Partial<ApiKey>;
+  onSave: (keys: Partial<ApiKey>) => Promise<void>;
 }
 
 const ApiKeyForm = ({ initialKeys, onSave }: ApiKeyFormProps) => {
-  const [apiKeys, setApiKeys] = useState<ApiKeysState>(initialKeys);
+  const [apiKeys, setApiKeys] = useState<Partial<ApiKey>>(initialKeys);
   const [loading, setLoading] = useState(false);
 
-  const handleApiKeyChange = (provider: keyof ApiKeysState, value: string) => {
+  const handleApiKeyChange = (provider: keyof ApiKey, value: string) => {
     setApiKeys((prev) => ({
       ...prev,
       [provider]: value,
@@ -46,8 +34,8 @@ const ApiKeyForm = ({ initialKeys, onSave }: ApiKeyFormProps) => {
       <ApiKeyProvider 
         providerId="openai"
         providerName="OpenAI"
-        keyValue={apiKeys.openai || ""}
-        onKeyChange={(value) => handleApiKeyChange("openai", value)}
+        keyValue={apiKeys.api_key || ""}
+        onKeyChange={(value) => handleApiKeyChange("api_key", value)}
         placeholder="sk-..."
       />
 

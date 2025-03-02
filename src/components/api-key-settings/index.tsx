@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
@@ -6,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { CheckCircle2, Copy, Loader2 } from 'lucide-react';
+import { ApiKey } from '@/lib/types';
 
 const ApiKeySettings = () => {
   const [openAIKey, setOpenAIKey] = useState('');
@@ -32,7 +34,7 @@ const ApiKeySettings = () => {
         }
 
         if (data) {
-          const apiKeys = data;
+          const apiKeys = data as ApiKey;
           setOpenAIKey(apiKeys.api_key || '');
           setAnthropicKey(apiKeys.anthropic || '');
           setHFKey(apiKeys["hugging face"] || '');
@@ -41,11 +43,11 @@ const ApiKeySettings = () => {
           if ('openrouter' in apiKeys && apiKeys.openrouter) {
             setOpenRouterKey(apiKeys.openrouter as string);
           }
-          setId(apiKeys.id || null);
+          setId(apiKeys.id ? Number(apiKeys.id) : null);
         }
       } catch (error: any) {
         toast({
-          title: "Error!",
+          title: "Error fetching API keys",
           description: error.message,
         })
       } finally {
@@ -59,17 +61,18 @@ const ApiKeySettings = () => {
   const saveApiKeys = async () => {
     setIsLoading(true);
     try {
-      const result = await supabase.from('api_keys').upsert([
-        {
-          id: id || 1, // Default to 1 if no ID exists
-          api_key: openAIKey,
-          anthropic: anthropicKey,
-          "hugging face": hfKey,
-          google: googleKey,
-          cohere: cohereKey,
-          openrouter: openRouterKey,
-        }
-      ]);
+      const apiKeyData: Partial<ApiKey> = {
+        id: id ? String(id) : undefined,
+        api_key: openAIKey,
+        anthropic: anthropicKey,
+        "hugging face": hfKey,
+        google: googleKey,
+        cohere: cohereKey,
+        openrouter: openRouterKey,
+        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: hfKey // Required field
+      };
+
+      const result = await supabase.from('api_keys').upsert([apiKeyData]);
 
       if (result.error) {
         throw result.error;
@@ -80,7 +83,7 @@ const ApiKeySettings = () => {
       })
     } catch (error: any) {
       toast({
-        title: "Error!",
+        title: "Error saving API keys",
         description: error.message,
       })
     } finally {
@@ -103,7 +106,7 @@ const ApiKeySettings = () => {
       .catch((err) => {
         console.error("Failed to copy: ", err);
         toast({
-          title: "Error!",
+          title: "Error copying",
           description: "Failed to copy API endpoint",
         })
       });
