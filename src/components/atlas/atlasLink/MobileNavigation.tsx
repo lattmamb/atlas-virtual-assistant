@@ -8,7 +8,7 @@ const MobileNavigation: React.FC = () => {
   const { activeTab, setActiveTab, toggleSidebar } = useAtlasLink();
 
   return (
-    <div className="md:hidden mobile-navigation" role="navigation" aria-label="Mobile Navigation">
+    <div className="md:hidden mobile-navigation fixed bottom-0 left-0 right-0 flex justify-around items-center h-16 bg-background/80 backdrop-blur-md border-t z-50 px-2" role="navigation" aria-label="Mobile Navigation">
       <Button 
         variant="ghost" 
         size="icon" 
@@ -33,31 +33,31 @@ const MobileNavigation: React.FC = () => {
         variant="ghost" 
         size="icon" 
         className="tap-highlight no-select"
-        onClick={() => setActiveTab('knowledge')}
+        onClick={() => setActiveTab('dashboard')}
         aria-label="Knowledge Base"
-        aria-current={activeTab === 'knowledge' ? 'page' : undefined}
+        aria-current={activeTab === 'dashboard' ? 'page' : undefined}
       >
-        <Book size={24} className={activeTab === 'knowledge' ? "text-primary" : ""} />
+        <Book size={24} className={activeTab === 'dashboard' ? "text-primary" : ""} />
       </Button>
       <Button 
         variant="ghost" 
         size="icon" 
         className="tap-highlight no-select"
-        onClick={() => setActiveTab('store')}
+        onClick={() => setActiveTab('dashboard')}
         aria-label="GPT Store"
-        aria-current={activeTab === 'store' ? 'page' : undefined}
+        aria-current={activeTab === 'dashboard' ? 'page' : undefined}
       >
-        <Store size={24} className={activeTab === 'store' ? "text-primary" : ""} />
+        <Store size={24} className={activeTab === 'dashboard' ? "text-primary" : ""} />
       </Button>
       <Button 
         variant="ghost" 
         size="icon" 
         className="tap-highlight no-select"
-        onClick={() => setActiveTab('api')}
+        onClick={() => setActiveTab('dashboard')}
         aria-label="API Integrations"
-        aria-current={activeTab === 'api' ? 'page' : undefined}
+        aria-current={activeTab === 'dashboard' ? 'page' : undefined}
       >
-        <Key size={24} className={activeTab === 'api' ? "text-primary" : ""} />
+        <Key size={24} className={activeTab === 'dashboard' ? "text-primary" : ""} />
       </Button>
       <Button 
         variant="ghost" 
