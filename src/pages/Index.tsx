@@ -6,7 +6,7 @@ import AppGrid from '@/components/icloud/AppGrid';
 import ICloudLayout from '@/components/icloud/ICloudLayout';
 import { AtlasChatBot } from '@/components/atlas/index';
 import { Button } from '@/components/ui/button';
-import { Settings, MessageSquare, Workflow, Shield } from 'lucide-react';
+import { Settings, MessageSquare, Workflow, Shield, Grid } from 'lucide-react';
 
 export default function Index() {
   const [showChat, setShowChat] = useState(false);
@@ -22,6 +22,15 @@ export default function Index() {
             <h1 className="text-2xl font-bold ml-2">Atlas Assistant</h1>
           </div>
           <div className="flex gap-2">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="flex gap-2 items-center"
+              onClick={() => setShowAppGrid(!showAppGrid)}
+            >
+              <Grid size={16} />
+              Apps
+            </Button>
             <Link to="/atlas-link">
               <Button variant="ghost" size="sm" className="flex gap-2 items-center">
                 <Shield size={16} />
