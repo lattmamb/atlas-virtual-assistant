@@ -7,15 +7,30 @@ import { Grid, MessageSquare, Plus } from 'lucide-react';
 import AppSidebar from '@/components/AppSidebar';
 import AppleNavBar from '@/components/AppleNavBar';
 import { GridPattern } from '@/components/ui/grid-pattern';
+import { useLocation } from 'react-router-dom';
 
 interface ICloudLayoutProps {
   children: ReactNode;
+  activePage?: string;
 }
 
-const ICloudLayout: React.FC<ICloudLayoutProps> = ({ children }) => {
+const ICloudLayout: React.FC<ICloudLayoutProps> = ({ children, activePage }) => {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(true);
   const [isAppGridOpen, setIsAppGridOpen] = useState<boolean>(false);
   const isMobile = useIsMobile();
+  const location = useLocation();
+
+  // Determine the active page from URL if not provided
+  const getActivePage = () => {
+    if (activePage) return activePage;
+    
+    const path = location.pathname;
+    if (path.startsWith('/chat')) return 'chat';
+    if (path.startsWith('/workflows')) return 'workflows';
+    if (path.startsWith('/atlas-link')) return 'atlas-link';
+    if (path.startsWith('/settings')) return 'settings';
+    return 'home';
+  };
   
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
@@ -28,7 +43,7 @@ const ICloudLayout: React.FC<ICloudLayoutProps> = ({ children }) => {
         isDarkMode ? 'bg-[#111111] text-white' : 'bg-gray-50 text-gray-800'
       )}>
         {/* Sidebar */}
-        <AppSidebar />
+        <AppSidebar activePage={getActivePage()} />
 
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col overflow-hidden">

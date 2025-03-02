@@ -52,7 +52,7 @@ const ChatRoom = () => {
     availableProviders 
   } = useChat();
   
-  const { currentTheme, isDarkMode, setCurrentTheme } = useTheme();
+  const { currentTheme, isDarkMode } = useTheme();
   const isMobile = useIsMobile();
   const [showTimeline, setShowTimeline] = useState(!isMobile);
   const [starredMessage, setStarredMessage] = useState<string | null>(null);
@@ -67,14 +67,14 @@ const ChatRoom = () => {
       if (lastMessage.role === 'user') {
         if (lastMessage.content.toLowerCase().includes('dark mode') || 
             lastMessage.content.toLowerCase().includes('night mode')) {
-          setCurrentTheme('dark');
+          document.documentElement.classList.add('dark');
           toast({
             title: "Theme changed",
             description: "Dark mode activated",
           });
         } else if (lastMessage.content.toLowerCase().includes('light mode') || 
                  lastMessage.content.toLowerCase().includes('day mode')) {
-          setCurrentTheme('light');
+          document.documentElement.classList.remove('dark');
           toast({
             title: "Theme changed",
             description: "Light mode activated",
@@ -82,7 +82,7 @@ const ChatRoom = () => {
         }
       }
     }
-  }, [messages, setCurrentTheme, toast]);
+  }, [messages, toast]);
 
   // Simulate typing status changes
   useEffect(() => {
@@ -164,7 +164,7 @@ const ChatRoom = () => {
           <ChatBackgroundEffect isDarkMode={isDarkMode} />
         </div>
         
-        <AppSidebar />
+        <AppSidebar activePage="chat" />
         <main className="flex-1 flex flex-col overflow-hidden">
           <AppleNavBar showAppGridButton={false} />
           

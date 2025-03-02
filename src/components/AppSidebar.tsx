@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -31,13 +30,27 @@ import {
   Bell,
   Car,
   Calendar,
-  Sparkles
+  Sparkles,
+  FileText,
+  Clock,
+  Users,
+  BadgeCheck,
+  CreditCard,
+  FileQuestion,
+  Phone,
+  Headphones,
+  BarChart2,
+  Key
 } from 'lucide-react';
 import { useTheme } from '@/context/ThemeContext';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
-const AppSidebar = () => {
+interface AppSidebarProps {
+  activePage?: string;
+}
+
+const AppSidebar: React.FC<AppSidebarProps> = ({ activePage }) => {
   const location = useLocation();
   const { state, toggleSidebar } = useSidebar();
   const { isDarkMode } = useTheme();
