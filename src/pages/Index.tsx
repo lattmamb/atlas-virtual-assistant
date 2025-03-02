@@ -2,8 +2,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import AnimatedLogo from '@/components/AnimatedLogo';
-import { AppGrid } from '@/components/icloud/AppGrid';
-import { ICloudLayout } from '@/components/icloud/ICloudLayout';
+import AppGrid from '@/components/icloud/AppGrid';
+import ICloudLayout from '@/components/icloud/ICloudLayout';
 import { AtlasChatBot } from '@/components/atlas/index';
 import { Button } from '@/components/ui/button';
 import { Settings, MessageSquare, Workflow, Shield } from 'lucide-react';
