@@ -1,82 +1,155 @@
 
 "use client";
+import React from "react";
+import { SparklesCore } from "@/components/ui/sparkles";
+import InteractiveBentoGallery from "@/components/blocks/interactive-bento-gallery";
 
-import { Box, Lock, Search, Settings, Sparkles } from "lucide-react";
-import { GlowingEffect } from "@/components/ui/glowing-effect";
-import { cn } from "@/lib/utils";
+const mediaItems = [
+  {
+    id: 1,
+    type: "image",
+    title: "Anurag Mishra",
+    desc: "Driven, innovative, visionary",
+    url: "https://kxptt4m9j4.ufs.sh/f/9YHhEDeslzkcbP3rYTiXwH7Y106CepJOsoAgQjyFi3MUfDkh",
+    span: "md:col-span-1 md:row-span-3 sm:col-span-1 sm:row-span-2",
+  },
+  {
+    id: 2,
+    type: "video",
+    title: "Dog Puppy",
+    desc: "Adorable loyal companion.",
+    url: "https://cdn.pixabay.com/video/2024/07/24/222837_large.mp4",
+    span: "md:col-span-2 md:row-span-2 col-span-1 sm:col-span-2 sm:row-span-2",
+  },
+  {
+    id: 3,
+    type: "image",
+    title: "Forest Path",
+    desc: "Mystical forest trail",
+    url: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e",
+    span: "md:col-span-1 md:row-span-3 sm:col-span-2 sm:row-span-2 ",
+  },
+  {
+    id: 4,
+    type: "image",
+    title: "Falling Leaves",
+    desc: "Autumn scenery",
+    url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+    span: "md:col-span-2 md:row-span-2 sm:col-span-1 sm:row-span-2 ",
+  },
+  {
+    id: 5,
+    type: "video",
+    title: "Bird Parrot",
+    desc: "Vibrant feathered charm",
+    url: "https://cdn.pixabay.com/video/2020/07/30/46026-447087782_large.mp4",
+    span: "md:col-span-1 md:row-span-3 sm:col-span-1 sm:row-span-2 ",
+  },
+  {
+    id: 6,
+    type: "image",
+    title: "Beach Paradise",
+    desc: "Sunny tropical beach",
+    url: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
+    span: "md:col-span-2 md:row-span-2 sm:col-span-1 sm:row-span-2 ",
+  },
+  {
+    id: 7,
+    type: "video",
+    title: "Shiva Temple",
+    desc: "Peaceful Shiva sanctuary.",
+    url: "https://cdn.pixabay.com/video/2020/05/25/40130-424930032_large.mp4",
+    span: "md:col-span-1 md:row-span-3 sm:col-span-1 sm:row-span-2 ",
+  },
+];
 
-export function GlowingEffectDemo() {
+export function BentoGridGalleryDemo() {
   return (
-    <ul className="grid grid-cols-1 grid-rows-none gap-4 md:grid-cols-12 md:grid-rows-3 lg:gap-4 xl:max-h-[34rem] xl:grid-rows-2">
-      <GridItem
-        area="md:[grid-area:1/1/2/7] xl:[grid-area:1/1/2/5]"
-        icon={<Box className="h-4 w-4" />}
-        title="Do things the right way"
-        description="Running out of copy so I'll write anything."
+    <div className="min-h-screen overflow-y-auto">
+      <InteractiveBentoGallery
+        mediaItems={mediaItems}
+        title="Gallery Shots Collection"
+        description="Drag and explore our curated collection of shots"
       />
-      <GridItem
-        area="md:[grid-area:1/7/2/13] xl:[grid-area:2/1/3/5]"
-        icon={<Settings className="h-4 w-4" />}
-        title="The best AI code editor ever."
-        description="Yes, it's true. I'm not even kidding. Ask my mom if you don't believe me."
-      />
-      <GridItem
-        area="md:[grid-area:2/1/3/7] xl:[grid-area:1/5/3/8]"
-        icon={<Lock className="h-4 w-4" />}
-        title="You should buy Aceternity UI Pro"
-        description="It's the best money you'll ever spend"
-      />
-      <GridItem
-        area="md:[grid-area:2/7/3/13] xl:[grid-area:1/8/2/13]"
-        icon={<Sparkles className="h-4 w-4" />}
-        title="This card is also built by Cursor"
-        description="I'm not even kidding. Ask my mom if you don't believe me."
-      />
-      <GridItem
-        area="md:[grid-area:3/1/4/13] xl:[grid-area:2/8/3/13]"
-        icon={<Search className="h-4 w-4" />}
-        title="Coming soon on Aceternity UI"
-        description="I'm writing the code as I record this, no shit."
-      />
-    </ul>
+    </div>
   );
 }
 
-interface GridItemProps {
-  area: string;
-  icon: React.ReactNode;
-  title: string;
-  description: React.ReactNode;
-}
-
-const GridItem = ({ area, icon, title, description }: GridItemProps) => {
+export function SparklesPreview() {
   return (
-    <li className={cn("min-h-[14rem] list-none", area)}>
-      <div className="relative h-full rounded-[1.25rem] border-[0.75px] border-border p-2 md:rounded-[1.5rem] md:p-3">
-        <GlowingEffect
-          spread={40}
-          glow={true}
-          disabled={false}
-          proximity={64}
-          inactiveZone={0.01}
-          borderWidth={3}
+    <div className="h-[40rem] w-full bg-black flex flex-col items-center justify-center overflow-hidden rounded-md">
+      <h1 className="md:text-7xl text-3xl lg:text-9xl font-bold text-center text-white relative z-20">
+        ATLAS
+      </h1>
+      <div className="w-[40rem] h-40 relative">
+        {/* Gradients */}
+        <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-indigo-500 to-transparent h-[2px] w-3/4 blur-sm" />
+        <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-indigo-500 to-transparent h-px w-3/4" />
+        <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent h-[5px] w-1/4 blur-sm" />
+        <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent h-px w-1/4" />
+
+        {/* Core component */}
+        <SparklesCore
+          background="transparent"
+          minSize={0.4}
+          maxSize={1}
+          particleDensity={1200}
+          className="w-full h-full"
+          particleColor="#FFFFFF"
         />
-        <div className="relative flex h-full flex-col justify-between gap-6 overflow-hidden rounded-xl border-[0.75px] bg-background p-6 shadow-sm dark:shadow-[0px_0px_27px_0px_rgba(45,45,45,0.3)] md:p-6">
-          <div className="relative flex flex-1 flex-col justify-between gap-3">
-            <div className="w-fit rounded-lg border-[0.75px] border-border bg-muted p-2">
-              {icon}
-            </div>
-            <div className="space-y-3">
-              <h3 className="pt-0.5 text-xl leading-[1.375rem] font-semibold font-sans tracking-[-0.04em] md:text-2xl md:leading-[1.875rem] text-balance text-foreground">
-                {title}
-              </h3>
-              <h2 className="[&_b]:md:font-semibold [&_strong]:md:font-semibold font-sans text-sm leading-[1.125rem] md:text-base md:leading-[1.375rem] text-muted-foreground">
-                {description}
-              </h2>
-            </div>
-          </div>
-        </div>
+
+        {/* Radial Gradient to prevent sharp edges */}
+        <div className="absolute inset-0 w-full h-full bg-black [mask-image:radial-gradient(350px_200px_at_top,transparent_20%,white)]"></div>
       </div>
-    </li>
+    </div>
   );
-};
+}
+
+export function SparklesPreviewDark() {
+  return (
+    <div className="h-[40rem] relative w-full bg-slate-950 flex flex-col items-center justify-center overflow-hidden rounded-md">
+      <div className="w-full absolute inset-0 h-screen">
+        <SparklesCore
+          id="tsparticlesfullpage"
+          background="transparent"
+          minSize={0.6}
+          maxSize={1.4}
+          particleDensity={100}
+          className="w-full h-full"
+          particleColor="#FFFFFF"
+          speed={1}
+        />
+      </div>
+      <h1 className="md:text-7xl text-3xl lg:text-9xl font-bold text-center text-white relative z-20">
+        Build faster
+      </h1>
+    </div>
+  );
+}
+
+export function SparklesPreviewColorful() {
+  return (
+    <div className="h-[40rem] relative w-full bg-black flex flex-col items-center justify-center overflow-hidden rounded-md">
+      <div className="w-full absolute inset-0 h-screen">
+        <SparklesCore
+          id="tsparticlescolorful"
+          background="transparent"
+          minSize={0.6}
+          maxSize={1.4}
+          particleDensity={100}
+          className="w-full h-full"
+          particleColor="#00ff00"
+          speed={0.5}
+        />
+      </div>
+      <div className="flex flex-col items-center justify-center gap-4 relative z-20">
+        <h1 className="md:text-7xl text-3xl lg:text-9xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400">
+          The Future
+        </h1>
+        <p className="text-neutral-300 cursor-default text-center">
+          is brighter than you think
+        </p>
+      </div>
+    </div>
+  );
+}

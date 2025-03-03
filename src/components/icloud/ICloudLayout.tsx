@@ -1,12 +1,11 @@
 
-import React, { useState, ReactNode, useEffect } from 'react';
+import React, { useState, ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { useLocation } from 'react-router-dom';
+import { SidebarProvider } from '@/components/ui/sidebar';
+import AppSidebar from '@/components/AppSidebar';
 import { AppleNavBar } from '@/components/apple-nav';
-import { SpaceNav } from '@/components/ui/space-nav';
-import { SpaceBackground } from '@/components/ui/space-background';
-import { CursorGlow } from '@/components/ui/cursor-glow';
+import { useLocation } from 'react-router-dom';
 
 interface ICloudLayoutProps {
   children: ReactNode;
@@ -14,6 +13,8 @@ interface ICloudLayoutProps {
 }
 
 const ICloudLayout: React.FC<ICloudLayoutProps> = ({ children, activePage }) => {
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(true);
+  const [isAppGridOpen, setIsAppGridOpen] = useState<boolean>(false);
   const isMobile = useIsMobile();
   const location = useLocation();
 
@@ -26,32 +27,35 @@ const ICloudLayout: React.FC<ICloudLayoutProps> = ({ children, activePage }) => 
     if (path.startsWith('/settings')) return 'settings';
     return 'home';
   };
+  
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+  };
 
   return (
-    <div className="min-h-screen font-sans transition-all duration-500 relative flex w-full bg-[#0D0015] text-white overflow-hidden">
-      {/* Space background effect */}
-      <SpaceBackground />
-      
-      {/* Cursor glow effect */}
-      <CursorGlow />
-      
-      {/* Navigation */}
-      <SpaceNav activePage={getActivePage()} />
+    <SidebarProvider defaultOpen={!isMobile}>
+      <div className={cn(
+        'min-h-screen font-sans transition-all duration-500 relative flex w-full',
+        isDarkMode ? 'bg-[#111111] text-white' : 'bg-gray-50 text-gray-800'
+      )}>
+        {/* Sidebar */}
+        <AppSidebar activePage={getActivePage()} />
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Navigation Bar */}
-        <AppleNavBar 
-          showAppGridButton={true}
-          className="bg-black/40 backdrop-blur-xl border-white/5"
-        />
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* Navigation Bar */}
+          <AppleNavBar 
+            showAppGridButton={true}
+            onToggleAppGrid={() => setIsAppGridOpen(!isAppGridOpen)}
+          />
 
-        {/* Content Area with Proper Spacing for NavBar */}
-        <main className="flex-1 overflow-auto p-2 md:p-6 pt-14">
-          {children}
-        </main>
+          {/* Content Area with Proper Spacing for NavBar */}
+          <main className="flex-1 overflow-auto p-2 md:p-6 pt-14">
+            {children}
+          </main>
+        </div>
       </div>
-    </div>
+    </SidebarProvider>
   );
 };
 

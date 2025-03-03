@@ -17,27 +17,19 @@ const ApiKeySettings = () => {
   const [mistoralKey, setMistoralKey] = useState('');
   const [azureKey, setAzureKey] = useState('');
   const [customAPIBase, setCustomAPIBase] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleSaveApiKeys = () => {
     // Logic to save API keys
-    setIsLoading(true);
-    
     console.log('Saving API keys:', { openAIKey, anthropicKey, googleKey });
     
-    // Simulate API call
-    setTimeout(() => {
-      // Store API keys in localStorage or a more secure storage
-      localStorage.setItem('openai_api_key', openAIKey);
-      localStorage.setItem('anthropic_api_key', anthropicKey);
-      localStorage.setItem('google_api_key', googleKey);
-      
-      setIsLoading(false);
-      
-      toast.success('API keys saved successfully', {
-        description: 'Your API keys have been securely stored.',
-      });
-    }, 1000);
+    // Store API keys in localStorage or a more secure storage
+    localStorage.setItem('openai_api_key', openAIKey);
+    localStorage.setItem('anthropic_api_key', anthropicKey);
+    localStorage.setItem('google_api_key', googleKey);
+    
+    toast.success('API keys saved successfully', {
+      description: 'Your API keys have been securely stored.',
+    });
   };
 
   return (
@@ -143,7 +135,7 @@ const ApiKeySettings = () => {
               </CardContent>
             </Card>
             
-            <SaveApiKeysButton onClick={handleSaveApiKeys} isLoading={isLoading} />
+            <SaveApiKeysButton onClick={handleSaveApiKeys} />
           </div>
         </TabsContent>
         
@@ -191,11 +183,7 @@ const ApiKeySettings = () => {
                 label="Custom API Base URL"
                 helpText="Enter a custom base URL for API requests"
               />
-              <SaveApiKeysButton 
-                onClick={handleSaveApiKeys} 
-                isLoading={isLoading} 
-                text="Save Custom Settings" 
-              />
+              <SaveApiKeysButton onClick={handleSaveApiKeys} text="Save Custom Settings" />
             </CardContent>
           </Card>
         </TabsContent>

@@ -3,7 +3,7 @@ import React from "react";
 import WorkflowDashboard from "@/components/workflow";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/AppSidebar";
-import { AppleNavBar } from "@/components/apple-nav";
+import AppleNavBar from "@/components/AppleNavBar";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useTheme } from "@/context/ThemeContext";
