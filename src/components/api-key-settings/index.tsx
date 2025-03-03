@@ -17,8 +17,11 @@ const ApiKeySettings = () => {
   const [mistoralKey, setMistoralKey] = useState('');
   const [azureKey, setAzureKey] = useState('');
   const [customAPIBase, setCustomAPIBase] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSaveApiKeys = () => {
+    setIsLoading(true);
+    
     // Logic to save API keys
     console.log('Saving API keys:', { openAIKey, anthropicKey, googleKey });
     
@@ -27,9 +30,12 @@ const ApiKeySettings = () => {
     localStorage.setItem('anthropic_api_key', anthropicKey);
     localStorage.setItem('google_api_key', googleKey);
     
-    toast.success('API keys saved successfully', {
-      description: 'Your API keys have been securely stored.',
-    });
+    setTimeout(() => {
+      setIsLoading(false);
+      toast.success('API keys saved successfully', {
+        description: 'Your API keys have been securely stored.',
+      });
+    }, 1000);
   };
 
   return (
@@ -58,7 +64,6 @@ const ApiKeySettings = () => {
                   onChange={setOpenAIKey} 
                   placeholder="sk-..." 
                   label="OpenAI API Key"
-                  helpText="Get your API key from openai.com/api-keys"
                 />
               </CardContent>
             </Card>
@@ -76,7 +81,6 @@ const ApiKeySettings = () => {
                   onChange={setAnthropicKey} 
                   placeholder="sk-ant-..." 
                   label="Anthropic API Key"
-                  helpText="Get your API key from console.anthropic.com"
                 />
               </CardContent>
             </Card>
@@ -94,7 +98,6 @@ const ApiKeySettings = () => {
                   onChange={setGoogleKey} 
                   placeholder="AIza..." 
                   label="Google AI API Key"
-                  helpText="Get your API key from console.cloud.google.com"
                 />
               </CardContent>
             </Card>
@@ -112,7 +115,6 @@ const ApiKeySettings = () => {
                   onChange={setMistoralKey} 
                   placeholder="..." 
                   label="Mistral AI API Key"
-                  helpText="Get your API key from console.mistral.ai"
                 />
               </CardContent>
             </Card>
@@ -130,12 +132,11 @@ const ApiKeySettings = () => {
                   onChange={setAzureKey} 
                   placeholder="..." 
                   label="Azure OpenAI API Key"
-                  helpText="Get your API key from Azure Portal"
                 />
               </CardContent>
             </Card>
             
-            <SaveApiKeysButton onClick={handleSaveApiKeys} />
+            <SaveApiKeysButton onClick={handleSaveApiKeys} isLoading={isLoading} />
           </div>
         </TabsContent>
         
@@ -181,9 +182,10 @@ const ApiKeySettings = () => {
                 onChange={setCustomAPIBase} 
                 placeholder="https://api.your-custom-endpoint.com" 
                 label="Custom API Base URL"
-                helpText="Enter a custom base URL for API requests"
               />
-              <SaveApiKeysButton onClick={handleSaveApiKeys} text="Save Custom Settings" />
+              <div className="mt-4">
+                <SaveApiKeysButton onClick={handleSaveApiKeys} isLoading={isLoading} />
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
