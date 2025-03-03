@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useAtlasLink } from './AtlasLinkContext';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
@@ -12,8 +12,8 @@ const ChatTab: React.FC = () => {
 
   // Apply iOS blur effect style based on theme
   const backgroundStyle = isDarkMode 
-    ? 'bg-black/80 backdrop-blur-lg' 
-    : 'bg-white/80 backdrop-blur-lg';
+    ? 'bg-black/80 backdrop-blur-lg border border-white/10' 
+    : 'bg-white/80 backdrop-blur-lg border border-gray-200/50';
 
   return (
     <motion.div 
