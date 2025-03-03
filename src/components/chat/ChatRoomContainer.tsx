@@ -8,6 +8,7 @@ import { Message, ApiKeyProvider } from "@/lib/types";
 import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StarBorder } from "@/components/ui/starBorder";
+import ModelSwitcher from "./ModelSwitcher";
 
 interface ChatRoomContainerProps {
   messages: Message[];
@@ -18,6 +19,8 @@ interface ChatRoomContainerProps {
   starredMessage: string | null;
   handleStarMessage: (messageId: string) => void;
   scrollRef: React.RefObject<HTMLDivElement>;
+  aiMode: 'atlas' | 'grok';
+  onAIModeChange: (mode: 'atlas' | 'grok') => void;
 }
 
 const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({
@@ -29,6 +32,8 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({
   starredMessage,
   handleStarMessage,
   scrollRef,
+  aiMode,
+  onAIModeChange,
 }) => {
   // Custom renderer for messages that adds star button
   const renderMessage = (message: Message) => {
@@ -65,13 +70,27 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({
       }}
       transition={{ duration: 0.1, ease: "easeOut" }}
     >
+      <div className="mx-auto w-full max-w-3xl px-4 py-2">
+        <ModelSwitcher 
+          currentModel={aiMode} 
+          onModelChange={onAIModeChange} 
+          className="mx-auto mb-2"
+        />
+      </div>
+      
       <div className="flex-1 overflow-y-auto relative">
         <ChatMessages 
           messages={messages} 
-          customRenderer={renderMessage} 
+          customRenderer={renderMessage}
+          aiMode={aiMode}
         />
         
-        {messages.length === 0 && <WelcomeScreen sendMessage={sendMessage} />}
+        {messages.length === 0 && (
+          <WelcomeScreen 
+            sendMessage={sendMessage} 
+            aiMode={aiMode}
+          />
+        )}
       </div>
       
       <div className="p-4 border-t dark:border-white/10 border-gray-200">
@@ -80,6 +99,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({
           selectedProvider={selectedProvider}
           sendMessage={sendMessage}
           availableProviders={availableProviders}
+          aiMode={aiMode}
         />
       </div>
     </motion.div>

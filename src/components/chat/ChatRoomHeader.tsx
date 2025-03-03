@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Clock, Sparkles } from "lucide-react";
+import { Clock, Sparkles, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LampEffect } from "@/components/ui/LampEffect";
 import { GooeyText } from "@/components/ui/GooeyText";
@@ -12,13 +12,15 @@ interface ChatRoomHeaderProps {
   isLoading: boolean;
   showTimeline: boolean;
   setShowTimeline: (show: boolean) => void;
+  aiMode?: 'atlas' | 'grok';
 }
 
 const ChatRoomHeader: React.FC<ChatRoomHeaderProps> = ({
   typingStatus,
   isLoading,
   showTimeline,
-  setShowTimeline
+  setShowTimeline,
+  aiMode = 'atlas'
 }) => {
   return (
     <LampEffect subtle className="w-full">
@@ -34,7 +36,11 @@ const ChatRoomHeader: React.FC<ChatRoomHeaderProps> = ({
           <GooeyText text={typingStatus} duration={0.5} className="italic" />
           {isLoading && (
             <span className="inline-block animate-pulse ml-1">
-              <Sparkles className="h-3 w-3 text-amber-400" />
+              {aiMode === 'atlas' ? (
+                <Sparkles className="h-3 w-3 text-blue-400" />
+              ) : (
+                <Zap className="h-3 w-3 text-purple-400" />
+              )}
             </span>
           )}
         </div>
@@ -44,6 +50,9 @@ const ChatRoomHeader: React.FC<ChatRoomHeaderProps> = ({
             size="sm" 
             subtle 
             variant="outline"
+            className={cn(
+              aiMode === 'grok' && "border-purple-400/30"
+            )}
             onClick={() => setShowTimeline(!showTimeline)}
           >
             {showTimeline ? <MessageSquarePlus className="h-4 w-4 mr-1" /> : <PanelRightOpen className="h-4 w-4 mr-1" />}

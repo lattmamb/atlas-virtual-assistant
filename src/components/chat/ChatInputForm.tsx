@@ -1,6 +1,6 @@
 
 import { useState, FormEvent, useRef, useEffect } from "react";
-import { Send, Mic, PlusCircle, Image, Sparkles } from "lucide-react";
+import { Send, Mic, PlusCircle, Image, Sparkles, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ChatInput } from "@/components/ui/chat-input";
 import { useNavigate } from "react-router-dom";
@@ -13,9 +13,16 @@ interface ChatInputFormProps {
   selectedProvider: ApiKeyProvider | null;
   sendMessage: (content: string) => void;
   availableProviders: ApiKeyProvider[];
+  aiMode?: 'atlas' | 'grok';
 }
 
-const ChatInputForm = ({ isLoading, selectedProvider, sendMessage, availableProviders }: ChatInputFormProps) => {
+const ChatInputForm = ({ 
+  isLoading, 
+  selectedProvider, 
+  sendMessage, 
+  availableProviders,
+  aiMode = "atlas" 
+}: ChatInputFormProps) => {
   const [input, setInput] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -38,13 +45,20 @@ const ChatInputForm = ({ isLoading, selectedProvider, sendMessage, availableProv
     }
   }, []);
   
-  // Sample suggestions based on input
-  const suggestions = [
-    "Tell me about the 2025 Dodge Ram",
-    "What's the pricing for a Charger?",
-    "Do you have financing options?",
-    "Schedule a test drive"
-  ];
+  // Sample suggestions based on AI mode
+  const suggestions = aiMode === "atlas" 
+    ? [
+        "Tell me about the 2025 Dodge Ram",
+        "What's the pricing for a Charger?",
+        "Do you have financing options?",
+        "Schedule a test drive"
+      ]
+    : [
+        "What's happening in the world today?",
+        "Write a poem about technology",
+        "Explain quantum physics simply",
+        "Debate electric vs gas vehicles"
+      ];
 
   if (availableProviders.length === 0) {
     return (
@@ -66,7 +80,10 @@ const ChatInputForm = ({ isLoading, selectedProvider, sendMessage, availableProv
   return (
     <form
       onSubmit={handleSubmit}
-      className="relative rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring p-1"
+      className={cn(
+        "relative rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring p-1",
+        aiMode === "grok" && isFocused && "focus-within:ring-purple-500"
+      )}
     >
       <div className="relative">
         {/* Sparkles animation behind input when focused */}
@@ -78,11 +95,19 @@ const ChatInputForm = ({ isLoading, selectedProvider, sendMessage, availableProv
               animate={{ opacity: 0.2 }}
               exit={{ opacity: 0 }}
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 via-purple-400/20 to-pink-400/20" />
+              <div className={cn(
+                "absolute inset-0",
+                aiMode === "atlas" 
+                  ? "bg-gradient-to-r from-blue-400/20 via-purple-400/20 to-pink-400/20"
+                  : "bg-gradient-to-r from-purple-400/20 via-pink-400/20 to-amber-400/20"
+              )} />
               {[...Array(5)].map((_, i) => (
                 <motion.div
                   key={i}
-                  className="absolute h-1 w-1 rounded-full bg-blue-400"
+                  className={cn(
+                    "absolute h-1 w-1 rounded-full",
+                    aiMode === "atlas" ? "bg-blue-400" : "bg-purple-400"
+                  )}
                   initial={{ 
                     x: Math.random() * 100 + "%", 
                     y: Math.random() * 100 + "%",
@@ -119,7 +144,7 @@ const ChatInputForm = ({ isLoading, selectedProvider, sendMessage, availableProv
             // Small delay to allow clicking on suggestions
             setTimeout(() => setShowSuggestions(false), 200);
           }}
-          placeholder="Ask me anything..."
+          placeholder={aiMode === "atlas" ? "Ask me anything..." : "Ask me anything... I'm real-time"}
           className={cn(
             "min-h-12 resize-none rounded-lg bg-background border-0 p-3 shadow-none focus-visible:ring-0",
             isFocused && "bg-background/50"
@@ -177,7 +202,11 @@ const ChatInputForm = ({ isLoading, selectedProvider, sendMessage, availableProv
               transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
               className="ml-1"
             >
-              <Sparkles className="h-3 w-3 text-amber-400" />
+              {aiMode === "atlas" ? (
+                <Sparkles className="h-3 w-3 text-blue-400" />
+              ) : (
+                <Zap className="h-3 w-3 text-purple-400" />
+              )}
             </motion.div>
           )}
         </div>
@@ -232,7 +261,9 @@ const ChatInputForm = ({ isLoading, selectedProvider, sendMessage, availableProv
             size="sm" 
             className={cn(
               "ml-auto gap-1.5",
-              input.length > 0 ? "bg-primary" : "bg-muted text-muted-foreground"
+              input.length > 0 
+                ? aiMode === "atlas" ? "bg-blue-600 hover:bg-blue-700" : "bg-purple-600 hover:bg-purple-700"
+                : "bg-muted text-muted-foreground"
             )}
             disabled={!input.trim() || isLoading || !selectedProvider}
           >

@@ -1,11 +1,12 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useChat } from "@/context/ChatContext";
 import { useTheme } from "@/context/ThemeContext";
 import { cn } from "@/lib/utils";
 import { GridPattern } from "@/components/ui/grid-pattern";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChatBackgroundEffect } from "@/components/effects/ChatBackgroundEffect";
+import AmbientGlow from "@/components/effects/AmbientGlow";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import { useToast } from "@/hooks/use-toast";
 import ChatRoomHeader from "@/components/chat/ChatRoomHeader";
@@ -39,6 +40,7 @@ const ChatRoom = () => {
   const [starredMessage, setStarredMessage] = useState<string | null>(null);
   const [typingStatus, setTypingStatus] = useState<string>("Ready");
   const [showHeroParallax, setShowHeroParallax] = useState(false);
+  const [aiMode, setAIMode] = useState<'atlas' | 'grok'>('atlas');
   const { ref: scrollRef, scrollProgress } = useScrollAnimation();
   const { toast } = useToast();
   const [showSearch, setShowSearch] = useState(false);
@@ -86,6 +88,20 @@ const ChatRoom = () => {
             title: "Parallax Effect",
             description: "Hero parallax effect deactivated",
           });
+        } else if (lastMessage.content.toLowerCase().includes('switch to grok') ||
+                 lastMessage.content.toLowerCase().includes('use grok')) {
+          setAIMode('grok');
+          toast({
+            title: "AI Mode Changed",
+            description: "Switched to Grok AI mode",
+          });
+        } else if (lastMessage.content.toLowerCase().includes('switch to atlas') ||
+                 lastMessage.content.toLowerCase().includes('use atlas')) {
+          setAIMode('atlas');
+          toast({
+            title: "AI Mode Changed",
+            description: "Switched to Atlas AI mode",
+          });
         }
       }
     }
@@ -94,7 +110,7 @@ const ChatRoom = () => {
   // Simulate typing status changes
   useEffect(() => {
     if (isLoading) {
-      setTypingStatus("Atlas is thinking...");
+      setTypingStatus(aiMode === 'atlas' ? "Atlas is thinking..." : "Grok is thinking...");
     } else if (messages.length > 0 && messages[messages.length - 1].role === 'assistant') {
       setTypingStatus("Message delivered");
       
@@ -105,7 +121,7 @@ const ChatRoom = () => {
       
       return () => clearTimeout(timer);
     }
-  }, [isLoading, messages]);
+  }, [isLoading, messages, aiMode]);
 
   const handleStarMessage = (messageId: string) => {
     setStarredMessage(starredMessage === messageId ? null : messageId);
@@ -120,6 +136,14 @@ const ChatRoom = () => {
     toast({
       title: showSearch ? "Search closed" : "Search opened",
       description: showSearch ? "Search has been closed" : "Use search to find messages",
+    });
+  };
+
+  const handleAIModeChange = (mode: 'atlas' | 'grok') => {
+    setAIMode(mode);
+    toast({
+      title: "AI Mode Changed",
+      description: `Switched to ${mode === 'atlas' ? 'Atlas' : 'Grok'} AI mode`,
     });
   };
 
@@ -148,7 +172,8 @@ const ChatRoom = () => {
           strokeDasharray="1 3"
         />
         
-        {/* Apply background effects */}
+        {/* Apply background effects based on AI mode */}
+        <AmbientGlow aiMode={aiMode} />
         <ChatBackgroundEffect isDarkMode={isDarkMode} />
       </div>
       
@@ -161,6 +186,7 @@ const ChatRoom = () => {
         isLoading={isLoading}
         showTimeline={showTimeline}
         setShowTimeline={setShowTimeline}
+        aiMode={aiMode}
       />
       
       <div className="flex-1 flex h-full overflow-hidden p-4 animate-fade-in relative z-10">
@@ -174,6 +200,8 @@ const ChatRoom = () => {
           starredMessage={starredMessage}
           handleStarMessage={handleStarMessage}
           scrollRef={scrollRef}
+          aiMode={aiMode}
+          onAIModeChange={handleAIModeChange}
         />
         
         {/* Timeline Panel */}
@@ -187,17 +215,20 @@ const ChatRoom = () => {
         </AnimatePresence>
       </div>
       
-      {/* Parallax toggle button */}
+      {/* Mode toggle button */}
       <motion.button
-        className="absolute bottom-6 right-6 z-50 px-4 py-2 bg-primary text-white rounded-md shadow-lg"
+        className={cn(
+          "absolute bottom-6 right-6 z-50 px-4 py-2 text-white rounded-md shadow-lg",
+          aiMode === 'atlas' ? "bg-blue-600 hover:bg-blue-700" : "bg-purple-600 hover:bg-purple-700"
+        )}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        onClick={() => setShowHeroParallax(prev => !prev)}
+        onClick={() => setAIMode(aiMode === 'atlas' ? 'grok' : 'atlas')}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
       >
-        {showHeroParallax ? "Hide Parallax" : "Show Parallax"}
+        {aiMode === 'atlas' ? "Switch to Grok" : "Switch to Atlas"}
       </motion.button>
     </div>
   );

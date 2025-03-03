@@ -10,9 +10,14 @@ import { motion } from "framer-motion";
 interface ChatMessagesProps {
   messages: Message[];
   customRenderer?: (message: Message) => React.ReactNode;
+  aiMode?: "atlas" | "grok"; // New prop for AI mode
 }
 
-const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, customRenderer }) => {
+const ChatMessages: React.FC<ChatMessagesProps> = ({ 
+  messages, 
+  customRenderer,
+  aiMode = "atlas" 
+}) => {
   const { isDarkMode } = useTheme();
   
   const renderMessageContent = (message: Message) => {
@@ -27,20 +32,34 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, customRenderer })
     return (
       <div className="flex h-full items-center justify-center p-4 text-center">
         <div className="max-w-md">
-          <h3 className="text-xl font-semibold mb-2">Atlas AI Assistant</h3>
-          <p className="text-muted-foreground mb-4">How can I help you today?</p>
+          <h3 className="text-xl font-semibold mb-2">
+            {aiMode === "atlas" ? "Atlas AI Assistant" : "Grok AI"}
+          </h3>
+          <p className="text-muted-foreground mb-4">
+            {aiMode === "atlas" 
+              ? "How can I help you today?"
+              : "Ask me anything, I'm significantly more fun and more importantly, I'm real-time."}
+          </p>
           <div className="grid grid-cols-2 gap-2 text-sm">
             <button className="p-2 border rounded-lg hover:bg-muted transition-colors text-left">
-              "Tell me about the 2025 Dodge Ram"
+              {aiMode === "atlas" 
+                ? "\"Tell me about the 2025 Dodge Ram\""
+                : "\"What happened in the world today?\""}
             </button>
             <button className="p-2 border rounded-lg hover:bg-muted transition-colors text-left">
-              "What financing options are available?"
+              {aiMode === "atlas" 
+                ? "\"What financing options are available?\""
+                : "\"Explain quantum computing like I'm five\""}
             </button>
             <button className="p-2 border rounded-lg hover:bg-muted transition-colors text-left">
-              "Show me your inventory"
+              {aiMode === "atlas" 
+                ? "\"Show me your inventory\""
+                : "\"Write a short sci-fi story\""}
             </button>
             <button className="p-2 border rounded-lg hover:bg-muted transition-colors text-left">
-              "Schedule a test drive"
+              {aiMode === "atlas" 
+                ? "\"Schedule a test drive\""
+                : "\"Debate the pros and cons of AI\""}
             </button>
           </div>
         </div>
@@ -63,7 +82,11 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, customRenderer })
         >
           {message.role !== "user" && (
             <Avatar className="h-8 w-8 shrink-0">
-              <AvatarFallback>A</AvatarFallback>
+              {aiMode === "atlas" ? (
+                <AvatarFallback className="bg-blue-600">A</AvatarFallback>
+              ) : (
+                <AvatarFallback className="bg-purple-600">G</AvatarFallback>
+              )}
             </Avatar>
           )}
           
@@ -73,8 +96,12 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, customRenderer })
               message.role === "user"
                 ? "bg-primary text-primary-foreground"
                 : isDarkMode 
-                  ? "bg-gray-800 text-gray-100" 
-                  : "bg-gray-200 text-gray-900" // Changed from text-gray-800 for better contrast
+                  ? aiMode === "atlas" 
+                    ? "bg-gray-800 text-gray-100"
+                    : "bg-purple-900/80 text-gray-100" 
+                  : aiMode === "atlas"
+                    ? "bg-gray-200 text-gray-900"
+                    : "bg-purple-200 text-gray-900"
             )}
           >
             {renderMessageContent(message)}
