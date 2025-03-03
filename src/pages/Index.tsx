@@ -22,6 +22,7 @@ import HeaderSection from '@/components/widgets/HeaderSection';
 import WidgetSelector from '@/components/widgets/WidgetSelector';
 import BackgroundEffects from '@/components/widgets/BackgroundEffects';
 import WidgetsGrid from '@/components/widgets/WidgetsGrid';
+import DraggableWidget from '@/components/widgets/DraggableWidget';
 import { motion } from 'framer-motion';
 import { SparklesCore } from '@/components/ui/sparkles';
 import { toast } from "sonner";
@@ -33,6 +34,7 @@ export default function Index() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [weatherData, setWeatherData] = useState({ temp: '72°', condition: 'Sunny', location: 'Taylorville, IL' });
   const [showWidgetSelector, setShowWidgetSelector] = useState(false);
+  const [isEditingWidgets, setIsEditingWidgets] = useState(false);
   const [activeWidgets, setActiveWidgets] = useState<string[]>([
     'trinity_cars', 'trinity_events', 'time', 'photos', 'mail', 'calendar', 'notes', 'storage', 'music'
   ]);
@@ -103,27 +105,81 @@ export default function Index() {
     setShowChat(!showChat);
   };
   
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.3
-      }
-    }
-  };
-  
-  const item = {
-    hidden: { y: 20, opacity: 0 },
-    show: { 
-      y: 0, 
-      opacity: 1,
-      transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 25
-      }
+  const renderWidget = (widgetId: string, index: number) => {
+    const key = `${widgetId}-${index}`;
+    
+    switch(widgetId) {
+      case 'trinity_cars':
+        return (
+          <DraggableWidget key={key} id={key} className="col-span-1 md:col-span-2">
+            <TrinityCarsWidget />
+          </DraggableWidget>
+        );
+      case 'trinity_events':
+        return (
+          <DraggableWidget key={key} id={key}>
+            <TrinityEventsWidget />
+          </DraggableWidget>
+        );
+      case 'time':
+        return (
+          <DraggableWidget key={key} id={key}>
+            <TimeWeatherWidget
+              currentTime={currentTime}
+              weatherData={weatherData}
+            />
+          </DraggableWidget>
+        );
+      case 'weather':
+        return (
+          <DraggableWidget key={key} id={key} className="col-span-1 md:col-span-2">
+            <ExpandedWeatherWidget />
+          </DraggableWidget>
+        );
+      case 'inventory':
+        return (
+          <DraggableWidget key={key} id={key} className="col-span-1 md:col-span-2">
+            <InventoryWidget />
+          </DraggableWidget>
+        );
+      case 'photos':
+        return (
+          <DraggableWidget key={key} id={key}>
+            <PhotosWidget photos={photos} />
+          </DraggableWidget>
+        );
+      case 'mail':
+        return (
+          <DraggableWidget key={key} id={key}>
+            <MailWidget emails={emails} />
+          </DraggableWidget>
+        );
+      case 'calendar':
+        return (
+          <DraggableWidget key={key} id={key} className="col-span-1 md:col-span-2">
+            <CalendarWidget events={events} />
+          </DraggableWidget>
+        );
+      case 'notes':
+        return (
+          <DraggableWidget key={key} id={key}>
+            <NotesWidget />
+          </DraggableWidget>
+        );
+      case 'storage':
+        return (
+          <DraggableWidget key={key} id={key}>
+            <StorageWidget />
+          </DraggableWidget>
+        );
+      case 'music':
+        return (
+          <DraggableWidget key={key} id={key}>
+            <MusicWidget />
+          </DraggableWidget>
+        );
+      default:
+        return null;
     }
   };
   
@@ -170,82 +226,9 @@ export default function Index() {
             toggleWidget={toggleWidget}
           />
           
-          <motion.div
-            variants={container}
-            initial="hidden"
-            animate="show"
-          >
-            <WidgetsGrid>
-              {activeWidgets.includes('trinity_cars') && (
-                <motion.div variants={item}>
-                  <TrinityCarsWidget />
-                </motion.div>
-              )}
-              
-              {activeWidgets.includes('trinity_events') && (
-                <motion.div variants={item}>
-                  <TrinityEventsWidget />
-                </motion.div>
-              )}
-              
-              {activeWidgets.includes('time') && (
-                <motion.div variants={item}>
-                  <TimeWeatherWidget
-                    currentTime={currentTime}
-                    weatherData={weatherData}
-                  />
-                </motion.div>
-              )}
-              
-              {activeWidgets.includes('weather') && (
-                <motion.div variants={item}>
-                  <ExpandedWeatherWidget />
-                </motion.div>
-              )}
-              
-              {activeWidgets.includes('inventory') && (
-                <motion.div variants={item}>
-                  <InventoryWidget />
-                </motion.div>
-              )}
-              
-              {activeWidgets.includes('photos') && (
-                <motion.div variants={item}>
-                  <PhotosWidget photos={photos} />
-                </motion.div>
-              )}
-              
-              {activeWidgets.includes('mail') && (
-                <motion.div variants={item}>
-                  <MailWidget emails={emails} />
-                </motion.div>
-              )}
-              
-              {activeWidgets.includes('calendar') && (
-                <motion.div variants={item}>
-                  <CalendarWidget events={events} />
-                </motion.div>
-              )}
-              
-              {activeWidgets.includes('notes') && (
-                <motion.div variants={item}>
-                  <NotesWidget />
-                </motion.div>
-              )}
-              
-              {activeWidgets.includes('storage') && (
-                <motion.div variants={item}>
-                  <StorageWidget />
-                </motion.div>
-              )}
-              
-              {activeWidgets.includes('music') && (
-                <motion.div variants={item}>
-                  <MusicWidget />
-                </motion.div>
-              )}
-            </WidgetsGrid>
-          </motion.div>
+          <WidgetsGrid onEditMode={setIsEditingWidgets}>
+            {activeWidgets.map((widgetId, index) => renderWidget(widgetId, index))}
+          </WidgetsGrid>
         </div>
         
         <div className="fixed bottom-4 right-4 z-40">
