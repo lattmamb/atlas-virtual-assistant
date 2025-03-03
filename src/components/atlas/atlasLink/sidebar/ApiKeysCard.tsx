@@ -4,14 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Key } from "lucide-react";
-
-// Update interface to include index signature
-interface ApiKeys {
-  openai: string;
-  huggingface: string;
-  supabase: string;
-  [key: string]: string; // Add index signature
-}
+import { ApiKeys } from "../types";
 
 interface ApiKeysCardProps {
   apiKeys: ApiKeys;
@@ -65,6 +58,16 @@ const ApiKeysCard: React.FC<ApiKeysCardProps> = ({
             onChange={(e) => handleKeyChange('supabase', e.target.value)}
             className="h-7 text-xs bg-gray-900 border-gray-700"
             placeholder="eyJh..."
+          />
+        </div>
+        <div>
+          <label className="block text-gray-400 mb-1">OpenRouter Key</label>
+          <Input
+            type="password"
+            value={apiKeys.openrouter || ''}
+            onChange={(e) => handleKeyChange('openrouter', e.target.value)}
+            className="h-7 text-xs bg-gray-900 border-gray-700"
+            placeholder="router-..."
           />
         </div>
         <Button 

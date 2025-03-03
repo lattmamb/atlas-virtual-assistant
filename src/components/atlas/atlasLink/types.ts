@@ -11,6 +11,7 @@ export interface ApiKeys {
   huggingface: string;
   supabase: string;
   openrouter?: string;
+  [key: string]: string | undefined; // Add index signature with optional values
 }
 
 export type ActiveTab = 'dashboard' | 'chat' | 'knowledge' | 'store' | 'api' | 'settings';
