@@ -10,6 +10,7 @@ interface LampEffectProps {
   color?: "blue" | "purple" | "cyan" | "pink";
   size?: "sm" | "md" | "lg";
   intensity?: "low" | "medium" | "high";
+  children?: React.ReactNode;
 }
 
 export const LampEffect: React.FC<LampEffectProps> = ({
@@ -19,6 +20,7 @@ export const LampEffect: React.FC<LampEffectProps> = ({
   color = "blue",
   size = "md",
   intensity = "medium",
+  children,
 }) => {
   const controls = useAnimation();
   const [mounted, setMounted] = useState(false);
@@ -73,58 +75,61 @@ export const LampEffect: React.FC<LampEffectProps> = ({
   };
   
   return (
-    <div className={cn("absolute inset-0 overflow-hidden -z-10", className)}>
-      <motion.div
-        animate={controls}
-        className={cn(
-          "absolute w-full h-full pointer-events-none",
-          subtle ? "opacity-10" : ""
-        )}
-      >
-        <div 
+    <div className={cn("relative overflow-hidden", className)}>
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        <motion.div
+          animate={controls}
           className={cn(
-            "absolute",
-            "rounded-full bg-gradient-radial",
-            colorMap[color], 
-            "to-transparent",
-            intensityMap[intensity]
-          )} 
-          style={{
-            width: sizeMap[size].width,
-            height: sizeMap[size].height,
-            top: "20%",
-            left: "50%",
-            transform: "translate(-50%, -20%)",
-          }}
-        />
-        
-        {animate && (
-          <motion.div
-            animate={{
-              x: ["-5%", "5%", "-5%"],
-              y: ["-2%", "5%", "-2%"],
-            }}
-            transition={{
-              duration: 8,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
+            "absolute w-full h-full pointer-events-none",
+            subtle ? "opacity-10" : ""
+          )}
+        >
+          <div 
             className={cn(
-              "absolute rounded-full",
-              "bg-gradient-radial", 
-              colorMap[color === "blue" ? "purple" : "blue"],
-              "to-transparent", 
+              "absolute",
+              "rounded-full bg-gradient-radial",
+              colorMap[color], 
+              "to-transparent",
               intensityMap[intensity]
-            )}
+            )} 
             style={{
               width: sizeMap[size].width,
               height: sizeMap[size].height,
-              bottom: "10%",
-              right: "20%",
+              top: "20%",
+              left: "50%",
+              transform: "translate(-50%, -20%)",
             }}
           />
-        )}
-      </motion.div>
+          
+          {animate && (
+            <motion.div
+              animate={{
+                x: ["-5%", "5%", "-5%"],
+                y: ["-2%", "5%", "-2%"],
+              }}
+              transition={{
+                duration: 8,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className={cn(
+                "absolute rounded-full",
+                "bg-gradient-radial", 
+                colorMap[color === "blue" ? "purple" : "blue"],
+                "to-transparent", 
+                intensityMap[intensity]
+              )}
+              style={{
+                width: sizeMap[size].width,
+                height: sizeMap[size].height,
+                bottom: "10%",
+                right: "20%",
+              }}
+            />
+          )}
+        </motion.div>
+      </div>
+      {children}
     </div>
   );
 };
