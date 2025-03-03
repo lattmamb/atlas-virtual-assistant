@@ -6,7 +6,7 @@ import { SidebarProvider } from '@/components/ui/sidebar';
 import { useTheme } from '@/context/ThemeContext';
 import { cn } from '@/lib/utils';
 import AppSidebar from '@/components/AppSidebar';
-import AppleNavBar from '@/components/AppleNavBar';
+import AppleNavBar from '@/components/icloud/AppleNavBar'; // Updated path
 import ChatRoom from './ChatRoom';
 import AtlasLink from './AtlasLink';
 import WorkflowDashboard from '@/components/workflow';
@@ -63,7 +63,10 @@ const Atlas = () => {
         <AppSidebar activePage="atlas" />
         
         <main className="flex-1 flex flex-col overflow-hidden">
-          <AppleNavBar showAppGridButton={true} hideMainNav={true} />
+          <AppleNavBar 
+            showAppGridButton={true} 
+            hideMainNav={true} 
+          />
           
           {/* Render content based on active view */}
           <div className="flex-1 h-full overflow-hidden pt-12">
