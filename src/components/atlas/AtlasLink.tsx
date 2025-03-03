@@ -5,8 +5,7 @@ import { AtlasLinkProvider } from './atlasLink/AtlasLinkContext';
 import { useAtlasLink } from './atlasLink/AtlasLinkContext';
 import CelestialEffect from './atlasLink/CelestialEffect';
 import Sidebar from './atlasLink/Sidebar';
-import TopBar from './atlasLink/TopBar';
-import TabContent from './atlasLink/TabContent';
+import ChatTab from './atlasLink/ChatTab';
 import MobileNavigation from './atlasLink/MobileNavigation';
 import { RetroGrid } from '@/components/ui/retro-grid';
 import { useTheme } from '@/context/ThemeContext';
@@ -22,18 +21,18 @@ const AtlasLinkContent: React.FC = () => {
   
   return (
     <motion.div 
-      className={cn("h-screen flex flex-col overflow-hidden relative",
-        celestialMode ? "celestial-bg" : "bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800")}
+      className={cn(
+        "h-screen flex flex-col overflow-hidden relative",
+        "bg-black text-white"
+      )}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
       {!celestialMode && (
         <RetroGrid 
-          className={cn(
-            "opacity-20", 
-            isDarkMode ? "opacity-30" : "opacity-10"
-          )} 
+          className="opacity-30" 
+          angle={55}
         />
       )}
       
@@ -44,26 +43,24 @@ const AtlasLinkContent: React.FC = () => {
           {/* App Navigation Sidebar */}
           <AppSidebar activePage="atlas" />
           
-          {/* Main Content */}
-          <div className="flex flex-1 h-full overflow-hidden">
-            {/* Atlas Sidebar */}
-            <Sidebar />
-            
-            {/* Content Area */}
-            <div className="flex-1 flex flex-col h-full overflow-hidden relative">
-              <TopBar />
-              <TabContent />
-              <MobileNavigation />
-            </div>
+          {/* Atlas Sidebar with controls and settings */}
+          <Sidebar />
+          
+          {/* Main Content - Just the Chat Interface */}
+          <div className="flex-1 flex flex-col h-full overflow-hidden relative">
+            <ChatTab />
           </div>
         </div>
       </SidebarProvider>
       
+      {/* Mobile navigation */}
+      <MobileNavigation />
+      
       {/* Ambient corner glow */}
       {!celestialMode && (
         <>
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-br from-transparent to-blue-500/10 rounded-full filter blur-[120px] pointer-events-none opacity-60" />
-          <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-gradient-to-tr from-transparent to-purple-500/10 rounded-full filter blur-[100px] pointer-events-none opacity-50" />
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-br from-transparent to-blue-500/10 rounded-full filter blur-[120px] pointer-events-none opacity-30" />
+          <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-gradient-to-tr from-transparent to-purple-500/10 rounded-full filter blur-[100px] pointer-events-none opacity-30" />
         </>
       )}
     </motion.div>
