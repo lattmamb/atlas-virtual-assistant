@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import AppSidebar from '@/components/AppSidebar';
-import AppleNavBar from '@/components/icloud/AppleNavBar'; // Updated path
+import { AppleNavBar } from '@/components/navigation'; // Updated import path
 import { useLocation } from 'react-router-dom';
 
 interface ICloudLayoutProps {
