@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Key } from "lucide-react";
 
-// Match the type from AtlasLinkContext
+// Update interface to include index signature
 interface ApiKeys {
   openai: string;
   huggingface: string;

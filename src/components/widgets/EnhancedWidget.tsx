@@ -7,17 +7,19 @@ import { useTheme } from '@/context/ThemeContext';
 interface EnhancedWidgetProps {
   children: React.ReactNode;
   className?: string;
-  style?: 'glass' | 'neomorph' | 'hybrid';
-  hoverEffect?: 'scale' | 'glow' | 'lift' | 'none';
+  style?: 'glass' | 'neomorph' | 'hybrid' | 'ios';
+  hoverEffect?: 'scale' | 'glow' | 'lift' | 'none' | 'subtle';
   accentColor?: string;
+  size?: 'sm' | 'md' | 'lg';
 }
 
 const EnhancedWidget: React.FC<EnhancedWidgetProps> = ({
   children,
   className,
-  style = 'glass',
-  hoverEffect = 'scale',
+  style = 'hybrid',
+  hoverEffect = 'subtle',
   accentColor,
+  size = 'md',
 }) => {
   const { isDarkMode } = useTheme();
   
@@ -41,6 +43,19 @@ const EnhancedWidget: React.FC<EnhancedWidgetProps> = ({
         ? "bg-gradient-to-br from-gray-900/90 to-black/80 border-gray-800/50 shadow-[inset_0px_0px_20px_rgba(255,255,255,0.05),0px_10px_20px_rgba(0,0,0,0.2)] text-gray-100"
         : "bg-gradient-to-br from-white to-gray-100/90 border-white shadow-[inset_0px_0px_20px_rgba(255,255,255,0.8),0px_10px_20px_rgba(0,0,0,0.05)] text-gray-800"
     ),
+    ios: cn(
+      "rounded-2xl overflow-hidden transition-all duration-300",
+      isDarkMode
+        ? "bg-black/90 border border-gray-800/70 shadow-xl text-gray-100"
+        : "bg-white/95 border border-gray-100 shadow-[0_8px_30px_rgba(0,0,0,0.12)] text-gray-800"
+    ),
+  };
+
+  // Size variations
+  const sizeClasses = {
+    sm: "p-3",
+    md: "p-4",
+    lg: "p-6",
   };
   
   // Hover effect variations
@@ -64,12 +79,19 @@ const EnhancedWidget: React.FC<EnhancedWidgetProps> = ({
         transition: { duration: 0.4, ease: "easeOut" }
       },
     },
+    subtle: {
+      whileHover: { 
+        y: -3,
+        scale: 1.01,
+        transition: { duration: 0.3, ease: "easeOut" }
+      },
+    },
     none: {},
   };
   
   return (
     <motion.div
-      className={cn(styleClasses[style], className)}
+      className={cn(styleClasses[style], sizeClasses[size], className)}
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
