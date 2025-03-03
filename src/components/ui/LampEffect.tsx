@@ -1,49 +1,130 @@
 
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useEffect, useState } from "react";
+import { motion, useAnimation } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface LampEffectProps {
-  children?: React.ReactNode;
   className?: string;
   subtle?: boolean;
+  animate?: boolean;
+  color?: "blue" | "purple" | "cyan" | "pink";
+  size?: "sm" | "md" | "lg";
+  intensity?: "low" | "medium" | "high";
 }
 
-export const LampEffect: React.FC<LampEffectProps> = ({ 
-  children, 
+export const LampEffect: React.FC<LampEffectProps> = ({
   className,
-  subtle = false
+  subtle = false,
+  animate = true,
+  color = "blue",
+  size = "md",
+  intensity = "medium",
 }) => {
-  return (
-    <div className={cn("relative overflow-hidden", className)}>
-      <motion.div
-        className="absolute inset-0 top-10 -z-10 transform-gpu overflow-hidden blur-3xl"
-        aria-hidden="true"
-        initial={{ opacity: 0.7 }}
-        animate={{
-          opacity: [0.7, 0.9, 0.7],
-        }}
-        transition={{
-          duration: 6,
+  const controls = useAnimation();
+  const [mounted, setMounted] = useState(false);
+  
+  useEffect(() => {
+    setMounted(true);
+    
+    if (animate) {
+      controls.start({
+        opacity: [0.6, 0.8, 0.6],
+        scale: [1, 1.05, 1],
+        transition: {
+          duration: 5,
           repeat: Infinity,
-          repeatType: "reverse",
-        }}
+          ease: "easeInOut",
+        },
+      });
+    }
+  }, [animate, controls]);
+  
+  if (!mounted) return null;
+  
+  // Color mappings
+  const colorMap = {
+    blue: "from-blue-400",
+    purple: "from-purple-400",
+    cyan: "from-cyan-400",
+    pink: "from-pink-400"
+  };
+  
+  // Size mappings
+  const sizeMap = {
+    sm: {
+      width: "15rem",
+      height: "10rem",
+    },
+    md: {
+      width: "25rem",
+      height: "15rem",
+    },
+    lg: {
+      width: "40rem",
+      height: "20rem",
+    }
+  };
+  
+  // Intensity mappings
+  const intensityMap = {
+    low: "opacity-20 blur-xl",
+    medium: "opacity-30 blur-2xl",
+    high: "opacity-40 blur-3xl"
+  };
+  
+  return (
+    <div className={cn("absolute inset-0 overflow-hidden -z-10", className)}>
+      <motion.div
+        animate={controls}
+        className={cn(
+          "absolute w-full h-full pointer-events-none",
+          subtle ? "opacity-10" : ""
+        )}
       >
-        <div
+        <div 
           className={cn(
-            "relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr",
-            subtle 
-              ? "from-blue-400/30 to-purple-400/30 opacity-30" 
-              : "from-blue-500 to-purple-500 opacity-50"
-          )}
+            "absolute",
+            "rounded-full bg-gradient-radial",
+            colorMap[color], 
+            "to-transparent",
+            intensityMap[intensity]
+          )} 
           style={{
-            clipPath:
-              "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
+            width: sizeMap[size].width,
+            height: sizeMap[size].height,
+            top: "20%",
+            left: "50%",
+            transform: "translate(-50%, -20%)",
           }}
         />
+        
+        {animate && (
+          <motion.div
+            animate={{
+              x: ["-5%", "5%", "-5%"],
+              y: ["-2%", "5%", "-2%"],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className={cn(
+              "absolute rounded-full",
+              "bg-gradient-radial", 
+              colorMap[color === "blue" ? "purple" : "blue"],
+              "to-transparent", 
+              intensityMap[intensity]
+            )}
+            style={{
+              width: sizeMap[size].width,
+              height: sizeMap[size].height,
+              bottom: "10%",
+              right: "20%",
+            }}
+          />
+        )}
       </motion.div>
-      
-      {children}
     </div>
   );
 };

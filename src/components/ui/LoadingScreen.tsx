@@ -1,8 +1,8 @@
 
 import React, { useEffect, useState } from "react";
-import { SparklesCore } from "./sparkles";
 import { useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { LampEffect } from "./LampEffect";
 
 type LoadingScreenProps = {
   duration?: number;
@@ -54,30 +54,60 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="md:text-7xl text-5xl lg:text-9xl font-bold text-center text-white relative z-20">
+          <LampEffect color="blue" size="lg" intensity="high" />
+          
+          <motion.h1 
+            className="md:text-7xl text-5xl lg:text-9xl font-bold text-center text-white relative z-20"
+            initial={{ opacity: 0.5, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.8,
+              ease: "easeOut",
+            }}
+          >
             ATLAS
-          </h1>
-          <p className="text-white/70 mt-4 text-xl">{getSubtitleText()}</p>
-          <div className="w-full h-40 relative">
-            {/* Gradients */}
-            <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-indigo-500 to-transparent h-[2px] w-3/4 blur-sm" />
-            <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-indigo-500 to-transparent h-px w-3/4" />
-            <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent h-[5px] w-1/4 blur-sm" />
-            <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent h-px w-1/4" />
-
-            {/* Core sparkles component */}
-            <SparklesCore
-              background="transparent"
-              minSize={0.4}
-              maxSize={1}
-              particleDensity={1200}
-              className="w-full h-full"
-              particleColor="#FFFFFF"
-            />
-
-            {/* Radial Gradient to prevent sharp edges */}
-            <div className="absolute inset-0 w-full h-full bg-black [mask-image:radial-gradient(350px_200px_at_top,transparent_20%,white)]"></div>
-          </div>
+          </motion.h1>
+          
+          <motion.p 
+            className="text-white/70 mt-4 text-xl"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{
+              duration: 0.8,
+              ease: "easeOut",
+              delay: 0.2,
+            }}
+          >
+            {getSubtitleText()}
+          </motion.p>
+          
+          <motion.div
+            className="mt-8 flex items-center justify-center gap-2"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{
+              duration: 0.8,
+              ease: "easeOut",
+              delay: 0.4,
+            }}
+          >
+            {[...Array(3)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="w-2 h-2 bg-white rounded-full"
+                animate={{
+                  opacity: [0.5, 1, 0.5],
+                  scale: [0.8, 1.2, 0.8],
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  delay: i * 0.2,
+                  ease: "easeInOut",
+                }}
+              />
+            ))}
+          </motion.div>
         </motion.div>
       )}
     </AnimatePresence>
