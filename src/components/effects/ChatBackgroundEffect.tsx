@@ -1,8 +1,8 @@
 
 import React from "react";
-import { SparklesCore } from "@/components/ui/sparkles";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { GlowingEffect } from "@/components/ui/glowing-effect";
 
 interface ChatBackgroundEffectProps {
   isDarkMode: boolean;
@@ -13,19 +13,7 @@ export const ChatBackgroundEffect: React.FC<ChatBackgroundEffectProps> = ({
 }) => {
   return (
     <div className="absolute inset-0 -z-10 overflow-hidden">
-      {/* Sparkles effect */}
-      <SparklesCore
-        id="sparkles"
-        background="transparent"
-        minSize={0.6}
-        maxSize={1.4}
-        particleColor={isDarkMode ? "#ffffff" : "#007AFF"}
-        particleDensity={10}
-        className="w-full h-full opacity-[0.15]"
-        speed={0.3}
-      />
-      
-      {/* Background paths */}
+      {/* Apple-inspired background effect */}
       <div className="absolute inset-0 z-[-1]">
         <motion.div 
           className={cn(
@@ -57,6 +45,19 @@ export const ChatBackgroundEffect: React.FC<ChatBackgroundEffectProps> = ({
             repeatType: "reverse",
           }}
         />
+        
+        {/* Add glowing effect container */}
+        <div className="absolute inset-0 pointer-events-none">
+          <GlowingEffect
+            spread={60}
+            glow={true}
+            disabled={false}
+            proximity={100}
+            inactiveZone={0.01}
+            borderWidth={2}
+            className="opacity-20"
+          />
+        </div>
       </div>
     </div>
   );
