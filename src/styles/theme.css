@@ -1,3 +1,4 @@
+
 /* Theme-specific styles */
 
 /* System Theme (will be auto-applied based on system preference) */
@@ -15,19 +16,19 @@
   --glow-effect: var(--system-glow);
 }
 
-/* Dark Theme (Default) */
+/* Dark Space Theme (Default) */
 .theme-dark {
-  --background-primary: #1a1a1a;
-  --background-secondary: #111111;
-  --background-gradient: linear-gradient(to bottom, #1a1a1a, #0c0c0c);
-  --widget-bg: rgba(0, 0, 0, 0.3);
-  --widget-border: rgba(255, 255, 255, 0.1);
-  --widget-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  --background-primary: #0D0015;
+  --background-secondary: #0A0010;
+  --background-gradient: linear-gradient(to bottom, #0D0015, #06000A);
+  --widget-bg: rgba(15, 10, 30, 0.4);
+  --widget-border: rgba(120, 100, 255, 0.1);
+  --widget-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
   --text-primary: #ffffff;
   --text-secondary: rgba(255, 255, 255, 0.7);
-  --accent-color: #007AFF;
-  --accent-hover: #0066CC;
-  --glow-effect: rgba(0, 122, 255, 0.1);
+  --accent-color: #7B61FF;
+  --accent-hover: #9A84FF;
+  --glow-effect: rgba(123, 97, 255, 0.15);
 }
 
 /* Light Theme */
@@ -62,9 +63,9 @@
 
 /* Purple Theme */
 .theme-purple {
-  --background-primary: #2e1065;
-  --background-secondary: #1c0942;
-  --background-gradient: linear-gradient(to bottom, #2e1065, #1c0942);
+  --background-primary: #1A103C;
+  --background-secondary: #0F0828;
+  --background-gradient: linear-gradient(to bottom, #1A103C, #0F0828);
   --widget-bg: rgba(46, 16, 101, 0.4);
   --widget-border: rgba(167, 139, 250, 0.2);
   --widget-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
@@ -150,119 +151,102 @@ body {
   box-shadow: 0 0 20px var(--glow-effect);
 }
 
-/* Apple Design Elements */
+/* Space Theme Elements */
 
-/* Dynamic Glassmorphism - adapts to light/dark */
-.glass {
+/* Deep space glassmorphism */
+.space-glass {
   backdrop-filter: blur(16px);
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  background: rgba(10, 5, 20, 0.3);
+  border: 1px solid rgba(120, 100, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
 }
 
-.dark .glass {
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-/* Neo-morphism for subtle Apple-like depth */
-.neomorphic {
-  background: var(--background-primary);
-  box-shadow: 
-    8px 8px 16px rgba(0, 0, 0, 0.1), 
-    -8px -8px 16px rgba(255, 255, 255, 0.05);
-  border-radius: 16px;
-  transition: all 0.3s ease;
-}
-
-.light .neomorphic {
-  box-shadow: 
-    8px 8px 16px rgba(0, 0, 0, 0.05), 
-    -8px -8px 16px rgba(255, 255, 255, 0.5);
-}
-
-/* Hybrid style (combining glassmorphism and neomorphism) for an Apple-like UI */
-.hybrid {
-  backdrop-filter: blur(10px);
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 
-    8px 8px 16px rgba(0, 0, 0, 0.1), 
-    -8px -8px 16px rgba(255, 255, 255, 0.05);
-  border-radius: 16px;
-  transition: all 0.3s ease;
-}
-
-.light .hybrid {
-  background: rgba(255, 255, 255, 0.7);
-  box-shadow: 
-    8px 8px 16px rgba(0, 0, 0, 0.05), 
-    -8px -8px 16px rgba(255, 255, 255, 0.5);
-}
-
-/* Frosted Glass Elements (like iOS controls) */
-.frosted-glass {
+/* Dark glass for cards */
+.space-card {
   backdrop-filter: blur(12px);
-  background: rgba(255, 255, 255, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(15, 10, 30, 0.4);
+  border: 1px solid rgba(120, 100, 255, 0.1);
   border-radius: 16px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
 }
 
-.dark .frosted-glass {
-  background: rgba(30, 30, 30, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+/* Glow effects */
+.space-glow {
+  box-shadow: 0 0 20px rgba(123, 97, 255, 0.15);
 }
 
-/* iOS Button styles */
-.ios-button {
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-weight: 500;
-  background-color: var(--accent-color);
-  color: white;
-  border: none;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease;
+.space-glow-purple {
+  box-shadow: 0 0 25px rgba(167, 139, 250, 0.15);
 }
 
-.ios-button:hover {
-  background-color: var(--accent-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+.space-glow-blue {
+  box-shadow: 0 0 25px rgba(86, 177, 240, 0.15);
 }
 
-.ios-button:active {
-  transform: scale(0.98);
+/* Rainbow glow border */
+.rainbow-border {
+  position: relative;
+  z-index: 0;
+  border-radius: 16px;
+  overflow: hidden;
 }
 
-/* Subtle animations */
-@keyframes subtle-float {
+.rainbow-border::before {
+  content: '';
+  position: absolute;
+  z-index: -2;
+  left: -50%;
+  top: -50%;
+  width: 200%;
+  height: 200%;
+  background-color: transparent;
+  background-image: 
+    linear-gradient(to right, #ff00cc, #3333ff, #00ccff, #33ff33, #ffcc00, #ff0000);
+  background-size: 200% 200%;
+  background-repeat: no-repeat;
+  animation: rainbow-rotate 6s linear infinite;
+  opacity: 0.5;
+}
+
+.rainbow-border::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 1px;
+  background: var(--background-secondary);
+  border-radius: 15px;
+}
+
+@keyframes rainbow-rotate {
   0% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-5px);
+    transform: rotate(0deg);
   }
   100% {
-    transform: translateY(0);
+    transform: rotate(360deg);
   }
 }
 
-.subtle-float {
-  animation: subtle-float 4s ease-in-out infinite;
+/* 3D Elements */
+.space-3d-card {
+  transform-style: preserve-3d;
+  perspective: 1000px;
 }
 
-/* Celestial effect stars */
-.star {
-  position: absolute;
-  background-color: #fff;
-  border-radius: 50%;
-  animation: twinkle 3s infinite ease-in-out;
+.space-3d-content {
+  transform: translateZ(20px);
+  transform-style: preserve-3d;
 }
 
+.space-depth-shadow {
+  box-shadow: 
+    0 10px 15px -3px rgba(0, 0, 0, 0.2),
+    0 4px 6px -2px rgba(0, 0, 0, 0.1),
+    0 0 20px 2px rgba(123, 97, 255, 0.1);
+}
+
+/* Star animation */
 @keyframes twinkle {
   0%, 100% {
     opacity: 0.2;
@@ -274,65 +258,26 @@ body {
   }
 }
 
-/* Apple gradient effects */
-.apple-gradient-blue {
-  background: linear-gradient(135deg, #0061ff, #60efff);
+.star {
+  position: absolute;
+  background-color: #fff;
+  border-radius: 50%;
+  animation: twinkle 3s infinite ease-in-out;
 }
 
-.apple-gradient-purple {
-  background: linear-gradient(135deg, #a960ee, #ff333d);
+/* Nebula glow */
+.nebula-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.1;
+  background: radial-gradient(circle, rgba(120, 100, 255, 0.5) 0%, rgba(120, 100, 255, 0) 70%);
 }
 
-.apple-gradient-green {
-  background: linear-gradient(135deg, #00c97b, #89ffb0);
-}
-
-.apple-gradient-orange {
-  background: linear-gradient(135deg, #ff7a00, #ffd635);
-}
-
-/* Glowing effect utilities */
-.glow-border {
-  box-shadow: 0 0 10px var(--glow-effect);
-  transition: box-shadow 0.3s ease;
-}
-
-.glow-border:hover {
-  box-shadow: 0 0 20px var(--glow-effect);
-}
-
-.glow-text {
-  text-shadow: 0 0 8px var(--glow-effect);
-}
-
-/* Card hover effects (Apple inspired) */
-.apple-card-hover {
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-.apple-card-hover:hover {
-  transform: translateY(-5px) scale(1.02);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);
-}
-
-/* Improved button design */
-.apple-button-modern {
-  background: var(--accent-color);
-  color: white;
-  border-radius: 12px;
-  padding: 10px 16px;
-  font-weight: 500;
-  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
-  border: none;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.apple-button-modern:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  background: var(--accent-hover);
-}
-
-.apple-button-modern:active {
-  transform: translateY(1px);
+/* Space background with noise texture */
+.space-bg-noise {
+  background-color: #0D0015;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  background-blend-mode: overlay;
+  opacity: 0.4;
 }

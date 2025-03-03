@@ -16,6 +16,7 @@ interface GlowingEffectProps {
   disabled?: boolean;
   movementDuration?: number;
   borderWidth?: number;
+  children?: React.ReactNode;
 }
 
 const GlowingEffect = memo(
@@ -30,6 +31,7 @@ const GlowingEffect = memo(
     movementDuration = 2,
     borderWidth = 1,
     disabled = true,
+    children,
   }: GlowingEffectProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const lastPosition = useRef({ x: 0, y: 0 });
@@ -182,6 +184,7 @@ const GlowingEffect = memo(
             )}
           />
         </div>
+        {children}
       </>
     );
   }
