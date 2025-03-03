@@ -1,4 +1,3 @@
-
 import { useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
@@ -30,6 +29,7 @@ function App() {
         <AnimatePresence mode="wait" initial={false}>
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<Index />} />
+            {/* Keep the original routes for direct access */}
             <Route path="/settings" element={<Settings />} />
             <Route path="/atlas" element={<Atlas />} />
             <Route path="/atlas-link" element={<AtlasLink />} />
