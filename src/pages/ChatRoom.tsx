@@ -13,6 +13,7 @@ import ChatRoomContainer from "@/components/chat/ChatRoomContainer";
 import ChatTimelinePanel from "@/components/chat/ChatTimelinePanel";
 import { HeroParallax } from "@/components/ui/hero-parallax";
 import { products } from "@/components/ui/hero-parallax.demo";
+import ChatNavBar from "@/components/chat/ChatNavBar";
 
 // Sample timeline items for the demo
 const timelineItems = [
@@ -40,6 +41,7 @@ const ChatRoom = () => {
   const [showHeroParallax, setShowHeroParallax] = useState(false);
   const { ref: scrollRef, scrollProgress } = useScrollAnimation();
   const { toast } = useToast();
+  const [showSearch, setShowSearch] = useState(false);
 
   // Toggle hero parallax with keyboard shortcut
   useEffect(() => {
@@ -113,6 +115,14 @@ const ChatRoom = () => {
     });
   };
 
+  const handleSearch = () => {
+    setShowSearch(!showSearch);
+    toast({
+      title: showSearch ? "Search closed" : "Search opened",
+      description: showSearch ? "Search has been closed" : "Use search to find messages",
+    });
+  };
+
   return (
     <div className="flex flex-col h-full relative">
       {showHeroParallax && (
@@ -141,6 +151,9 @@ const ChatRoom = () => {
         {/* Apply background effects */}
         <ChatBackgroundEffect isDarkMode={isDarkMode} />
       </div>
+      
+      {/* Chat NavBar */}
+      <ChatNavBar onSearch={handleSearch} className="z-10" />
       
       {/* Chat Room Header */}
       <ChatRoomHeader 
