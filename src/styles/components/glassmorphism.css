@@ -1,0 +1,100 @@
+
+/* Glassmorphism Effects */
+.glass-light {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.glass-dark {
+  background: rgba(15, 15, 15, 0.25);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* Neomorphism Effects */
+.neomorph-light {
+  background: #f0f0f3;
+  box-shadow: 
+    10px 10px 20px #bebebe,
+    -10px -10px 20px #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+}
+
+.neomorph-dark {
+  background: #202020;
+  box-shadow: 
+    10px 10px 20px #151515,
+    -10px -10px 20px #2a2a2a;
+  border: 1px solid #252525;
+}
+
+/* Hybrid Styles */
+.hybrid-light {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  box-shadow: 
+    5px 5px 15px rgba(0, 0, 0, 0.1),
+    -5px -5px 15px rgba(255, 255, 255, 0.8),
+    inset 3px 3px 5px rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.hybrid-dark {
+  background: rgba(25, 25, 25, 0.7);
+  backdrop-filter: blur(10px);
+  box-shadow: 
+    5px 5px 15px rgba(0, 0, 0, 0.3),
+    -5px -5px 15px rgba(50, 50, 50, 0.1),
+    inset 3px 3px 5px rgba(50, 50, 50, 0.2);
+  border: 1px solid rgba(50, 50, 50, 0.3);
+}
+
+/* Hover Animation Utilities */
+.hover-scale {
+  transition: transform 0.3s ease-out;
+}
+
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
+.hover-lift {
+  transition: transform 0.4s ease-out, box-shadow 0.4s ease-out;
+}
+
+.hover-lift:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.hover-glow {
+  transition: box-shadow 0.3s ease-out;
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 20px 5px rgba(59, 130, 246, 0.25);
+}
+
+/* Custom accent colors for glow effects */
+.glow-blue:hover {
+  box-shadow: 0 0 20px 5px rgba(59, 130, 246, 0.3);
+}
+
+.glow-purple:hover {
+  box-shadow: 0 0 20px 5px rgba(147, 51, 234, 0.3);
+}
+
+.glow-green:hover {
+  box-shadow: 0 0 20px 5px rgba(16, 185, 129, 0.3);
+}
+
+.glow-red:hover {
+  box-shadow: 0 0 20px 5px rgba(239, 68, 68, 0.3);
+}
+
+.glow-amber:hover {
+  box-shadow: 0 0 20px 5px rgba(252, 211, 77, 0.3);
+}
