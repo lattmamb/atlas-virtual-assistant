@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { GridPattern } from '@/components/ui/grid-pattern';
 import { cn } from '@/lib/utils';
 
 interface BackgroundEffectsProps {
@@ -9,24 +8,37 @@ interface BackgroundEffectsProps {
 
 const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({ currentTheme }) => {
   return (
-    <div 
-      className="fixed inset-0 z-0 transition-all duration-700"
-      style={{ background: `var(--background-gradient)` }}
-    >
-      <GridPattern 
-        width={40} 
-        height={40} 
-        className={cn(
-          "absolute inset-0 fill-white/[0.01] stroke-white/[0.05]",
-          "[mask-image:radial-gradient(1000px_circle_at_center,white,transparent)]"
-        )}
-        strokeDasharray="1 3"
+    <>
+      {/* Background base */}
+      <div 
+        className="fixed inset-0 z-0 transition-all duration-700"
+        style={{ background: `var(--background-gradient)` }}
       />
-      <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] rounded-full blur-[120px] -z-10 transition-all duration-700" 
-        style={{ backgroundColor: `var(--accent-color)`, opacity: 0.1 }}></div>
-      <div className="absolute bottom-1/4 left-1/3 w-[400px] h-[400px] rounded-full blur-[100px] -z-10 transition-all duration-700"
-        style={{ backgroundColor: `var(--accent-color)`, opacity: 0.05 }}></div>
-    </div>
+      
+      {/* Ambient glow effects */}
+      <div className="fixed top-0 right-0 w-[40vw] h-[40vw] -z-10 transition-all duration-700" 
+        style={{ 
+          background: `radial-gradient(circle, var(--accent-color) 0%, transparent 70%)`,
+          opacity: 0.1,
+          filter: 'blur(120px)'
+        }}
+      />
+      
+      <div className="fixed bottom-0 left-10 w-[30vw] h-[30vw] -z-10 transition-all duration-700"
+        style={{ 
+          background: `radial-gradient(circle, var(--secondary-color) 0%, transparent 70%)`,
+          opacity: 0.05,
+          filter: 'blur(100px)'
+        }}
+      />
+      
+      {/* Grid overlay */}
+      <div className={cn(
+        "fixed inset-0 z-0 opacity-10 pointer-events-none",
+        "bg-[linear-gradient(to_right,#8882_1px,transparent_1px),linear-gradient(to_bottom,#8882_1px,transparent_1px)]",
+        "bg-[size:4rem_4rem]"
+      )} />
+    </>
   );
 };
 

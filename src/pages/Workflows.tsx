@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import WorkflowDashboard from "@/components/workflow";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/AppSidebar";
@@ -7,50 +7,90 @@ import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useTheme } from "@/context/ThemeContext";
 import { GridPattern } from "@/components/ui/grid-pattern";
-import AppleNavBar from "@/components/icloud/AppleNavBar"; // Updated path
+import AppleNavBar from "@/components/icloud/AppleNavBar";
+import HeaderSection from "@/components/widgets/HeaderSection";
+import BackgroundEffects from "@/components/widgets/BackgroundEffects";
+import { SparklesCore } from "@/components/ui/sparkles";
+import { toast } from "sonner";
+import { motion } from "framer-motion";
 
 const Workflows = () => {
   const isMobile = useIsMobile();
   const { currentTheme, isDarkMode } = useTheme();
 
+  useEffect(() => {
+    // Display welcome toast on initial load
+    setTimeout(() => {
+      toast.info("Workflow Dashboard", {
+        description: "Create and manage your automation workflows.",
+        duration: 3000,
+      });
+    }, 1000);
+  }, []);
+
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.3
+      }
+    }
+  };
+
   return (
-    <SidebarProvider defaultOpen={!isMobile}>
-      <div className={cn(
-        `flex h-screen w-full overflow-hidden theme-${currentTheme}`
-      )}>
-        <div 
-          className="fixed inset-0 z-0 transition-all duration-700"
-          style={{ background: `var(--background-gradient)` }}
-        >
-          <GridPattern 
-            width={40} 
-            height={40} 
-            className={cn(
-              "absolute inset-0 fill-white/[0.01] stroke-white/[0.05]",
-              "[mask-image:radial-gradient(1000px_circle_at_center,white,transparent)]"
-            )}
-            strokeDasharray="1 3"
+    <div className={`min-h-screen w-full overflow-hidden theme-${currentTheme}`}>
+      <BackgroundEffects currentTheme={currentTheme} />
+      
+      {isDarkMode && (
+        <div className="fixed inset-0 pointer-events-none z-0 opacity-50">
+          <SparklesCore
+            id="tsparticlesfullpage"
+            background="transparent"
+            minSize={0.6}
+            maxSize={1.4}
+            particleDensity={20}
+            className="w-full h-full"
+            particleColor="#FFFFFF"
+            speed={0.5}
           />
-          <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] rounded-full blur-[120px] -z-10 transition-all duration-700" 
-            style={{ backgroundColor: `var(--accent-color)`, opacity: 0.1 }}></div>
-          <div className="absolute bottom-1/4 left-1/3 w-[400px] h-[400px] rounded-full blur-[100px] -z-10 transition-all duration-700"
-            style={{ backgroundColor: `var(--accent-color)`, opacity: 0.05 }}></div>
         </div>
-        
-        <AppSidebar />
-        <main className="flex-1 flex flex-col overflow-hidden">
-          <AppleNavBar 
-            showAppGridButton={false}
-          />
-          
-          <div className="flex-1 overflow-y-auto pt-14">
-            <div className="animate-fade-in p-4">
-              <WorkflowDashboard />
+      )}
+      
+      <SidebarProvider defaultOpen={!isMobile}>
+        <div className={cn(
+          `flex h-screen w-full overflow-hidden theme-${currentTheme}`
+        )}>
+          <AppSidebar />
+          <main className="flex-1 flex flex-col overflow-hidden">
+            <AppleNavBar 
+              showAppGridButton={false}
+            />
+            
+            <div className="relative z-10 mt-4 mb-8 pt-10">
+              <HeaderSection 
+                isDarkMode={isDarkMode}
+                setShowAppGrid={() => {}}
+                showAppGrid={false}
+                title="Workflow Dashboard"
+              />
+              
+              <motion.div
+                variants={container}
+                initial="hidden"
+                animate="show"
+                className="flex-1 overflow-y-auto"
+              >
+                <div className="animate-fade-in p-4">
+                  <WorkflowDashboard />
+                </div>
+              </motion.div>
             </div>
-          </div>
-        </main>
-      </div>
-    </SidebarProvider>
+          </main>
+        </div>
+      </SidebarProvider>
+    </div>
   );
 };
 
