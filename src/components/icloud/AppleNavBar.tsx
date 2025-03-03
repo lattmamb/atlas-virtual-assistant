@@ -146,40 +146,6 @@ const AppleNavBar: React.FC<AppleNavBarProps> = ({
             </Button>
           </MotionLink>
           
-          <MotionLink 
-            to="/chat"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            <Button 
-              variant="ghost" 
-              size="icon"
-              className={cn(
-                "rounded-full w-8 h-8 transition-transform hover:scale-110 active:scale-95 glow-on-hover",
-                isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100"
-              )}
-            >
-              <MessageSquare className="h-4 w-4" />
-            </Button>
-          </MotionLink>
-          
-          <MotionLink 
-            to="/settings"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            <Button 
-              variant="ghost" 
-              size="icon"
-              className={cn(
-                "rounded-full w-8 h-8 transition-transform hover:scale-110 active:scale-95 glow-on-hover",
-                isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100"
-              )}
-            >
-              <Settings className="h-4 w-4" />
-            </Button>
-          </MotionLink>
-          
           <ThemeSwitcherDropdown />
           
           <MotionButton 

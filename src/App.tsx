@@ -29,7 +29,6 @@ function App() {
     { id: "home", title: "Dashboard", url: "/" },
     { id: "atlas", title: "Atlas", url: "/atlas" },
     { id: "atlas-link", title: "Atlas Link", url: "/atlas-link" },
-    { id: "chat", title: "Chat Room", url: "/chat" },
     { id: "workflows", title: "Workflows", url: "/workflows" },
     { id: "settings", title: "Settings", url: "/settings" },
   ];

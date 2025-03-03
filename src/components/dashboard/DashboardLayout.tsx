@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import HeaderSection from '@/components/widgets/HeaderSection';
 import WidgetSelector from '@/components/widgets/WidgetSelector';
@@ -13,8 +14,6 @@ import { motion } from 'framer-motion';
 import { SparklesCore } from '@/components/ui/sparkles';
 import { useTheme } from '@/context/ThemeContext';
 import ICloudLayout from '@/components/icloud/ICloudLayout';
-import ChatButton from '@/components/widgets/ChatButton';
-import ChatPopup from '@/components/widgets/ChatPopup';
 import ActiveWidgets from '@/components/dashboard/ActiveWidgets';
 
 interface DashboardLayoutProps {
@@ -23,7 +22,6 @@ interface DashboardLayoutProps {
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const { currentTheme, isDarkMode } = useTheme();
-  const [showChat, setShowChat] = useState(false);
   const [showAppGrid, setShowAppGrid] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [weatherData, setWeatherData] = useState({ temp: '72°', condition: 'Sunny', location: 'Taylorville, IL' });
@@ -70,10 +68,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
       description: `${availableWidgets.find(w => w.id === widgetId)?.name} has been ${activeWidgets.includes(widgetId) ? "removed from" : "added to"} your dashboard.`,
       duration: 2000,
     });
-  };
-  
-  const toggleChat = () => {
-    setShowChat(!showChat);
   };
   
   return (
@@ -127,17 +121,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             />
           </WidgetsGrid>
         </div>
-        
-        <div className="fixed bottom-4 right-4 z-40">
-          <ChatButton onClick={toggleChat} />
-        </div>
-
-        {showChat && (
-          <ChatPopup 
-            isDarkMode={isDarkMode} 
-            onClose={() => setShowChat(false)}
-          />
-        )}
       </ICloudLayout>
     </div>
   );
