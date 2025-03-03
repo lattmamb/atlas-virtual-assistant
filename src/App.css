@@ -1,20 +1,28 @@
 
 #root {
-  max-width: 1280px;
+  width: 100%;
   margin: 0 auto;
-  padding: 2rem;
   text-align: center;
 }
 
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
+}
+
 .logo {
-  height: 6em;
-  padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em rgba(234, 56, 76, 0.67));
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em rgba(234, 56, 76, 0.67));
 }
@@ -50,4 +58,70 @@
 
 .read-the-docs {
   color: #888;
+}
+
+/* iCloud specific styles */
+.icloud-blue-bg {
+  background: linear-gradient(135deg, #0047ab, #00008b);
+}
+
+.icloud-card {
+  background-color: rgba(30, 30, 36, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.icloud-app-icon {
+  border-radius: 12px;
+  background-color: #222;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.icloud-button {
+  background-color: rgba(60, 60, 70, 0.4);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  color: white;
+  padding: 8px 16px;
+  transition: all 0.2s ease;
+}
+
+.icloud-button:hover {
+  background-color: rgba(70, 70, 80, 0.6);
+}
+
+.icloud-navbar {
+  background-color: rgba(20, 20, 25, 0.8);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* iCloud nav/status bar */
+.icloud-status-bar {
+  background-color: #222;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  color: white;
+}
+
+/* Custom scrollbar for iCloud look */
+::-webkit-scrollbar {
+  width: 8px;
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.3);
 }
