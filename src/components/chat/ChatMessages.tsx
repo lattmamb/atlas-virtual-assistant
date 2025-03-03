@@ -26,11 +26,23 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, customRenderer })
   if (messages.length === 0) {
     return (
       <div className="flex h-full items-center justify-center p-4 text-center">
-        <div>
-          <p className="text-muted-foreground">No messages yet.</p>
-          <p className="text-sm text-muted-foreground">
-            Start a conversation by typing a message below.
-          </p>
+        <div className="max-w-md">
+          <h3 className="text-xl font-semibold mb-2">Atlas AI Assistant</h3>
+          <p className="text-muted-foreground mb-4">How can I help you today?</p>
+          <div className="grid grid-cols-2 gap-2 text-sm">
+            <button className="p-2 border rounded-lg hover:bg-muted transition-colors text-left">
+              "Tell me about the 2025 Dodge Ram"
+            </button>
+            <button className="p-2 border rounded-lg hover:bg-muted transition-colors text-left">
+              "What financing options are available?"
+            </button>
+            <button className="p-2 border rounded-lg hover:bg-muted transition-colors text-left">
+              "Show me your inventory"
+            </button>
+            <button className="p-2 border rounded-lg hover:bg-muted transition-colors text-left">
+              "Schedule a test drive"
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -42,28 +54,35 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, customRenderer })
         <motion.div
           key={message.id || index}
           className={cn(
-            "flex gap-3 px-4 py-2 group",
-            message.role === "user" && "flex-row-reverse"
+            "flex gap-3 px-4 py-3 group max-w-3xl mx-auto w-full",
+            message.role === "user" ? "justify-end" : "justify-start"
           )}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 * index % 5 }}
         >
-          <Avatar className={cn("h-8 w-8")}>
-            <AvatarFallback>
-              {message.role === "user" ? "U" : "A"}
-            </AvatarFallback>
-          </Avatar>
+          {message.role !== "user" && (
+            <Avatar className="h-8 w-8 shrink-0">
+              <AvatarFallback>A</AvatarFallback>
+            </Avatar>
+          )}
+          
           <div
             className={cn(
-              "rounded-lg px-3 py-2 max-w-[85%]",
+              "rounded-lg px-4 py-2",
               message.role === "user"
                 ? "bg-primary text-primary-foreground"
-                : "bg-muted"
+                : isDarkMode ? "bg-muted" : "bg-muted/70"
             )}
           >
             {renderMessageContent(message)}
           </div>
+          
+          {message.role === "user" && (
+            <Avatar className="h-8 w-8 shrink-0">
+              <AvatarFallback>U</AvatarFallback>
+            </Avatar>
+          )}
         </motion.div>
       ))}
     </ChatMessageList>

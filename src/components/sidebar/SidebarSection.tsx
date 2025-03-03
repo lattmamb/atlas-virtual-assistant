@@ -23,7 +23,7 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({ label, items, isActive 
               <SidebarMenuButton asChild isActive={isActive(item.path)}>
                 <Link to={item.path} className={cn(
                   "flex items-center w-full", 
-                  isActive(item.path) ? 'font-medium' : ''
+                  isActive(item.path) ? 'font-medium text-primary' : ''
                 )}>
                   <span className="flex items-center justify-center h-5 w-5 mr-3">
                     {item.icon}
@@ -32,7 +32,9 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({ label, items, isActive 
                   {item.badge && (
                     <span className={cn(
                       "flex h-5 w-5 items-center justify-center rounded-full text-xs font-medium",
-                      `bg-${item.badge.color} text-white`
+                      item.badge.color.includes('-') 
+                        ? `bg-${item.badge.color} text-white` 
+                        : `bg-${item.badge.color}-600 text-white`
                     )}>
                       {item.badge.count}
                     </span>

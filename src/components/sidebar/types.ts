@@ -22,5 +22,5 @@ export interface SubMenuSectionProps {
   items: NavItem[];
   isActive?: (path: string) => boolean;
   onItemClick?: (name: string) => void;
+  collapsible?: boolean;
 }
-
