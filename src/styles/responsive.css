@@ -73,6 +73,28 @@
     right: 16px;
     z-index: 100;
   }
+  
+  /* PIP widget adjustments for mobile */
+  .pip-widget-mobile {
+    position: fixed !important;
+    bottom: 60px !important; 
+    right: 10px !important;
+    width: calc(100% - 20px) !important;
+    max-width: 300px !important;
+    z-index: 40 !important;
+  }
+  
+  /* Position the pip manager for mobile devices */
+  .pip-manager-controls {
+    bottom: 70px !important;
+    right: 10px !important;
+  }
+  
+  /* Make sure PIP widgets don't overlap with navbar on mobile */
+  .pip-manager-container {
+    max-height: calc(100vh - 130px);
+    overflow: auto;
+  }
 }
 
 /* Better support for touch controls on mobile */
@@ -116,6 +138,12 @@
     @apply min-h-[36px] min-w-[36px];
     opacity: 1 !important;
   }
+  
+  /* Improve PIP widget controls for touch */
+  .pip-controls button {
+    @apply min-h-[32px] min-w-[32px];
+    margin: 0 2px;
+  }
 }
 
 /* Handle different screen heights */
@@ -131,6 +159,11 @@
   /* Adjust chat container height */
   .chat-container-compact {
     max-height: calc(100vh - 110px);
+  }
+  
+  /* PIP widget smaller on short screens */
+  .pip-widget-container {
+    max-height: 250px;
   }
 }
 
@@ -156,5 +189,16 @@
   
   .chat-sidebar-landscape {
     @apply w-64 h-[calc(100vh-80px)];
+  }
+  
+  /* Position PIP widgets better in landscape */
+  .pip-manager-container {
+    bottom: 10px;
+    right: 10px;
+  }
+  
+  .pip-widget-landscape {
+    width: 250px !important;
+    height: 180px !important;
   }
 }
