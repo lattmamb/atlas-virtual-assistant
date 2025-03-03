@@ -1,7 +1,7 @@
 
 "use client";
 import React from "react";
-import { HeroParallax } from "@/components/blocks/hero-parallax";
+import { HeroParallax } from "./hero-parallax";
 
 export function HeroParallaxDemo() {
   return (

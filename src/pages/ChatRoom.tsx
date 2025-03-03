@@ -4,13 +4,15 @@ import { useChat } from "@/context/ChatContext";
 import { useTheme } from "@/context/ThemeContext";
 import { cn } from "@/lib/utils";
 import { GridPattern } from "@/components/ui/grid-pattern";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { ChatBackgroundEffect } from "@/components/effects/ChatBackgroundEffect";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import { useToast } from "@/hooks/use-toast";
 import ChatRoomHeader from "@/components/chat/ChatRoomHeader";
 import ChatRoomContainer from "@/components/chat/ChatRoomContainer";
 import ChatTimelinePanel from "@/components/chat/ChatTimelinePanel";
+import { HeroParallax } from "@/components/ui/hero-parallax";
+import { products } from "@/components/ui/hero-parallax.demo";
 
 // Sample timeline items for the demo
 const timelineItems = [
@@ -35,8 +37,21 @@ const ChatRoom = () => {
   const [showTimeline, setShowTimeline] = useState(false);
   const [starredMessage, setStarredMessage] = useState<string | null>(null);
   const [typingStatus, setTypingStatus] = useState<string>("Ready");
+  const [showHeroParallax, setShowHeroParallax] = useState(false);
   const { ref: scrollRef, scrollProgress } = useScrollAnimation();
   const { toast } = useToast();
+
+  // Toggle hero parallax with keyboard shortcut
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'h' && e.ctrlKey) {
+        setShowHeroParallax(prev => !prev);
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Toggle theme on specific message patterns
   useEffect(() => {
@@ -56,6 +71,18 @@ const ChatRoom = () => {
           toast({
             title: "Theme changed",
             description: "Light mode activated",
+          });
+        } else if (lastMessage.content.toLowerCase().includes('show parallax')) {
+          setShowHeroParallax(true);
+          toast({
+            title: "Parallax Effect",
+            description: "Hero parallax effect activated",
+          });
+        } else if (lastMessage.content.toLowerCase().includes('hide parallax')) {
+          setShowHeroParallax(false);
+          toast({
+            title: "Parallax Effect",
+            description: "Hero parallax effect deactivated",
           });
         }
       }
@@ -87,9 +114,18 @@ const ChatRoom = () => {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full relative">
+      {showHeroParallax && (
+        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+          <HeroParallax products={products} />
+        </div>
+      )}
+      
       <div 
-        className="fixed inset-0 z-0 transition-all duration-700"
+        className={cn(
+          "fixed inset-0 z-0 transition-all duration-700",
+          showHeroParallax ? "opacity-0" : "opacity-100"
+        )}
         style={{ background: `var(--background-gradient)` }}
       >
         <GridPattern 
@@ -114,7 +150,7 @@ const ChatRoom = () => {
         setShowTimeline={setShowTimeline}
       />
       
-      <div className="flex-1 flex h-full overflow-hidden p-4 animate-fade-in">
+      <div className="flex-1 flex h-full overflow-hidden p-4 animate-fade-in relative z-10">
         {/* Main Chat Container */}
         <ChatRoomContainer
           messages={messages}
@@ -137,6 +173,19 @@ const ChatRoom = () => {
           )}
         </AnimatePresence>
       </div>
+      
+      {/* Parallax toggle button */}
+      <motion.button
+        className="absolute bottom-6 right-6 z-50 px-4 py-2 bg-primary text-white rounded-md shadow-lg"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={() => setShowHeroParallax(prev => !prev)}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        {showHeroParallax ? "Hide Parallax" : "Show Parallax"}
+      </motion.button>
     </div>
   );
 };

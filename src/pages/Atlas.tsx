@@ -15,6 +15,8 @@ import BackgroundEffects from '@/components/widgets/BackgroundEffects';
 import { SparklesCore } from '@/components/ui/sparkles';
 import { toast } from "sonner";
 import { motion } from 'framer-motion';
+import { HeroParallax } from '@/components/ui/hero-parallax';
+import { products } from '@/components/ui/hero-parallax.demo';
 
 const Atlas = () => {
   const [activeView, setActiveView] = useState<'chat' | 'link' | 'workflows' | 'store' | 'knowledge' | 'api' | 'settings'>('chat');
@@ -22,6 +24,7 @@ const Atlas = () => {
   const isMobile = useIsMobile();
   const location = useLocation();
   const navigate = useNavigate();
+  const [showHeroParallax, setShowHeroParallax] = useState(false);
 
   useEffect(() => {
     // Display welcome toast on initial load
@@ -31,6 +34,16 @@ const Atlas = () => {
         duration: 3000,
       });
     }, 1000);
+
+    // Add keyboard shortcut to toggle hero parallax
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'h' && e.ctrlKey) {
+        setShowHeroParallax(prev => !prev);
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   // Parse the URL query parameters to set the active view
@@ -107,9 +120,15 @@ const Atlas = () => {
 
   return (
     <div className={`min-h-screen w-full overflow-hidden theme-${currentTheme}`}>
-      <BackgroundEffects currentTheme={currentTheme} />
+      {showHeroParallax ? (
+        <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+          <HeroParallax products={products} />
+        </div>
+      ) : (
+        <BackgroundEffects currentTheme={currentTheme} />
+      )}
       
-      {isDarkMode && (
+      {isDarkMode && !showHeroParallax && (
         <div className="fixed inset-0 pointer-events-none z-0 opacity-50">
           <SparklesCore
             id="tsparticlesfullpage"
@@ -152,6 +171,19 @@ const Atlas = () => {
           </main>
         </div>
       </SidebarProvider>
+      
+      {/* Parallax toggle button */}
+      <motion.button
+        className="fixed bottom-6 right-6 z-50 px-4 py-2 bg-primary text-white rounded-md shadow-lg"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={() => setShowHeroParallax(prev => !prev)}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        {showHeroParallax ? "Hide Parallax" : "Show Parallax"}
+      </motion.button>
     </div>
   );
 };
