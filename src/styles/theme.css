@@ -25,7 +25,7 @@
   --widget-border: rgba(255, 255, 255, 0.1);
   --widget-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
   --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.85);
+  --text-secondary: rgba(255, 255, 255, 0.9); /* Improved from 0.85 for better contrast */
   --accent-color: #007AFF;
   --accent-hover: #0066CC;
   --glow-effect: rgba(0, 122, 255, 0.15);
@@ -40,9 +40,9 @@
   --widget-border: rgba(0, 0, 0, 0.1);
   --widget-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
   --text-primary: #000000;
-  --text-secondary: rgba(0, 0, 0, 0.85);
-  --accent-color: #007AFF;
-  --accent-hover: #0066CC;
+  --text-secondary: rgba(0, 0, 0, 0.9); /* Improved from 0.85 for better contrast */
+  --accent-color: #0055CC; /* Darkened for better contrast on light backgrounds */
+  --accent-hover: #0044AA;
   --glow-effect: rgba(0, 122, 255, 0.1);
 }
 
@@ -55,7 +55,7 @@
   --widget-border: rgba(86, 177, 240, 0.2);
   --widget-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
   --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.85);
+  --text-secondary: rgba(255, 255, 255, 0.9); /* Improved from 0.85 for better contrast */
   --accent-color: #56b1f0;
   --accent-hover: #3a9bd4;
   --glow-effect: rgba(86, 177, 240, 0.15);
@@ -70,7 +70,7 @@
   --widget-border: rgba(167, 139, 250, 0.2);
   --widget-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
   --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.85);
+  --text-secondary: rgba(255, 255, 255, 0.9); /* Improved from 0.85 for better contrast */
   --accent-color: #a78bfa;
   --accent-hover: #8b5cf6;
   --glow-effect: rgba(167, 139, 250, 0.15);
@@ -85,9 +85,9 @@
   --widget-border: rgba(52, 211, 153, 0.2);
   --widget-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
   --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.85);
-  --accent-color: #34d399;
-  --accent-hover: #10b981;
+  --text-secondary: rgba(255, 255, 255, 0.9); /* Improved from 0.85 for better contrast */
+  --accent-color: #10b981; /* Darkened from #34d399 for better contrast */
+  --accent-hover: #059669;
   --glow-effect: rgba(52, 211, 153, 0.15);
 }
 
@@ -100,9 +100,9 @@
   --widget-border: rgba(251, 146, 60, 0.2);
   --widget-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
   --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.85);
-  --accent-color: #fb923c;
-  --accent-hover: #f97316;
+  --text-secondary: rgba(255, 255, 255, 0.9); /* Improved from 0.85 for better contrast */
+  --accent-color: #f97316; /* Darkened from #fb923c for better contrast */
+  --accent-hover: #ea580c;
   --glow-effect: rgba(249, 115, 22, 0.15);
 }
 
@@ -115,9 +115,9 @@
   --widget-border: rgba(252, 165, 165, 0.2);
   --widget-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
   --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.85);
-  --accent-color: #f87171;
-  --accent-hover: #ef4444;
+  --text-secondary: rgba(255, 255, 255, 0.9); /* Improved from 0.85 for better contrast */
+  --accent-color: #ef4444; /* Darkened from #f87171 for better contrast */
+  --accent-hover: #dc2626;
   --glow-effect: rgba(239, 68, 68, 0.15);
 }
 

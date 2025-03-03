@@ -106,12 +106,12 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, index, isDarkMode })
         "p-3 rounded-2xl transition-colors duration-300",
         message.role === 'user' 
           ? `${isDarkMode ? 'bg-primary' : 'bg-primary'} text-primary-foreground rounded-tr-sm` 
-          : `${isDarkMode ? 'bg-gray-800' : 'bg-gray-200'} ${isDarkMode ? 'text-gray-100' : 'text-gray-800'} rounded-tl-sm`
+          : `${isDarkMode ? 'bg-gray-800' : 'bg-gray-200'} ${isDarkMode ? 'text-white' : 'text-gray-900'} rounded-tl-sm` // Improved contrast
       )}>
         {message.content}
       </div>
       <div className={`text-xs mt-1 px-2 transition-colors duration-300 ${
-        isDarkMode ? 'text-gray-400' : 'text-gray-600'
+        isDarkMode ? 'text-gray-300' : 'text-gray-700' // Improved from text-gray-400/text-gray-600
       }`}>
         {message.role === 'user' ? 'You' : 'Atlas AI'} • {new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
       </div>

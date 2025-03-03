@@ -10,9 +10,9 @@ import {
   ArrowLeft,
   Search,
   Bell,
-  User,
   Moon,
-  Sun
+  Sun,
+  User
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -35,7 +35,7 @@ const ChatNavBar: React.FC<ChatNavBarProps> = ({
         "w-full h-14 flex items-center justify-between px-4 z-10",
         isDarkMode 
           ? "text-white border-b border-white/10" 
-          : "text-gray-800 border-b border-gray-200",
+          : "text-gray-900 border-b border-gray-200", // Changed from text-gray-800 for better contrast
         className
       )}
       initial={{ opacity: 0, y: -10 }}
@@ -122,7 +122,7 @@ const ChatNavBar: React.FC<ChatNavBarProps> = ({
           size="icon"
           className={cn(
             "rounded-full w-8 h-8 ml-1 transition-all",
-            "hover:bg-gray-100 dark:hover:bg-white/10"
+            isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100" // Updated for consistency
           )}
         >
           <User className="h-4 w-4" />

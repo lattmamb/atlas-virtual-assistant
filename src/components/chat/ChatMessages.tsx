@@ -74,7 +74,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, customRenderer })
                 ? "bg-primary text-primary-foreground"
                 : isDarkMode 
                   ? "bg-gray-800 text-gray-100" 
-                  : "bg-gray-200 text-gray-800"
+                  : "bg-gray-200 text-gray-900" // Changed from text-gray-800 for better contrast
             )}
           >
             {renderMessageContent(message)}
