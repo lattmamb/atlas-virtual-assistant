@@ -72,7 +72,9 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, customRenderer })
               "rounded-lg px-4 py-2",
               message.role === "user"
                 ? "bg-primary text-primary-foreground"
-                : isDarkMode ? "bg-muted" : "bg-muted/70"
+                : isDarkMode 
+                  ? "bg-gray-800 text-gray-100" 
+                  : "bg-gray-200 text-gray-800"
             )}
           >
             {renderMessageContent(message)}

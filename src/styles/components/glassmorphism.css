@@ -1,14 +1,14 @@
 
 /* Glassmorphism Effects */
 .glass-light {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.65);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .glass-dark {
-  background: rgba(15, 15, 15, 0.25);
+  background: rgba(15, 15, 15, 0.65);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
@@ -18,13 +18,13 @@
 .neomorph-light {
   background: #f0f0f3;
   box-shadow: 
-    10px 10px 20px #bebebe,
+    10px 10px 20px #d1d1d4,
     -10px -10px 20px #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.7);
 }
 
 .neomorph-dark {
-  background: #202020;
+  background: #1e1e1e;
   box-shadow: 
     10px 10px 20px #151515,
     -10px -10px 20px #2a2a2a;
@@ -33,7 +33,7 @@
 
 /* Hybrid Styles */
 .hybrid-light {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(10px);
   box-shadow: 
     5px 5px 15px rgba(0, 0, 0, 0.1),
@@ -43,7 +43,7 @@
 }
 
 .hybrid-dark {
-  background: rgba(25, 25, 25, 0.7);
+  background: rgba(25, 25, 25, 0.85);
   backdrop-filter: blur(10px);
   box-shadow: 
     5px 5px 15px rgba(0, 0, 0, 0.3),

@@ -21,14 +21,14 @@
   --background-primary: #1a1a1a;
   --background-secondary: #111111;
   --background-gradient: linear-gradient(to bottom, #1a1a1a, #0c0c0c);
-  --widget-bg: rgba(0, 0, 0, 0.3);
+  --widget-bg: rgba(30, 30, 30, 0.75);
   --widget-border: rgba(255, 255, 255, 0.1);
-  --widget-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  --widget-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
   --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-secondary: rgba(255, 255, 255, 0.85);
   --accent-color: #007AFF;
   --accent-hover: #0066CC;
-  --glow-effect: rgba(0, 122, 255, 0.1);
+  --glow-effect: rgba(0, 122, 255, 0.15);
 }
 
 /* Light Theme */
@@ -36,11 +36,11 @@
   --background-primary: #f5f5f7;
   --background-secondary: #ffffff;
   --background-gradient: linear-gradient(to bottom, #f5f5f7, #e5e5e5);
-  --widget-bg: rgba(255, 255, 255, 0.5);
+  --widget-bg: rgba(255, 255, 255, 0.85);
   --widget-border: rgba(0, 0, 0, 0.1);
-  --widget-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+  --widget-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
   --text-primary: #000000;
-  --text-secondary: rgba(0, 0, 0, 0.6);
+  --text-secondary: rgba(0, 0, 0, 0.85);
   --accent-color: #007AFF;
   --accent-hover: #0066CC;
   --glow-effect: rgba(0, 122, 255, 0.1);
@@ -51,11 +51,11 @@
   --background-primary: #0c2d48;
   --background-secondary: #051923;
   --background-gradient: linear-gradient(to bottom, #0c2d48, #051923);
-  --widget-bg: rgba(12, 45, 72, 0.4);
+  --widget-bg: rgba(12, 45, 72, 0.75);
   --widget-border: rgba(86, 177, 240, 0.2);
   --widget-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
   --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-secondary: rgba(255, 255, 255, 0.85);
   --accent-color: #56b1f0;
   --accent-hover: #3a9bd4;
   --glow-effect: rgba(86, 177, 240, 0.15);
@@ -66,11 +66,11 @@
   --background-primary: #2e1065;
   --background-secondary: #1c0942;
   --background-gradient: linear-gradient(to bottom, #2e1065, #1c0942);
-  --widget-bg: rgba(46, 16, 101, 0.4);
+  --widget-bg: rgba(46, 16, 101, 0.75);
   --widget-border: rgba(167, 139, 250, 0.2);
   --widget-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
   --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-secondary: rgba(255, 255, 255, 0.85);
   --accent-color: #a78bfa;
   --accent-hover: #8b5cf6;
   --glow-effect: rgba(167, 139, 250, 0.15);
@@ -81,11 +81,11 @@
   --background-primary: #064e3b;
   --background-secondary: #022c22;
   --background-gradient: linear-gradient(to bottom, #064e3b, #022c22);
-  --widget-bg: rgba(6, 78, 59, 0.4);
+  --widget-bg: rgba(6, 78, 59, 0.75);
   --widget-border: rgba(52, 211, 153, 0.2);
   --widget-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
   --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-secondary: rgba(255, 255, 255, 0.85);
   --accent-color: #34d399;
   --accent-hover: #10b981;
   --glow-effect: rgba(52, 211, 153, 0.15);
@@ -96,11 +96,11 @@
   --background-primary: #7c2d12;
   --background-secondary: #4c1d05;
   --background-gradient: linear-gradient(to bottom, #7c2d12, #4c1d05);
-  --widget-bg: rgba(124, 45, 18, 0.4);
+  --widget-bg: rgba(124, 45, 18, 0.75);
   --widget-border: rgba(251, 146, 60, 0.2);
   --widget-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
   --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-secondary: rgba(255, 255, 255, 0.85);
   --accent-color: #fb923c;
   --accent-hover: #f97316;
   --glow-effect: rgba(249, 115, 22, 0.15);
@@ -111,11 +111,11 @@
   --background-primary: #7f1d1d;
   --background-secondary: #450a0a;
   --background-gradient: linear-gradient(to bottom, #7f1d1d, #450a0a);
-  --widget-bg: rgba(127, 29, 29, 0.4);
+  --widget-bg: rgba(127, 29, 29, 0.75);
   --widget-border: rgba(252, 165, 165, 0.2);
   --widget-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
   --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-secondary: rgba(255, 255, 255, 0.85);
   --accent-color: #f87171;
   --accent-hover: #ef4444;
   --glow-effect: rgba(239, 68, 68, 0.15);
@@ -156,14 +156,14 @@ body {
 /* Dynamic Glassmorphism - adapts to light/dark */
 .glass {
   backdrop-filter: blur(16px);
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
 }
 
 .dark .glass {
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(30, 30, 30, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -171,7 +171,7 @@ body {
 .neomorphic {
   background: var(--background-primary);
   box-shadow: 
-    8px 8px 16px rgba(0, 0, 0, 0.1), 
+    8px 8px 16px rgba(0, 0, 0, 0.15), 
     -8px -8px 16px rgba(255, 255, 255, 0.05);
   border-radius: 16px;
   transition: all 0.3s ease;
@@ -179,33 +179,33 @@ body {
 
 .light .neomorphic {
   box-shadow: 
-    8px 8px 16px rgba(0, 0, 0, 0.05), 
+    8px 8px 16px rgba(0, 0, 0, 0.08), 
     -8px -8px 16px rgba(255, 255, 255, 0.5);
 }
 
 /* Hybrid style (combining glassmorphism and neomorphism) for an Apple-like UI */
 .hybrid {
   backdrop-filter: blur(10px);
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 
-    8px 8px 16px rgba(0, 0, 0, 0.1), 
+    8px 8px 16px rgba(0, 0, 0, 0.15), 
     -8px -8px 16px rgba(255, 255, 255, 0.05);
   border-radius: 16px;
   transition: all 0.3s ease;
 }
 
 .light .hybrid {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.85);
   box-shadow: 
-    8px 8px 16px rgba(0, 0, 0, 0.05), 
+    8px 8px 16px rgba(0, 0, 0, 0.08), 
     -8px -8px 16px rgba(255, 255, 255, 0.5);
 }
 
 /* Frosted Glass Elements (like iOS controls) */
 .frosted-glass {
   backdrop-filter: blur(12px);
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.4);
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
@@ -213,7 +213,7 @@ body {
 }
 
 .dark .frosted-glass {
-  background: rgba(30, 30, 30, 0.5);
+  background: rgba(30, 30, 30, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 

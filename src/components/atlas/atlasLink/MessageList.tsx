@@ -111,7 +111,7 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, index, isDarkMode })
         {message.content}
       </div>
       <div className={`text-xs mt-1 px-2 transition-colors duration-300 ${
-        isDarkMode ? 'text-gray-500' : 'text-gray-600'
+        isDarkMode ? 'text-gray-400' : 'text-gray-600'
       }`}>
         {message.role === 'user' ? 'You' : 'Atlas AI'} • {new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
       </div>
