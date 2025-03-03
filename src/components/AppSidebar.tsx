@@ -35,7 +35,8 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ activePage }) => {
   
   const isActive = (path: string) => {
     return location.pathname === path || 
-           (path !== '/' && location.pathname.startsWith(path));
+           (path !== '/' && location.pathname.startsWith(path)) ||
+           (path.includes('?') && location.search.includes(path.split('?')[1]));
   };
 
   return (
@@ -43,11 +44,16 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ activePage }) => {
       variant="sidebar"
       collapsible="offcanvas"
       className={cn(
-        "border-r border-border/40 shadow-sm",
-        isDarkMode ? "bg-black/90 backdrop-blur-xl" : "bg-white/90 backdrop-blur-xl"
+        "border-r shadow-sm",
+        isDarkMode 
+          ? "bg-black/90 backdrop-blur-xl border-white/10" 
+          : "bg-white/90 backdrop-blur-xl border-gray-200/70"
       )}
     >
-      <SidebarHeader className="border-b border-border/40">
+      <SidebarHeader className={cn(
+        "border-b", 
+        isDarkMode ? "border-white/10" : "border-gray-200/70"
+      )}>
         <SidebarLogo />
       </SidebarHeader>
       
@@ -94,7 +100,10 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ activePage }) => {
         />
       </SidebarContent>
       
-      <SidebarFooter className="border-t border-border/40">
+      <SidebarFooter className={cn(
+        "border-t", 
+        isDarkMode ? "border-white/10" : "border-gray-200/70"
+      )}>
         <UserProfile />
       </SidebarFooter>
     </Sidebar>

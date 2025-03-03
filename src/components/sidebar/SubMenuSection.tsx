@@ -9,6 +9,7 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from '@/components/ui/sidebar';
+import { cn } from '@/lib/utils';
 
 const SubMenuSection: React.FC<SubMenuSectionProps> = ({ label, items, isActive, onItemClick }) => {
   return (
@@ -21,13 +22,22 @@ const SubMenuSection: React.FC<SubMenuSectionProps> = ({ label, items, isActive,
               <SidebarMenuButton 
                 isActive={isActive ? isActive(item.path) : false}
                 onClick={() => {
-                  console.log(`Switch to ${item.name}`);
                   if (onItemClick) onItemClick(item.name);
                 }}
               >
-                <div className="flex items-center">
-                  {item.icon}
-                  <span className="ml-2">{item.name}</span>
+                <div className="flex items-center w-full">
+                  <span className="flex items-center justify-center h-5 w-5 mr-3">
+                    {item.icon}
+                  </span>
+                  <span className="flex-grow">{item.name}</span>
+                  {item.badge && (
+                    <span className={cn(
+                      "flex h-5 w-5 items-center justify-center rounded-full text-xs font-medium",
+                      `bg-${item.badge.color} text-white`
+                    )}>
+                      {item.badge.count}
+                    </span>
+                  )}
                 </div>
               </SidebarMenuButton>
             </SidebarMenuItem>

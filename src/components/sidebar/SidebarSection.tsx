@@ -10,6 +10,7 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from '@/components/ui/sidebar';
+import { cn } from '@/lib/utils';
 
 const SidebarSection: React.FC<SidebarSectionProps> = ({ label, items, isActive }) => {
   return (
@@ -20,11 +21,19 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({ label, items, isActive 
           {items.map((item) => (
             <SidebarMenuItem key={item.name}>
               <SidebarMenuButton asChild isActive={isActive(item.path)}>
-                <Link to={item.path} className={isActive(item.path) ? 'font-medium' : ''}>
-                  {item.icon}
-                  <span>{item.name}</span>
+                <Link to={item.path} className={cn(
+                  "flex items-center w-full", 
+                  isActive(item.path) ? 'font-medium' : ''
+                )}>
+                  <span className="flex items-center justify-center h-5 w-5 mr-3">
+                    {item.icon}
+                  </span>
+                  <span className="flex-grow">{item.name}</span>
                   {item.badge && (
-                    <span className={`ml-auto flex h-6 w-6 items-center justify-center rounded-full bg-${item.badge.color}/10 text-${item.badge.color} text-xs`}>
+                    <span className={cn(
+                      "flex h-5 w-5 items-center justify-center rounded-full text-xs font-medium",
+                      `bg-${item.badge.color} text-white`
+                    )}>
                       {item.badge.count}
                     </span>
                   )}

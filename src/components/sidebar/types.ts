@@ -23,3 +23,4 @@ export interface SubMenuSectionProps {
   isActive?: (path: string) => boolean;
   onItemClick?: (name: string) => void;
 }
+
