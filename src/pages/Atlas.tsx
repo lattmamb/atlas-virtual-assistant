@@ -6,7 +6,7 @@ import { SidebarProvider } from '@/components/ui/sidebar';
 import { useTheme } from '@/context/ThemeContext';
 import { cn } from '@/lib/utils';
 import AppSidebar from '@/components/AppSidebar';
-import { AppleNavBar } from '@/components/navigation'; // Updated import path
+import AppleNavBar from '@/components/icloud/AppleNavBar';
 import ChatRoom from './ChatRoom';
 import AtlasLink from './AtlasLink';
 import WorkflowDashboard from '@/components/workflow';

@@ -12,6 +12,7 @@ import { useTheme } from '@/context/ThemeContext';
 import { motion } from 'framer-motion';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { useIsMobile } from '@/hooks/use-mobile';
+import AppSidebar from '@/components/AppSidebar';
 
 const AtlasLinkContent: React.FC = () => {
   const { celestialMode } = useAtlasLink();
@@ -21,7 +22,7 @@ const AtlasLinkContent: React.FC = () => {
   return (
     <motion.div 
       className={cn(
-        "h-full flex flex-col overflow-hidden relative",
+        "h-screen flex flex-col overflow-hidden relative",
         "bg-black text-white"
       )}
       initial={{ opacity: 0 }}
@@ -39,6 +40,9 @@ const AtlasLinkContent: React.FC = () => {
       
       <SidebarProvider defaultOpen={!isMobile}>
         <div className="flex w-full h-full overflow-hidden">
+          {/* App Navigation Sidebar */}
+          <AppSidebar activePage="atlas" />
+          
           {/* Atlas Sidebar with controls and settings */}
           <Sidebar />
           

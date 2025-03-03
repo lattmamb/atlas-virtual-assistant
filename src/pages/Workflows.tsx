@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useTheme } from "@/context/ThemeContext";
 import { GridPattern } from "@/components/ui/grid-pattern";
-import { AppleNavBar } from "@/components/navigation"; // Updated import path
+import AppleNavBar from "@/components/icloud/AppleNavBar";
 import HeaderSection from "@/components/widgets/HeaderSection";
 import BackgroundEffects from "@/components/widgets/BackgroundEffects";
 import { SparklesCore } from "@/components/ui/sparkles";
