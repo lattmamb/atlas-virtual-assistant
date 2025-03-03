@@ -57,8 +57,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({
 
   return (
     <motion.div 
-      className="flex-1 flex flex-col overflow-hidden border rounded-lg hybrid"
-      style={{ borderColor: 'var(--widget-border)' }}
+      className="flex-1 flex flex-col overflow-hidden"
       ref={scrollRef}
       animate={{
         scale: 1,
@@ -75,7 +74,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({
         {messages.length === 0 && <WelcomeScreen sendMessage={sendMessage} />}
       </div>
       
-      <div className="p-4 border-t" style={{ borderColor: 'var(--widget-border)' }}>
+      <div className="p-4 border-t dark:border-white/10 border-gray-200">
         <ChatInputForm 
           isLoading={isLoading}
           selectedProvider={selectedProvider}

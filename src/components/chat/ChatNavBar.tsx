@@ -32,10 +32,10 @@ const ChatNavBar: React.FC<ChatNavBarProps> = ({
   return (
     <motion.div 
       className={cn(
-        "w-full h-14 backdrop-blur-xl flex items-center justify-between px-4 border-b",
+        "w-full h-14 flex items-center justify-between px-4 z-10",
         isDarkMode 
-          ? "bg-black/60 border-white/10 text-white" 
-          : "bg-white/80 border-gray-200 text-gray-800",
+          ? "text-white border-b border-white/10" 
+          : "text-gray-800 border-b border-gray-200",
         className
       )}
       initial={{ opacity: 0, y: -10 }}
@@ -122,9 +122,7 @@ const ChatNavBar: React.FC<ChatNavBarProps> = ({
           size="icon"
           className={cn(
             "rounded-full w-8 h-8 ml-1 transition-all",
-            "bg-gradient-to-br from-blue-500 to-blue-600 text-white",
-            "hover:shadow-md hover:shadow-blue-500/20 hover:scale-105 active:scale-95",
-            "border border-blue-400/30"
+            "hover:bg-gray-100 dark:hover:bg-white/10"
           )}
         >
           <User className="h-4 w-4" />
