@@ -1,8 +1,8 @@
 
 import React from "react";
+import { SparklesCore } from "@/components/ui/sparkles";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { LampEffect } from "@/components/ui/LampEffect";
 
 interface ChatBackgroundEffectProps {
   isDarkMode: boolean;
@@ -13,11 +13,16 @@ export const ChatBackgroundEffect: React.FC<ChatBackgroundEffectProps> = ({
 }) => {
   return (
     <div className="absolute inset-0 -z-10 overflow-hidden">
-      <LampEffect 
-        color={isDarkMode ? "blue" : "cyan"}
-        size="lg"
-        intensity={isDarkMode ? "medium" : "low"}
-        className="opacity-70"
+      {/* Sparkles effect */}
+      <SparklesCore
+        id="sparkles"
+        background="transparent"
+        minSize={0.6}
+        maxSize={1.4}
+        particleColor={isDarkMode ? "#ffffff" : "#007AFF"}
+        particleDensity={10}
+        className="w-full h-full opacity-[0.15]"
+        speed={0.3}
       />
       
       {/* Background paths */}

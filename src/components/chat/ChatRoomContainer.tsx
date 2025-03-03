@@ -8,7 +8,6 @@ import { Message, ApiKeyProvider } from "@/lib/types";
 import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StarBorder } from "@/components/ui/starBorder";
-import { LampEffect } from "@/components/ui/LampEffect";
 
 interface ChatRoomContainerProps {
   messages: Message[];
@@ -58,23 +57,15 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({
 
   return (
     <motion.div 
-      className="flex-1 flex flex-col overflow-hidden rounded-lg backdrop-blur-md relative"
-      style={{ background: 'var(--background)', opacity: 0.98 }}
+      className="flex-1 flex flex-col overflow-hidden border rounded-lg hybrid"
+      style={{ borderColor: 'var(--widget-border)' }}
+      ref={scrollRef}
       animate={{
         scale: 1,
         y: 0,
       }}
       transition={{ duration: 0.1, ease: "easeOut" }}
-      ref={scrollRef}
     >
-      <LampEffect 
-        subtle={true} 
-        animate={true} 
-        color="blue" 
-        size="lg" 
-        intensity="medium" 
-      />
-      
       <div className="flex-1 overflow-y-auto relative">
         <ChatMessages 
           messages={messages} 
@@ -84,7 +75,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({
         {messages.length === 0 && <WelcomeScreen sendMessage={sendMessage} />}
       </div>
       
-      <div className="p-4">
+      <div className="p-4 border-t" style={{ borderColor: 'var(--widget-border)' }}>
         <ChatInputForm 
           isLoading={isLoading}
           selectedProvider={selectedProvider}
