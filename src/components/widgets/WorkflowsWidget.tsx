@@ -35,9 +35,9 @@ const WorkflowsWidget: React.FC = () => {
     <AppleWidget 
       title="Workflows"
       icon={<Workflow className="h-5 w-5 text-blue-400" />}
-      className="row-span-1 md:col-span-2 glass"
+      className="h-full"
     >
-      <div className="p-4">
+      <div className="p-4 flex flex-col h-full">
         <div className="flex justify-between items-center mb-3">
           <h3 className="text-sm font-medium">Active Automations</h3>
           <Button 
@@ -51,7 +51,7 @@ const WorkflowsWidget: React.FC = () => {
           </Button>
         </div>
         
-        <div className="space-y-3 mb-3">
+        <div className="space-y-3 mb-3 flex-1 overflow-auto">
           {workflows.map(workflow => (
             <div 
               key={workflow.id}
@@ -100,13 +100,6 @@ const WorkflowsWidget: React.FC = () => {
             </div>
           ))}
         </div>
-        
-        <Button 
-          className="w-full" 
-          onClick={handleNavigateToWorkflows}
-        >
-          Manage Workflows
-        </Button>
       </div>
     </AppleWidget>
   );

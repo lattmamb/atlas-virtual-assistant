@@ -12,31 +12,43 @@ import InventoryWidget from '@/components/widgets/InventoryWidget';
 const widgetStyles: Record<string, {
   style: 'glass' | 'neomorph' | 'hybrid',
   hoverEffect: 'scale' | 'glow' | 'lift' | 'none',
-  accentColor?: string
+  accentColor?: string,
+  redirectTo: string,
+  redirectLabel: string
 }> = {
   atlas_link: {
     style: 'hybrid',
     hoverEffect: 'lift',
-    accentColor: 'rgba(59, 130, 246, 0.5)'
+    accentColor: 'rgba(59, 130, 246, 0.5)',
+    redirectTo: '/atlas',
+    redirectLabel: 'Open Atlas'
   },
   chat_room: {
     style: 'glass',
     hoverEffect: 'scale',
-    accentColor: 'rgba(99, 102, 241, 0.5)'
+    accentColor: 'rgba(99, 102, 241, 0.5)',
+    redirectTo: '/chat',
+    redirectLabel: 'Start Chatting'
   },
   workflows: {
     style: 'neomorph',
     hoverEffect: 'glow',
-    accentColor: 'rgba(79, 70, 229, 0.5)'
+    accentColor: 'rgba(79, 70, 229, 0.5)',
+    redirectTo: '/workflows',
+    redirectLabel: 'Manage Workflows'
   },
   time: {
     style: 'glass',
-    hoverEffect: 'scale'
+    hoverEffect: 'scale',
+    redirectTo: '/settings',
+    redirectLabel: 'Settings'
   },
   trinity_cars: {
     style: 'hybrid',
     hoverEffect: 'lift',
-    accentColor: 'rgba(220, 38, 38, 0.5)'
+    accentColor: 'rgba(220, 38, 38, 0.5)',
+    redirectTo: '/trinity',
+    redirectLabel: 'View Inventory'
   }
 };
 
@@ -57,7 +69,12 @@ const ActiveWidgets: React.FC<ActiveWidgetsProps> = ({
 }) => {
   const renderWidget = (widgetId: string, index: number) => {
     const key = `${widgetId}-${index}`;
-    const widgetStyle = widgetStyles[widgetId] || { style: 'glass', hoverEffect: 'scale' };
+    const widgetStyle = widgetStyles[widgetId] || { 
+      style: 'glass', 
+      hoverEffect: 'scale',
+      redirectTo: '/',
+      redirectLabel: 'View More'
+    };
     
     switch(widgetId) {
       case 'atlas_link':
@@ -68,6 +85,8 @@ const ActiveWidgets: React.FC<ActiveWidgetsProps> = ({
             style={widgetStyle.style}
             hoverEffect={widgetStyle.hoverEffect}
             accentColor={widgetStyle.accentColor}
+            redirectTo={widgetStyle.redirectTo}
+            redirectLabel={widgetStyle.redirectLabel}
           >
             <AtlasLinkWidget />
           </DraggableWidget>
@@ -81,6 +100,8 @@ const ActiveWidgets: React.FC<ActiveWidgetsProps> = ({
             style={widgetStyle.style}
             hoverEffect={widgetStyle.hoverEffect}
             accentColor={widgetStyle.accentColor}
+            redirectTo={widgetStyle.redirectTo}
+            redirectLabel={widgetStyle.redirectLabel}
           >
             <ChatRoomWidget />
           </DraggableWidget>
@@ -94,6 +115,8 @@ const ActiveWidgets: React.FC<ActiveWidgetsProps> = ({
             style={widgetStyle.style}
             hoverEffect={widgetStyle.hoverEffect}
             accentColor={widgetStyle.accentColor}
+            redirectTo={widgetStyle.redirectTo}
+            redirectLabel={widgetStyle.redirectLabel}
           >
             <WorkflowsWidget />
           </DraggableWidget>
@@ -106,6 +129,8 @@ const ActiveWidgets: React.FC<ActiveWidgetsProps> = ({
             style={widgetStyle.style}
             hoverEffect={widgetStyle.hoverEffect}
             accentColor={widgetStyle.accentColor}
+            redirectTo={widgetStyle.redirectTo}
+            redirectLabel={widgetStyle.redirectLabel}
           >
             <TimeWeatherWidget
               currentTime={currentTime}
@@ -122,6 +147,8 @@ const ActiveWidgets: React.FC<ActiveWidgetsProps> = ({
             style={widgetStyle.style}
             hoverEffect={widgetStyle.hoverEffect}
             accentColor={widgetStyle.accentColor}
+            redirectTo={widgetStyle.redirectTo}
+            redirectLabel={widgetStyle.redirectLabel}
           >
             <InventoryWidget />
           </DraggableWidget>

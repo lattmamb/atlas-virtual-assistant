@@ -16,6 +16,8 @@ interface DraggableWidgetProps {
   style?: 'glass' | 'neomorph' | 'hybrid';
   hoverEffect?: 'scale' | 'glow' | 'lift' | 'none';
   accentColor?: string;
+  redirectTo?: string;
+  redirectLabel?: string;
 }
 
 const DraggableWidget: React.FC<DraggableWidgetProps> = ({
@@ -28,6 +30,8 @@ const DraggableWidget: React.FC<DraggableWidgetProps> = ({
   style = 'glass',
   hoverEffect = 'scale',
   accentColor,
+  redirectTo,
+  redirectLabel,
 }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [widgetStyle, setWidgetStyle] = useState<'glass' | 'neomorph' | 'hybrid'>(style);
@@ -154,6 +158,8 @@ const DraggableWidget: React.FC<DraggableWidgetProps> = ({
         style={widgetStyle} 
         hoverEffect={widgetHoverEffect}
         accentColor={accentColor}
+        redirectTo={redirectTo}
+        redirectLabel={redirectLabel}
       >
         {enhancedChildren}
       </EnhancedWidget>

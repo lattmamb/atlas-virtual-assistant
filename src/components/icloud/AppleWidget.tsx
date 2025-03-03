@@ -16,6 +16,7 @@ interface AppleWidgetProps {
   headerActionIcon?: React.ReactNode;
   headerActionTooltip?: string;
   onHeaderActionClick?: () => void;
+  headerActions?: React.ReactNode;
 }
 
 export const AppleWidget: React.FC<AppleWidgetProps> = ({ 
@@ -29,7 +30,8 @@ export const AppleWidget: React.FC<AppleWidgetProps> = ({
   isDarkMode = true,
   headerActionIcon,
   headerActionTooltip,
-  onHeaderActionClick
+  onHeaderActionClick,
+  headerActions
 }) => {
   return (
     <div 
@@ -57,27 +59,31 @@ export const AppleWidget: React.FC<AppleWidgetProps> = ({
             )}
           </div>
           
-          {headerActionIcon && (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-7 w-7 rounded-full opacity-70 hover:opacity-100 hover:bg-white/10"
-                    onClick={onHeaderActionClick}
-                  >
-                    {headerActionIcon}
-                  </Button>
-                </TooltipTrigger>
-                {headerActionTooltip && (
-                  <TooltipContent>
-                    <p>{headerActionTooltip}</p>
-                  </TooltipContent>
-                )}
-              </Tooltip>
-            </TooltipProvider>
-          )}
+          <div className="flex items-center space-x-1">
+            {headerActionIcon && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7 rounded-full opacity-70 hover:opacity-100 hover:bg-white/10"
+                      onClick={onHeaderActionClick}
+                    >
+                      {headerActionIcon}
+                    </Button>
+                  </TooltipTrigger>
+                  {headerActionTooltip && (
+                    <TooltipContent>
+                      <p>{headerActionTooltip}</p>
+                    </TooltipContent>
+                  )}
+                </Tooltip>
+              </TooltipProvider>
+            )}
+            
+            {headerActions}
+          </div>
         </div>
       )}
       
