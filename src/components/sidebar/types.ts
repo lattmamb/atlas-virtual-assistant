@@ -1,26 +1,29 @@
 
-import { ReactNode } from 'react';
+import React from 'react';
 
 export interface NavItem {
-  name: string;
+  icon?: React.ReactNode;
+  title: string;
   path: string;
-  icon: ReactNode;
-  onClick?: () => void;
-  badge?: {
-    count: number | string;
-    color: string;
-  };
+  active?: boolean;
+  children?: NavItem[];
+  badge?: string | number;
+  badgeColor?: string;
+  isExternal?: boolean;
 }
 
 export interface SidebarSectionProps {
-  title: string;
-  children: ReactNode;
+  children?: React.ReactNode;
   collapsible?: boolean;
   defaultOpen?: boolean;
 }
 
 export interface SubMenuSectionProps {
-  activeItem: string;
+  label: string;
   items: NavItem[];
-  onNavItemClick?: (item: NavItem) => void;
+  isActive: (path: string) => boolean;
+  onItemClick?: (path: string) => void;
+  collapsible?: boolean;
+  defaultOpen?: boolean;
+  activeItem?: string;
 }

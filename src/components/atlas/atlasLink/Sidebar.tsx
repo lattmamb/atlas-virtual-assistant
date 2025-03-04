@@ -1,97 +1,49 @@
 
 import React from 'react';
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { 
-  Home, 
-  MessageSquare, 
-  Grid,
-  Layers,
-  Moon, 
-  Sun
-} from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useAtlasLink } from './AtlasLinkContext';
 import { useTheme } from '@/context/ThemeContext';
-import SidebarNavigation from './sidebar/SidebarNavigation';
-
-// Import sidebar component sections
 import SidebarHeader from './sidebar/SidebarHeader';
-import QuickNav from './sidebar/QuickNav';
-import ActiveInstructionCard from './sidebar/ActiveInstructionCard';
-import ApiKeysCard from './sidebar/ApiKeysCard';
-import ThemeToggle from './sidebar/ThemeToggle';
 import SidebarFooter from './sidebar/SidebarFooter';
+import SidebarNavigation from './sidebar/SidebarNavigation';
+import QuickNav from './sidebar/QuickNav';
 
-const Sidebar: React.FC = () => {
-  const { 
-    sidebarOpen, 
-    selectedInstruction,
-    setSelectedInstruction,
-    apiKeys,
-    setApiKeys,
-    handleSaveApiKeys,
-    celestialMode, 
-    toggleCelestialMode
-  } = useAtlasLink();
+// Import and use types from SidebarNavigation
+interface SidebarProps {
+  className?: string;
+  activePage: string;
+  onPageChange: (name: string) => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({
+  className,
+  activePage,
+  onPageChange
+}) => {
+  const { isDarkMode } = useTheme();
   
-  const { isDarkMode, toggleTheme } = useTheme();
-
-  // Quick Nav buttons for the top section
-  const quickNavButtons = [
-    { icon: <Home className="h-4 w-4" />, ariaLabel: "Home" },
-    { icon: <MessageSquare className="h-4 w-4" />, ariaLabel: "Messages" },
-    { icon: <Grid className="h-4 w-4" />, ariaLabel: "Dashboard" },
-    { icon: <Layers className="h-4 w-4" />, ariaLabel: "Workflows" }
-  ];
-
-  const handleItemClick = (name: string) => {
-    if (name === 'Appearance') {
-      toggleTheme();
-    }
-  };
-
   return (
-    <div className={cn(
-      "w-64 border-r border-gray-800 z-20 transition-transform duration-300 bg-black",
-      "flex flex-col justify-between overflow-auto",
-      sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-    )}>
-      <div className="p-4 space-y-4">
-        {/* Logo and Atlas Link title */}
-        <SidebarHeader />
+    <aside
+      className={cn(
+        "flex flex-col h-full w-56 lg:w-64 flex-shrink-0 border-r relative",
+        "bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800",
+        className
+      )}
+    >
+      <SidebarHeader />
+      
+      <div className="flex flex-col h-full overflow-hidden">
+        <QuickNav />
         
-        {/* Quick Nav */}
-        <QuickNav buttons={quickNavButtons} />
-        
-        {/* Navigation Sections */}
-        <SidebarNavigation onItemClick={handleItemClick} />
-        
-        {/* Currently active chat instruction */}
-        <ActiveInstructionCard 
-          selectedInstruction={selectedInstruction}
-          setSelectedInstruction={setSelectedInstruction}
-        />
-        
-        {/* API Keys Section */}
-        <ApiKeysCard 
-          apiKeys={apiKeys}
-          setApiKeys={setApiKeys}
-          handleSaveApiKeys={handleSaveApiKeys}
-        />
-        
-        {/* Theme Toggle */}
-        <ThemeToggle 
-          celestialMode={celestialMode}
-          toggleCelestialMode={toggleCelestialMode}
-          isDarkMode={isDarkMode}
-          toggleTheme={toggleTheme}
-        />
+        <div className="flex-grow overflow-y-auto">
+          <SidebarNavigation 
+            activePage={activePage}
+            onPageChange={onPageChange}
+          />
+        </div>
       </div>
       
       <SidebarFooter />
-    </div>
+    </aside>
   );
 };
 

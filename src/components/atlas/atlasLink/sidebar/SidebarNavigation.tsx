@@ -1,17 +1,47 @@
 
 import React from 'react';
 import { cn } from "@/lib/utils";
-import { SubMenuSection } from '@/components/sidebar';
+import SubMenuSection from '@/components/sidebar/SubMenuSection';
 import { useTheme } from '@/context/ThemeContext';
-import { 
-  getPrimaryItems,
-  getSettingsItems
-} from './navigationItems';
+import { NavItem } from '@/components/sidebar/types';
 
 interface SidebarNavigationProps {
   activePage: string;
   onPageChange: (name: string) => void;
 }
+
+// Define navigation items directly here since there are import issues
+const getPrimaryItems = (): NavItem[] => [
+  {
+    icon: "🏠",
+    title: "Home",
+    path: "home",
+  },
+  {
+    icon: "💬",
+    title: "Chat",
+    path: "chat",
+    badge: "New"
+  },
+  {
+    icon: "📊",
+    title: "Dashboard",
+    path: "dashboard",
+  }
+];
+
+const getSettingsItems = (): NavItem[] => [
+  {
+    icon: "⚙️",
+    title: "Settings",
+    path: "settings",
+  },
+  {
+    icon: "🔒",
+    title: "Privacy",
+    path: "privacy",
+  }
+];
 
 const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
   activePage,
