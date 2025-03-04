@@ -12,6 +12,11 @@ interface SidebarContextValue {
   setIsCollapsed: (value: boolean) => void;
 }
 
+// Define props interface for AppSidebar
+interface AppSidebarProps {
+  activePage?: string;
+}
+
 // Simplified mock context since we can't modify the original
 const useSidebar = (): SidebarContextValue => {
   return {
@@ -20,7 +25,7 @@ const useSidebar = (): SidebarContextValue => {
   };
 };
 
-const AppSidebar = ({ activePage }: { activePage?: string }) => {
+const AppSidebar = ({ activePage }: AppSidebarProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { isCollapsed, setIsCollapsed } = useSidebar();
@@ -49,6 +54,7 @@ const AppSidebar = ({ activePage }: { activePage?: string }) => {
             label="Navigation" 
             items={navigationItems}
             isActive={isActive}
+            isCollapsed={isCollapsed}
           >
             <div className="space-y-1 px-3">
               {navigationItems.map((item) => (

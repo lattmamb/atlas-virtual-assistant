@@ -1,3 +1,4 @@
+
 export type ApiKeyProvider = "openai" | "anthropic" | "cohere" | "huggingface" | "google" | "hugging face" | "openrouter";
 
 export interface ApiKey {
@@ -36,4 +37,9 @@ export interface ChatContextType {
   setSelectedProvider: (provider: ApiKeyProvider | null) => void;
   availableProviders: ApiKeyProvider[];
   sendMessage: (content: string) => void;
+}
+
+// Add the missing UniverseComponentProps interface
+export interface UniverseComponentProps {
+  scrollY?: number;
 }

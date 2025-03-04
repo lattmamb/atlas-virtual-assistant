@@ -8,6 +8,7 @@ interface QuickNavProps {
     icon: React.ReactNode;
     ariaLabel: string;
   }[];
+  isCollapsed?: boolean;
 }
 
 const defaultButtons = [
@@ -17,7 +18,7 @@ const defaultButtons = [
   { icon: <Settings size={18} />, ariaLabel: "Settings" }
 ];
 
-const QuickNav: React.FC<QuickNavProps> = ({ buttons = defaultButtons }) => {
+const QuickNav: React.FC<QuickNavProps> = ({ buttons = defaultButtons, isCollapsed }) => {
   return (
     <div className="flex justify-center space-x-2 mb-4">
       {buttons.map((button, index) => (

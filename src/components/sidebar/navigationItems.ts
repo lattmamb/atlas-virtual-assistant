@@ -1,3 +1,5 @@
+
+import React from 'react';
 import { NavItem } from './types';
 import { Home, MessageSquare, Settings, Sparkles } from 'lucide-react';
 
@@ -5,13 +7,13 @@ export const navigationItems: NavItem[] = [
   {
     name: 'home',
     title: 'Home',
-    icon: Home,
+    icon: React.createElement(Home),
     path: '/',
   },
   {
     name: 'chat',
     title: 'Chat',
-    icon: MessageSquare,
+    icon: React.createElement(MessageSquare),
     path: '/chat',
     badge: {
       count: 2,
@@ -21,13 +23,13 @@ export const navigationItems: NavItem[] = [
   {
     name: 'settings',
     title: 'Settings',
-    icon: Settings,
+    icon: React.createElement(Settings),
     path: '/settings',
   },
   {
     name: 'features',
     title: 'Features',
-    icon: Sparkles,
+    icon: React.createElement(Sparkles),
     path: '/features',
   },
 ];

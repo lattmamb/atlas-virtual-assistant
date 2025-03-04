@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { toast } from 'sonner';
+import { UniverseComponentProps } from '@/lib/types';
 
 import ARBackground from '@/components/applevision/ARBackground';
 import HeroSection from '@/components/applevision/HeroSection';
@@ -20,9 +21,15 @@ import UniverseNavBar from '@/components/universe/UniverseNavBar';
 import SectionIndicator from '@/components/universe/SectionIndicator';
 import { useSwipeable } from '@/hooks/use-swipeable';
 
-const sections = [
-  { id: 'vision', title: 'Vision Pro', component: (props: UniverseComponentProps) => <HeroSection {...props} /> },
-  { id: 'features', title: 'Features', component: (props: UniverseComponentProps) => <FeaturesSection {...props} /> },
+interface SectionConfig {
+  id: string;
+  title: string;
+  component: React.ComponentType<UniverseComponentProps>;
+}
+
+const sections: SectionConfig[] = [
+  { id: 'vision', title: 'Vision Pro', component: HeroSection },
+  { id: 'features', title: 'Features', component: FeaturesSection },
   { id: 'chat', title: 'Chat', component: ChatRoomPanel },
   { id: 'atlas', title: 'Atlas', component: AtlasPanel },
   { id: 'workflow', title: 'Workflows', component: WorkflowPanel },
