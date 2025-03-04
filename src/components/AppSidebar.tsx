@@ -17,16 +17,6 @@ interface AppSidebarProps {
   activePage?: string;
 }
 
-// Interface for SidebarLogo 
-interface SidebarLogoProps {
-  isCollapsed: boolean;
-}
-
-// Interface for UserProfile
-interface UserProfileProps {
-  isCollapsed: boolean;
-}
-
 // Simplified mock context since we can't modify the original
 const useSidebar = (): SidebarContextValue => {
   return {

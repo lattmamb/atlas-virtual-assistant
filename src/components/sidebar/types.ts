@@ -1,32 +1,60 @@
 
+import React from 'react';
+
 export interface NavItem {
+  icon?: React.ReactNode;
   title: string;
+  name: string; // Making this required
   path: string;
-  icon: React.ReactNode;
-  name: string;
-  badge?: {
-    count: number;
+  active?: boolean;
+  children?: NavItem[];
+  badge?: string | number | {
+    count: string | number;
     color: string;
-  } | string;
+  };
+  badgeColor?: string;
+  isExternal?: boolean;
   onClick?: () => void;
 }
 
-export interface SubMenuSectionProps {
-  items: NavItem[];
-  isActive: (path: string) => boolean;
-  title?: string;
-  isCollapsed?: boolean;
-  label?: string;
-  activeItem?: string;
-  onItemClick?: (path: string) => void;
+export interface SidebarSectionProps {
+  children?: React.ReactNode;
   collapsible?: boolean;
-  onNavItemClick?: (item: NavItem) => void;
+  defaultOpen?: boolean;
+  label?: string;
+  items?: NavItem[];
+  isActive?: (path: string) => boolean;
+  isCollapsed?: boolean; // Added prop
 }
 
-export interface SidebarSectionProps {
-  label?: string;
+export interface SubMenuSectionProps {
+  label: string;
   items: NavItem[];
-  isActive: (path: string) => boolean;
+  isActive?: (path: string) => boolean;
+  onItemClick?: (path: string) => void;
+  collapsible?: boolean;
+  defaultOpen?: boolean;
+  activeItem?: string;
+  onNavItemClick?: (item: NavItem) => void;
+  isCollapsed?: boolean; // Added prop
+}
+
+export interface SidebarLogoProps {
   isCollapsed?: boolean;
-  children?: React.ReactNode;
+}
+
+export interface UserProfileProps {
+  isCollapsed?: boolean;
+}
+
+export interface QuickNavProps {
+  buttons?: {
+    icon: React.ReactNode;
+    ariaLabel: string;
+  }[];
+  isCollapsed?: boolean; // Added prop
+}
+
+export interface UniverseComponentProps {
+  scrollY?: number; // Added prop
 }

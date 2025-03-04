@@ -1,60 +1,59 @@
 
-import React from 'react';
+import React, { useState } from 'react';
+import { ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import SubMenuSection from './SubMenuSection';
 import { SidebarSectionProps } from './types';
 
-const SidebarSection: React.FC<SidebarSectionProps> = ({
+interface ExtendedSidebarSectionProps extends SidebarSectionProps {
+  label: string;
+  items: any[];
+  isActive: (path: string) => boolean;
+}
+
+const SidebarSection: React.FC<ExtendedSidebarSectionProps> = ({
   label,
   items,
   isActive,
-  isCollapsed = false,
-  children
+  children,
+  collapsible = true,
+  defaultOpen = true
 }) => {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+
   return (
-    <div className="px-3 py-2">
-      {label && (
-        <h3 className={cn(
-          "mb-2 text-xs font-semibold text-sidebar-muted-foreground",
-          isCollapsed && "sr-only"
-        )}>
+    <div className="mb-3">
+      {collapsible ? (
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="flex items-center justify-between w-full text-xs font-bold uppercase tracking-wider px-3 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
+        >
           {label}
-        </h3>
-      )}
-      
-      {children ? (
-        children
+          <ChevronRight
+            className={cn(
+              "h-4 w-4 transition-transform",
+              isOpen && "rotate-90"
+            )}
+          />
+        </button>
       ) : (
-        <div className="space-y-1">
-          {items.map((item) => (
-            <button
-              key={item.path}
-              onClick={item.onClick}
-              className={cn(
-                "flex items-center w-full justify-start px-3 py-2 text-sm rounded-md",
-                isActive(item.path) 
-                  ? "bg-sidebar-accent text-sidebar-accent-foreground" 
-                  : "text-sidebar-foreground hover:bg-sidebar-accent/10"
-              )}
-            >
-              {item.icon && <span className="mr-2">{item.icon}</span>}
-              {!isCollapsed && <span>{item.title}</span>}
-              
-              {!isCollapsed && item.badge && (
-                typeof item.badge === 'string' ? (
-                  <span className="ml-auto px-1.5 py-0.5 text-xs rounded-full bg-blue-500/20 text-blue-500">
-                    {item.badge}
-                  </span>
-                ) : (
-                  <span className={cn(
-                    "ml-auto px-1.5 py-0.5 text-xs rounded-full",
-                    `bg-${item.badge.color}-500/20 text-${item.badge.color}-500`
-                  )}>
-                    {item.badge.count}
-                  </span>
-                )
-              )}
-            </button>
-          ))}
+        <div className="text-xs font-bold uppercase tracking-wider px-3 py-2 text-slate-500 dark:text-slate-400">
+          {label}
+        </div>
+      )}
+
+      {isOpen && (
+        <div className="pl-2">
+          {children ? (
+            children
+          ) : (
+            <SubMenuSection 
+              label={label}
+              items={items}
+              isActive={isActive}
+              activeItem=""
+            />
+          )}
         </div>
       )}
     </div>

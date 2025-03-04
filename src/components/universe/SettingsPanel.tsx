@@ -1,274 +1,255 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
 import { useTheme } from '@/context/ThemeContext';
-import { 
-  Settings, 
-  User, 
-  Bell, 
-  Shield, 
-  Palette, 
-  Globe,
-  Moon,
-  Sun,
-  Smartphone
-} from 'lucide-react';
-import { UniverseComponentProps } from '@/lib/types';
-import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { Settings, Moon, Sun, BellRing, Shield, Eye, Sparkles } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
+import { Slider } from '@/components/ui/slider';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-interface SettingsSectionProps {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  children: React.ReactNode;
-  delay?: number;
-}
-
-const SettingsSection: React.FC<SettingsSectionProps> = ({
-  icon,
-  title,
-  description,
-  children,
-  delay = 0
-}) => {
-  const { isDarkMode } = useTheme();
+const SettingsPanel: React.FC = () => {
+  const { isDarkMode, toggleTheme } = useTheme();
+  const [activeTab, setActiveTab] = useState("general");
   
   return (
-    <motion.div
-      className={cn(
-        "p-6 rounded-xl",
-        "backdrop-blur-md border",
-        isDarkMode ? "bg-white/5 border-white/10" : "bg-black/5 border-black/10"
-      )}
+    <motion.div 
+      className="w-full max-w-5xl mx-auto px-4"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay }}
+      transition={{ duration: 0.5 }}
     >
-      <div className="flex items-start mb-6">
-        <div className={cn(
-          "p-2 rounded-lg mr-4",
-          isDarkMode ? "bg-white/10" : "bg-black/5"
-        )}>
-          {icon}
-        </div>
-        
-        <div>
-          <h3 className="text-xl font-semibold mb-1">
-            {title}
-          </h3>
-          
-          <p className={cn(
-            "text-sm",
-            isDarkMode ? "text-white/70" : "text-black/70"
-          )}>
-            {description}
-          </p>
-        </div>
+      <div className="flex flex-col items-center text-center mb-8">
+        <motion.div
+          className="mb-4 inline-block p-3 rounded-full bg-gray-500/20 text-gray-400"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.3, type: "spring" }}
+        >
+          <Settings className="h-8 w-8" />
+        </motion.div>
+        <h1 className="text-3xl sm:text-4xl font-bold mb-4">
+          System Settings
+        </h1>
+        <p className="text-lg max-w-3xl opacity-80">
+          Customize your experience and manage your preferences.
+        </p>
       </div>
       
-      <div className="space-y-4">
-        {children}
+      <div className={cn(
+        "rounded-xl overflow-hidden",
+        "border backdrop-blur-lg",
+        isDarkMode
+          ? "bg-white/5 border-white/10"
+          : "bg-white/60 border-gray-200/50"
+      )}>
+        <Tabs defaultValue="general" value={activeTab} onValueChange={setActiveTab}>
+          <div className="p-4 border-b border-white/10">
+            <TabsList className={cn(
+              "grid grid-cols-4 w-full",
+              isDarkMode
+                ? "bg-white/5"
+                : "bg-black/5"
+            )}>
+              <TabsTrigger value="general">General</TabsTrigger>
+              <TabsTrigger value="appearance">Appearance</TabsTrigger>
+              <TabsTrigger value="privacy">Privacy</TabsTrigger>
+              <TabsTrigger value="ai">AI & Learning</TabsTrigger>
+            </TabsList>
+          </div>
+          
+          <div className="p-6">
+            <TabsContent value="general" className="space-y-6">
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium">Profile Settings</h3>
+                
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="font-medium">Notifications</div>
+                    <div className="text-sm opacity-70">Receive alerts and updates</div>
+                  </div>
+                  <Switch />
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="font-medium">Sync Across Devices</div>
+                    <div className="text-sm opacity-70">Keep settings in sync</div>
+                  </div>
+                  <Switch defaultChecked />
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="font-medium">Activity Log</div>
+                    <div className="text-sm opacity-70">Track your actions</div>
+                  </div>
+                  <Switch defaultChecked />
+                </div>
+                
+                <div className="pt-4">
+                  <h3 className="text-lg font-medium mb-2">Language Preference</h3>
+                  <select className={cn(
+                    "w-full px-3 py-2 rounded-md",
+                    "border backdrop-blur-sm",
+                    isDarkMode
+                      ? "bg-white/5 border-white/10"
+                      : "bg-white/60 border-gray-200/50"
+                  )}>
+                    <option value="en">English (US)</option>
+                    <option value="fr">French</option>
+                    <option value="es">Spanish</option>
+                    <option value="de">German</option>
+                    <option value="jp">Japanese</option>
+                  </select>
+                </div>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="appearance" className="space-y-6">
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium">Theme Settings</h3>
+                
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="font-medium">Dark Mode</div>
+                    <div className="text-sm opacity-70">Switch between light and dark themes</div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Sun className="h-4 w-4 text-yellow-400" />
+                    <Switch checked={isDarkMode} onCheckedChange={toggleTheme} />
+                    <Moon className="h-4 w-4 text-blue-400" />
+                  </div>
+                </div>
+                
+                <div>
+                  <div className="font-medium mb-2">Interface Density</div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs">Compact</span>
+                    <Slider defaultValue={[50]} max={100} step={1} className="flex-1" />
+                    <span className="text-xs">Spacious</span>
+                  </div>
+                </div>
+                
+                <div>
+                  <div className="font-medium mb-2">Animation Intensity</div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs">Minimal</span>
+                    <Slider defaultValue={[75]} max={100} step={1} className="flex-1" />
+                    <span className="text-xs">Full</span>
+                  </div>
+                </div>
+
+                <div className="pt-2">
+                  <div className="font-medium mb-2">Accent Color</div>
+                  <div className="flex gap-2">
+                    {['#3B82F6', '#8B5CF6', '#EC4899', '#10B981', '#F59E0B'].map((color) => (
+                      <button
+                        key={color}
+                        className="w-8 h-8 rounded-full border-2 border-white/30"
+                        style={{ backgroundColor: color }}
+                        aria-label={`Select ${color} as accent color`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="privacy" className="space-y-6">
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium">Privacy & Security</h3>
+                
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Shield className="h-4 w-4 text-green-400" />
+                    <div>
+                      <div className="font-medium">Enhanced Protection</div>
+                      <div className="text-sm opacity-70">Additional security features</div>
+                    </div>
+                  </div>
+                  <Switch defaultChecked />
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Eye className="h-4 w-4 text-blue-400" />
+                    <div>
+                      <div className="font-medium">Privacy Mode</div>
+                      <div className="text-sm opacity-70">Limit data collection</div>
+                    </div>
+                  </div>
+                  <Switch />
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <BellRing className="h-4 w-4 text-purple-400" />
+                    <div>
+                      <div className="font-medium">Privacy Alerts</div>
+                      <div className="text-sm opacity-70">Receive notifications about privacy concerns</div>
+                    </div>
+                  </div>
+                  <Switch defaultChecked />
+                </div>
+                
+                <div className="pt-4">
+                  <button className={cn(
+                    "px-4 py-2 rounded-lg text-sm font-medium",
+                    "bg-red-500/20 text-red-400",
+                    "hover:bg-red-500/30 transition-colors"
+                  )}>
+                    Clear All Data
+                  </button>
+                </div>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="ai" className="space-y-6">
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium">AI Preferences</h3>
+                
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="h-4 w-4 text-blue-400" />
+                    <div>
+                      <div className="font-medium">Vision AI</div>
+                      <div className="text-sm opacity-70">Enable advanced AI capabilities</div>
+                    </div>
+                  </div>
+                  <Switch defaultChecked />
+                </div>
+                
+                <div>
+                  <div className="font-medium mb-2">AI Assistance Level</div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs">Minimal</span>
+                    <Slider defaultValue={[80]} max={100} step={1} className="flex-1" />
+                    <span className="text-xs">Proactive</span>
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="font-medium">Learning from Interactions</div>
+                    <div className="text-sm opacity-70">Allow AI to improve based on your usage</div>
+                  </div>
+                  <Switch defaultChecked />
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="font-medium">Custom AI Agent Creation</div>
+                    <div className="text-sm opacity-70">Create and deploy specialized AI assistants</div>
+                  </div>
+                  <Switch defaultChecked />
+                </div>
+              </div>
+            </TabsContent>
+          </div>
+        </Tabs>
       </div>
     </motion.div>
-  );
-};
-
-interface SettingItemProps {
-  label: string;
-  description?: string;
-  children: React.ReactNode;
-}
-
-const SettingItem: React.FC<SettingItemProps> = ({ label, description, children }) => {
-  const { isDarkMode } = useTheme();
-  
-  return (
-    <div className="flex items-center justify-between py-2">
-      <div>
-        <Label htmlFor={label.toLowerCase()} className="text-base">{label}</Label>
-        {description && (
-          <p className={cn(
-            "text-xs",
-            isDarkMode ? "text-white/60" : "text-black/60"
-          )}>
-            {description}
-          </p>
-        )}
-      </div>
-      {children}
-    </div>
-  );
-};
-
-const SettingsPanel: React.FC<UniverseComponentProps> = ({ scrollY }) => {
-  const { isDarkMode, toggleTheme } = useTheme();
-  
-  return (
-    <div className="w-full py-8 px-4">
-      <motion.div
-        className="text-center mb-12"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <motion.div
-          className="inline-block mb-4"
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-        >
-          <div className={cn(
-            "p-3 rounded-full",
-            isDarkMode ? "bg-white/10" : "bg-black/5"
-          )}>
-            <Settings className="h-10 w-10 text-gray-500" />
-          </div>
-        </motion.div>
-        
-        <motion.h1
-          className="text-3xl sm:text-4xl font-bold mb-4"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
-        >
-          App{" "}
-          <span className={cn(
-            "bg-clip-text text-transparent",
-            "bg-gradient-to-r from-gray-500 to-gray-700 dark:from-gray-300 dark:to-gray-500"
-          )}>
-            Settings
-          </span>
-        </motion.h1>
-        
-        <motion.p
-          className={cn(
-            "max-w-3xl mx-auto text-lg",
-            isDarkMode ? "text-white/70" : "text-black/70"
-          )}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-        >
-          Customize your experience with personalized settings and preferences.
-        </motion.p>
-      </motion.div>
-      
-      <div className="max-w-4xl mx-auto space-y-6">
-        <SettingsSection
-          icon={<Palette className="h-6 w-6 text-blue-500" />}
-          title="Appearance"
-          description="Customize the look and feel of the application"
-          delay={0.2}
-        >
-          <SettingItem 
-            label="Dark Mode" 
-            description="Toggle between light and dark theme"
-          >
-            <Switch 
-              id="dark-mode"
-              checked={isDarkMode}
-              onCheckedChange={toggleTheme}
-              className="data-[state=checked]:bg-blue-500"
-            />
-          </SettingItem>
-          
-          <SettingItem 
-            label="High Contrast" 
-            description="Increase contrast for better visibility"
-          >
-            <Switch id="high-contrast" />
-          </SettingItem>
-          
-          <SettingItem 
-            label="Animation Effects" 
-            description="Enable or disable UI animations"
-          >
-            <Switch id="animations" defaultChecked />
-          </SettingItem>
-        </SettingsSection>
-        
-        <SettingsSection
-          icon={<Bell className="h-6 w-6 text-purple-500" />}
-          title="Notifications"
-          description="Manage how and when you receive alerts"
-          delay={0.3}
-        >
-          <SettingItem 
-            label="Push Notifications" 
-            description="Receive alerts even when the app is closed"
-          >
-            <Switch id="push-notifications" defaultChecked />
-          </SettingItem>
-          
-          <SettingItem 
-            label="Email Notifications" 
-            description="Get important updates via email"
-          >
-            <Switch id="email-notifications" />
-          </SettingItem>
-          
-          <SettingItem 
-            label="Sound Effects" 
-            description="Play sounds for notifications"
-          >
-            <Switch id="sound-effects" />
-          </SettingItem>
-        </SettingsSection>
-        
-        <SettingsSection
-          icon={<Shield className="h-6 w-6 text-green-500" />}
-          title="Privacy & Security"
-          description="Control your data and security preferences"
-          delay={0.4}
-        >
-          <SettingItem 
-            label="Two-Factor Authentication" 
-            description="Add an extra layer of security"
-          >
-            <Switch id="two-factor" />
-          </SettingItem>
-          
-          <SettingItem 
-            label="Data Collection" 
-            description="Allow anonymous usage data to improve the app"
-          >
-            <Switch id="data-collection" defaultChecked />
-          </SettingItem>
-          
-          <SettingItem 
-            label="Activity History" 
-            description="Store your activity history"
-          >
-            <Switch id="activity-history" defaultChecked />
-          </SettingItem>
-        </SettingsSection>
-        
-        <motion.div
-          className="flex justify-center mt-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8, duration: 0.5 }}
-        >
-          <Button
-            className={cn(
-              "px-6 py-2 rounded-full",
-              "bg-gradient-to-r from-gray-500 to-gray-700 dark:from-gray-700 dark:to-gray-600",
-              "text-white",
-              "shadow-lg hover:shadow-xl shadow-gray-500/20",
-              "border border-white/10",
-              "transition-all duration-300"
-            )}
-            size="lg"
-          >
-            <Settings className="mr-2 h-4 w-4" />
-            Save Settings
-          </Button>
-        </motion.div>
-      </div>
-    </div>
   );
 };
 

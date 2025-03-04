@@ -1,36 +1,22 @@
 
 import React from 'react';
-import { cn } from '@/lib/utils';
-import { User, Settings } from 'lucide-react';
+import { User } from 'lucide-react';
+import { SidebarCollapseToggle } from '@/components/ui/sidebar';
 
-interface UserProfileProps {
-  isCollapsed: boolean;
-}
-
-const UserProfile: React.FC<UserProfileProps> = ({ isCollapsed }) => {
+const UserProfile: React.FC = () => {
   return (
-    <div className="border-t border-sidebar-border p-3">
-      <div className={cn(
-        "flex items-center p-2 rounded-md hover:bg-sidebar-accent/10 cursor-pointer",
-        "transition-colors duration-200"
-      )}>
-        <div className="h-8 w-8 rounded-full bg-sidebar-accent/20 flex items-center justify-center text-sidebar-foreground">
+    <div className="flex justify-between items-center px-2 py-2">
+      <div className="flex items-center gap-2 px-2">
+        <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-blue-500 to-blue-600 text-white flex items-center justify-center">
           <User className="h-4 w-4" />
         </div>
-        
-        {!isCollapsed && (
-          <>
-            <div className="ml-3 flex-grow">
-              <p className="text-sm font-medium text-sidebar-foreground">User</p>
-              <p className="text-xs text-sidebar-muted-foreground">user@example.com</p>
-            </div>
-            
-            <button className="h-8 w-8 rounded-full flex items-center justify-center hover:bg-sidebar-accent/20 text-sidebar-muted-foreground">
-              <Settings className="h-4 w-4" />
-            </button>
-          </>
-        )}
+        <div className="flex flex-col">
+          <span className="text-sm font-medium">Trinity Dodge</span>
+          <span className="text-xs text-muted-foreground">Taylorville, IL</span>
+        </div>
       </div>
+      
+      <SidebarCollapseToggle className="text-muted-foreground" />
     </div>
   );
 };

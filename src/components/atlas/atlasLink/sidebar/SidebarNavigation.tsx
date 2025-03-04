@@ -23,10 +23,7 @@ const getPrimaryItems = (): NavItem[] => [
     title: "Chat",
     name: "Chat",
     path: "chat",
-    badge: {
-      count: 2,
-      color: "blue"
-    }
+    badge: "New"
   },
   {
     icon: "📊",
@@ -68,7 +65,7 @@ const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
       )}
     >
       <SubMenuSection
-        title="Main Navigation"
+        label="Main Navigation"
         items={primaryItems}
         isActive={(path) => activePage === path}
         onItemClick={onPageChange}
@@ -78,7 +75,7 @@ const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
       
       <div className="mt-auto pt-4">
         <SubMenuSection
-          title="Settings"
+          label="Settings"
           items={settingsItems}
           isActive={(path) => activePage === path}
           onItemClick={onPageChange}
