@@ -1,7 +1,9 @@
 
-import { useState } from "react";
-import { Home, Settings, Bell, User } from "lucide-react";
-import { MenuBar } from "@/components/ui/glow-menu";
+"use client"
+
+import { useState } from "react"
+import { Home, Settings, Bell, User } from "lucide-react"
+import { MenuBar } from "@/components/ui/glow-menu"
 
 const menuItems = [
   {
@@ -36,10 +38,10 @@ const menuItems = [
       "radial-gradient(circle, rgba(239,68,68,0.15) 0%, rgba(220,38,38,0.06) 50%, rgba(185,28,28,0) 100%)",
     iconColor: "text-red-500",
   },
-];
+]
 
-export function GlowMenuDemo() {
-  const [activeItem, setActiveItem] = useState<string>("Home");
+export function MenuBarDemo() {
+  const [activeItem, setActiveItem] = useState<string>("Home")
 
   return (
     <MenuBar
@@ -47,5 +49,5 @@ export function GlowMenuDemo() {
       activeItem={activeItem}
       onItemClick={setActiveItem}
     />
-  );
+  )
 }
