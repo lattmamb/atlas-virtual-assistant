@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { NavItem } from './types';
-import { Home, MessageSquare, Settings, Sparkles } from 'lucide-react';
+import { Home, MessageSquare, Settings, Sparkles, Shield, Workflow } from 'lucide-react';
 
 export const navigationItems: NavItem[] = [
   {
@@ -19,6 +19,18 @@ export const navigationItems: NavItem[] = [
       count: 2,
       color: 'blue',
     },
+  },
+  {
+    name: 'atlas',
+    title: 'Atlas',
+    icon: React.createElement(Shield, { size: 20 }),
+    path: '/atlas',
+  },
+  {
+    name: 'workflows',
+    title: 'Workflows',
+    icon: React.createElement(Workflow, { size: 20 }),
+    path: '/workflows',
   },
   {
     name: 'settings',

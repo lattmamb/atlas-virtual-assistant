@@ -1,164 +1,257 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useTheme } from '@/context/ThemeContext';
 import { cn } from '@/lib/utils';
-import { Workflow, ArrowRight, Layers, ChevronRight, Plus } from 'lucide-react';
+import { useTheme } from '@/context/ThemeContext';
+import { 
+  Workflow, 
+  ArrowRight, 
+  MessageSquare, 
+  Mail, 
+  Calendar, 
+  FileText, 
+  BellRing, 
+  CheckCircle 
+} from 'lucide-react';
+import { UniverseComponentProps } from '@/lib/types';
+import { Button } from '@/components/ui/button';
 
-const WorkflowPanel: React.FC = () => {
+interface WorkflowCardProps {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  steps: string[];
+  color: string;
+  delay?: number;
+}
+
+const WorkflowCard: React.FC<WorkflowCardProps> = ({
+  icon,
+  title,
+  description,
+  steps,
+  color,
+  delay = 0
+}) => {
   const { isDarkMode } = useTheme();
   
   return (
-    <motion.div 
-      className="w-full max-w-6xl mx-auto px-4"
+    <motion.div
+      className={cn(
+        "p-6 rounded-xl relative overflow-hidden",
+        "backdrop-blur-md border",
+        isDarkMode ? "bg-white/5 border-white/10" : "bg-black/5 border-black/10"
+      )}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.5, delay }}
+      whileHover={{ y: -5, transition: { duration: 0.2 } }}
     >
-      <div className="flex flex-col items-center text-center mb-8">
-        <motion.div
-          className="mb-4 inline-block p-3 rounded-full bg-purple-500/20 text-purple-400"
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.3, type: "spring" }}
-        >
-          <Workflow className="h-8 w-8" />
-        </motion.div>
-        <h1 className="text-3xl sm:text-4xl font-bold mb-4">
-          Workflow Automation
-        </h1>
-        <p className="text-lg max-w-3xl opacity-80 mb-8">
-          Create powerful automated workflows to streamline your tasks and enhance productivity.
-        </p>
-      </div>
+      <div className={cn(
+        "absolute top-0 left-0 w-full h-1",
+        `bg-${color}-500/50`
+      )} />
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold mb-4 flex items-center">
-            <Layers className="h-5 w-5 mr-2 text-purple-400" />
-            Active Workflows
-          </h2>
-          
-          {workflows.map((workflow, index) => (
-            <motion.div
-              key={workflow.name}
-              className={cn(
-                "p-4 rounded-xl cursor-pointer",
-                "border backdrop-blur-lg",
-                isDarkMode
-                  ? "bg-white/5 border-white/10 hover:bg-white/10"
-                  : "bg-white/60 border-gray-200/50 hover:bg-white/80",
-                "transition-all duration-200"
-              )}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 + index * 0.1, duration: 0.5 }}
-              whileHover={{ x: 5 }}
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-medium">{workflow.name}</div>
-                  <div className="text-sm opacity-70 mt-1">{workflow.description}</div>
-                </div>
-                <div className={cn(
-                  "w-12 h-6 rounded-full relative cursor-pointer",
-                  workflow.active 
-                    ? "bg-green-500" 
-                    : isDarkMode ? "bg-gray-700" : "bg-gray-300"
-                )}>
-                  <div className={cn(
-                    "absolute w-5 h-5 rounded-full bg-white top-0.5 transition-all duration-300",
-                    workflow.active ? "left-6" : "left-0.5"
-                  )} />
-                </div>
-              </div>
-              
-              <div className="flex mt-3 gap-2">
-                {workflow.tags.map(tag => (
-                  <div key={tag} className={cn(
-                    "text-xs px-2 py-0.5 rounded-full",
-                    "bg-purple-500/20 text-purple-400"
-                  )}>
-                    {tag}
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          ))}
+      <div className="flex items-start mb-4">
+        <div className={cn(
+          "p-2 rounded-lg mr-3",
+          isDarkMode ? "bg-white/10" : "bg-black/5"
+        )}>
+          {icon}
         </div>
         
-        <div className={cn(
-          "rounded-xl overflow-hidden",
-          "border backdrop-blur-lg",
-          isDarkMode
-            ? "bg-white/5 border-white/10"
-            : "bg-white/60 border-gray-200/50"
-        )}>
-          <div className="p-4 border-b border-white/10 flex justify-between items-center">
-            <h3 className="font-semibold">Workflow Editor</h3>
-            <button className={cn(
-              "px-3 py-1 rounded-md text-xs font-medium",
-              "flex items-center gap-1",
-              "bg-purple-500/20 text-purple-400"
-            )}>
-              <Plus className="h-3 w-3" />
-              New
-            </button>
-          </div>
+        <div>
+          <h3 className="text-lg font-semibold">
+            {title}
+          </h3>
           
-          <div className="p-6 flex flex-col items-center justify-center min-h-[300px]">
-            <div className="flex flex-col items-center">
-              <div className={cn(
-                "w-16 h-16 rounded-xl mb-4 flex items-center justify-center",
-                "bg-purple-500/20"
-              )}>
-                <Workflow className="h-8 w-8 text-purple-400" />
-              </div>
-              <p className="text-center text-sm opacity-70 max-w-xs">
-                Build powerful automated workflows by connecting triggers, actions, and conditions in our visual editor.
-              </p>
-              
-              <button className={cn(
-                "mt-6 px-4 py-2 rounded-lg",
-                "bg-purple-500 text-white",
-                "flex items-center gap-2"
-              )}>
-                Create Workflow
-                <ArrowRight className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
+          <p className={cn(
+            "text-sm",
+            isDarkMode ? "text-white/70" : "text-black/70"
+          )}>
+            {description}
+          </p>
         </div>
+      </div>
+      
+      <div className={cn(
+        "my-4 p-3 rounded-lg",
+        isDarkMode ? "bg-white/5" : "bg-black/5"
+      )}>
+        <h4 className="text-sm font-medium mb-2">Workflow Steps:</h4>
+        <div className="space-y-2">
+          {steps.map((step, index) => (
+            <div key={index} className="flex items-center">
+              <div className={cn(
+                "w-5 h-5 rounded-full flex items-center justify-center text-xs mr-2",
+                `bg-${color}-500/20 text-${color}-500`
+              )}>
+                {index + 1}
+              </div>
+              <span className="text-sm">{step}</span>
+              {index < steps.length - 1 && (
+                <ArrowRight className="w-3 h-3 mx-2 opacity-50" />
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      <div className="flex justify-end">
+        <Button 
+          variant="ghost" 
+          size="sm"
+          className={cn(
+            "text-xs",
+            `text-${color}-500 hover:text-${color}-400`
+          )}
+        >
+          Edit Workflow <ArrowRight className="ml-1 h-3 w-3" />
+        </Button>
       </div>
     </motion.div>
   );
 };
 
-const workflows = [
-  {
-    name: "Morning Briefing",
-    description: "Sends daily weather, news, and schedule at 7AM",
-    active: true,
-    tags: ["Daily", "Notification"]
-  },
-  {
-    name: "Social Media Auto-Post",
-    description: "Creates and posts content across platforms",
-    active: true,
-    tags: ["Social", "Content"]
-  },
-  {
-    name: "Customer Support AI",
-    description: "Handles initial customer inquiries via email",
-    active: false,
-    tags: ["Business", "AI"]
-  },
-  {
-    name: "Fleet Status Monitor",
-    description: "Tracks vehicle location and maintenance needs",
-    active: true,
-    tags: ["Mobility", "Monitoring"]
-  }
-];
+const WorkflowPanel: React.FC<UniverseComponentProps> = ({ scrollY }) => {
+  const { isDarkMode } = useTheme();
+  
+  const workflows = [
+    {
+      icon: <MessageSquare className="h-5 w-5 text-blue-500" />,
+      title: "Chat Response Automation",
+      description: "Automatically respond to chat messages based on predefined triggers",
+      steps: ["New message received", "Analyze content", "Generate response", "Send reply"],
+      color: "blue"
+    },
+    {
+      icon: <Mail className="h-5 w-5 text-purple-500" />,
+      title: "Email Processing",
+      description: "Filter, categorize and respond to emails automatically",
+      steps: ["Email received", "Extract content", "Categorize", "Take action"],
+      color: "purple"
+    },
+    {
+      icon: <Calendar className="h-5 w-5 text-green-500" />,
+      title: "Schedule Management",
+      description: "Create calendar events from various sources",
+      steps: ["Event request", "Check availability", "Create event", "Send invites"],
+      color: "green"
+    },
+    {
+      icon: <FileText className="h-5 w-5 text-amber-500" />,
+      title: "Document Processing",
+      description: "Extract data from documents and generate reports",
+      steps: ["Upload document", "Extract data", "Process information", "Generate report"],
+      color: "amber"
+    },
+    {
+      icon: <BellRing className="h-5 w-5 text-red-500" />,
+      title: "Alert Notifications",
+      description: "Send notifications based on defined triggers and conditions",
+      steps: ["Event trigger", "Check conditions", "Format notification", "Send alert"],
+      color: "red"
+    },
+    {
+      icon: <CheckCircle className="h-5 w-5 text-cyan-500" />,
+      title: "Task Automation",
+      description: "Create and assign tasks based on various events",
+      steps: ["Trigger event", "Generate task", "Assign to user", "Set deadline"],
+      color: "cyan"
+    }
+  ];
+  
+  return (
+    <div className="w-full py-8 px-4">
+      <motion.div
+        className="text-center mb-12"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <motion.div
+          className="inline-block mb-4"
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        >
+          <div className={cn(
+            "p-3 rounded-full",
+            isDarkMode ? "bg-white/10" : "bg-black/5"
+          )}>
+            <Workflow className="h-10 w-10 text-purple-500" />
+          </div>
+        </motion.div>
+        
+        <motion.h1
+          className="text-3xl sm:text-4xl font-bold mb-4"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+        >
+          Powerful{" "}
+          <span className={cn(
+            "bg-clip-text text-transparent",
+            "bg-gradient-to-r from-purple-500 to-blue-500"
+          )}>
+            Workflow Automation
+          </span>
+        </motion.h1>
+        
+        <motion.p
+          className={cn(
+            "max-w-3xl mx-auto text-lg",
+            isDarkMode ? "text-white/70" : "text-black/70"
+          )}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.5 }}
+        >
+          Automate tasks and streamline your processes with our intuitive workflow builder. Connect apps, trigger actions, and let automation handle the repetitive tasks.
+        </motion.p>
+      </motion.div>
+      
+      <motion.div
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5, duration: 0.5 }}
+      >
+        {workflows.map((workflow, index) => (
+          <WorkflowCard 
+            key={workflow.title}
+            icon={workflow.icon}
+            title={workflow.title}
+            description={workflow.description}
+            steps={workflow.steps}
+            color={workflow.color}
+            delay={0.2 + index * 0.1}
+          />
+        ))}
+      </motion.div>
+      
+      <motion.div
+        className="flex justify-center"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.8, duration: 0.5 }}
+      >
+        <Button
+          className={cn(
+            "px-6 py-6 rounded-full text-white font-medium",
+            "bg-gradient-to-r from-purple-500 to-blue-500",
+            "border border-white/10",
+            "shadow-lg hover:shadow-xl hover:shadow-purple-500/20",
+            "transition-all duration-300 transform hover:-translate-y-1"
+          )}
+          size="lg"
+        >
+          <Workflow className="mr-2 h-5 w-5" />
+          Create New Workflow
+        </Button>
+      </motion.div>
+    </div>
+  );
+};
 
 export default WorkflowPanel;
