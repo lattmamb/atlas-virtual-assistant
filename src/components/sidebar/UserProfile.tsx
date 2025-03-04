@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { User, MapPin } from 'lucide-react';
+import { User, MapPin, Car } from 'lucide-react';
 import { SidebarCollapseToggle } from '@/components/ui/sidebar';
 import { motion } from 'framer-motion';
 
@@ -17,7 +17,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ isCollapsed }) => {
           whileHover={{ scale: 1.1 }}
           transition={{ type: "spring", stiffness: 400, damping: 10 }}
         >
-          <User className="h-4 w-4" />
+          <Car className="h-4 w-4" />
         </motion.div>
         {!isCollapsed && (
           <div className="flex flex-col">

@@ -5,6 +5,7 @@ import { useTheme } from '@/context/ThemeContext';
 import { cn } from '@/lib/utils';
 import { Apple, Settings, MessageSquare, Workflow, Sparkles, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 interface UniverseNavBarProps {
   currentSection: string;
@@ -14,12 +15,12 @@ const UniverseNavBar: React.FC<UniverseNavBarProps> = ({ currentSection }) => {
   const { isDarkMode, toggleTheme } = useTheme();
   
   const navItems = [
-    { id: 'vision', label: 'Vision Pro', icon: <Apple className="h-4 w-4" /> },
-    { id: 'features', label: 'Features', icon: <Sparkles className="h-4 w-4" /> },
-    { id: 'chat', label: 'Chat', icon: <MessageSquare className="h-4 w-4" /> },
-    { id: 'atlas', label: 'Atlas', icon: <Sparkles className="h-4 w-4" /> },
-    { id: 'workflow', label: 'Workflows', icon: <Workflow className="h-4 w-4" /> },
-    { id: 'settings', label: 'Settings', icon: <Settings className="h-4 w-4" /> },
+    { id: 'vision', label: 'Vision Pro', icon: <Apple className="h-4 w-4" />, path: '/' },
+    { id: 'features', label: 'Features', icon: <Sparkles className="h-4 w-4" />, path: '/features' },
+    { id: 'chat', label: 'Chat', icon: <MessageSquare className="h-4 w-4" />, path: '/chat' },
+    { id: 'atlas', label: 'Atlas', icon: <Sparkles className="h-4 w-4" />, path: '/atlas' },
+    { id: 'workflow', label: 'Workflows', icon: <Workflow className="h-4 w-4" />, path: '/workflows' },
+    { id: 'settings', label: 'Settings', icon: <Settings className="h-4 w-4" />, path: '/settings' },
   ];
   
   return (
@@ -47,24 +48,25 @@ const UniverseNavBar: React.FC<UniverseNavBarProps> = ({ currentSection }) => {
         
         <div className="hidden md:flex items-center space-x-4">
           {navItems.map((item) => (
-            <Button
-              key={item.id}
-              variant="ghost"
-              size="sm"
-              className={cn(
-                "flex items-center gap-1.5",
-                currentSection === item.id ? "bg-white/10 text-white" : "text-white/70"
-              )}
-            >
-              {item.icon}
-              <span>{item.label}</span>
-              {currentSection === item.id && (
-                <motion.div
-                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500"
-                  layoutId="activeSection"
-                />
-              )}
-            </Button>
+            <Link key={item.id} to={item.path}>
+              <Button
+                variant="ghost"
+                size="sm"
+                className={cn(
+                  "flex items-center gap-1.5 relative",
+                  currentSection === item.id ? "bg-white/10 text-white" : "text-white/70"
+                )}
+              >
+                {item.icon}
+                <span>{item.label}</span>
+                {currentSection === item.id && (
+                  <motion.div
+                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500"
+                    layoutId="activeSection"
+                  />
+                )}
+              </Button>
+            </Link>
           ))}
         </div>
         

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Sparkles, Cloud } from 'lucide-react';
+import { Sparkles, Car } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { SidebarHeaderTitle } from '@/components/ui/sidebar';
 
@@ -16,7 +16,7 @@ const SidebarLogo: React.FC<{ isCollapsed?: boolean }> = ({ isCollapsed }) => {
             transition: { duration: 0.5 }
           }}
         >
-          <Cloud className="h-3.5 w-3.5" />
+          <Car className="h-3.5 w-3.5" />
           <motion.div
             className="absolute -right-1 -bottom-1 h-3 w-3 flex items-center justify-center rounded-full bg-amber-400"
             initial={{ scale: 0, opacity: 0 }}
@@ -27,7 +27,7 @@ const SidebarLogo: React.FC<{ isCollapsed?: boolean }> = ({ isCollapsed }) => {
           </motion.div>
         </motion.div>
       </div>
-      {!isCollapsed && <span className="text-lg font-medium">Atlas Assistant</span>}
+      {!isCollapsed && <span className="text-lg font-medium">Trinity Dodge</span>}
     </SidebarHeaderTitle>
   );
 };

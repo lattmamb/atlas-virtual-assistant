@@ -21,16 +21,16 @@ export const navigationItems: NavItem[] = [
     },
   },
   {
-    name: 'settings',
-    title: 'Settings',
-    icon: React.createElement(Settings),
-    path: '/settings',
-  },
-  {
     name: 'features',
     title: 'Features',
     icon: React.createElement(Sparkles),
     path: '/features',
+  },
+  {
+    name: 'settings',
+    title: 'Settings',
+    icon: React.createElement(Settings),
+    path: '/settings',
   },
   {
     name: 'atlas',

@@ -11,6 +11,7 @@ import Atlas from "./pages/Atlas";
 import AtlasLink from "./pages/AtlasLink";
 import ChatRoom from "./pages/ChatRoom";
 import Workflows from "./pages/Workflows";
+import Features from "./pages/Features";
 import { Toaster } from "./components/ui/sonner";
 import LoadingScreen from "./components/ui/LoadingScreen";
 import { AnimatePresence } from "framer-motion";
@@ -31,6 +32,7 @@ function App() {
     { id: "atlas-link", title: "Atlas Link", url: "/atlas-link" },
     { id: "chat", title: "Chat Room", url: "/chat" },
     { id: "workflows", title: "Workflows", url: "/workflows" },
+    { id: "features", title: "Features", url: "/features" },
     { id: "settings", title: "Settings", url: "/settings" },
   ];
 
@@ -46,6 +48,7 @@ function App() {
             <Route path="/atlas-link" element={<AtlasLink />} />
             <Route path="/chat" element={<ChatRoom />} />
             <Route path="/workflows" element={<Workflows />} />
+            <Route path="/features" element={<Features />} />
             <Route path="/applevisionpro" element={<Navigate to="/" replace />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

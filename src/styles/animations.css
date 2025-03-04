@@ -1,86 +1,33 @@
 
-@keyframes fade-in {
+@keyframes shimmer {
+  from {
+    backgroundPosition: 0 0;
+  }
+  to {
+    backgroundPosition: -200% 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s linear infinite;
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(0.5rem);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
 .animate-fade-in {
-  animation: fade-in 0.2s ease-out forwards;
+  animation: fadeIn 0.5s ease-out forwards;
 }
 
-@keyframes slide-in-left {
-  from {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-.animate-slide-in-left {
-  animation: slide-in-left 0.3s ease-out forwards;
-}
-
-@keyframes slide-in-right {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-.animate-slide-in-right {
-  animation: slide-in-right 0.3s ease-out forwards;
-}
-
-/* Loading dots animation */
-.loading-dots {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-}
-
-.loading-dots .dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: var(--primary);
-  animation: dot-pulse 1.5s infinite ease-in-out;
-}
-
-.loading-dots .dot:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.loading-dots .dot:nth-child(3) {
-  animation-delay: 0.4s;
-}
-
-@keyframes dot-pulse {
-  0%, 100% {
-    transform: scale(0.8);
-    opacity: 0.5;
-  }
-  50% {
-    transform: scale(1.2);
-    opacity: 1;
-  }
-}
-
-/* Sidebar transition animations */
-@keyframes sidebar-slide-in {
+/* Slide in animation */
+@keyframes slideIn {
   from {
     transform: translateX(-100%);
   }
@@ -89,191 +36,6 @@
   }
 }
 
-.sidebar-enter {
-  animation: sidebar-slide-in 0.3s ease-out forwards;
-}
-
-@keyframes sidebar-slide-out {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-100%);
-  }
-}
-
-.sidebar-exit {
-  animation: sidebar-slide-out 0.3s ease-out forwards;
-}
-
-/* Gemini-style scroll animations */
-@keyframes gemini-wave {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-15px);
-  }
-}
-
-.animate-gemini-wave {
-  animation: gemini-wave 8s ease-in-out infinite;
-}
-
-/* Gooey text animations */
-@keyframes gooey-morph {
-  0% {
-    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
-  }
-  34% {
-    border-radius: 70% 30% 50% 50% / 30% 30% 70% 70%;
-  }
-  67% {
-    border-radius: 40% 60% 30% 70% / 60% 30% 70% 40%;
-  }
-  100% {
-    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
-  }
-}
-
-.animate-gooey {
-  animation: gooey-morph 8s ease-in-out infinite;
-}
-
-/* Lamp effect animation */
-@keyframes lamp-glow {
-  0%, 100% {
-    opacity: 0.7;
-    filter: blur(20px) brightness(1.05);
-  }
-  50% {
-    opacity: 1;
-    filter: blur(25px) brightness(1.2);
-  }
-}
-
-.animate-lamp-glow {
-  animation: lamp-glow 5s ease-in-out infinite;
-}
-
-/* Star border animation */
-@keyframes spin-slow {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.animate-spin-slow {
-  animation: spin-slow 6s linear infinite;
-}
-
-@keyframes expand {
-  0% {
-    transform: scale(0.9);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.animate-expand {
-  animation: expand 0.3s ease-out forwards;
-}
-
-/* Rainbow gradient animation */
-@keyframes gradient-x {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-.animate-gradient-x {
-  animation: gradient-x 15s ease infinite;
-  background-size: 200% 200%;
-}
-
-/* PIP Widget Animations */
-@keyframes pip-enter {
-  from {
-    opacity: 0;
-    transform: translateY(20px) scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.pip-enter {
-  animation: pip-enter 0.3s cubic-bezier(0.17, 0.67, 0.83, 0.67) forwards;
-}
-
-@keyframes pip-exit {
-  from {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(20px) scale(0.9);
-  }
-}
-
-.pip-exit {
-  animation: pip-exit 0.2s ease-in forwards;
-}
-
-@keyframes pip-hover {
-  0% {
-    box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.3);
-  }
-  100% {
-    box-shadow: 0 15px 40px -15px rgba(0, 0, 0, 0.4);
-  }
-}
-
-.pip-hover {
-  animation: pip-hover 0.3s ease-out forwards;
-}
-
-/* Animations for widget transitions */
-@keyframes widget-size-change {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-.widget-size-change {
-  animation: widget-size-change 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-
-/* Subtle pulse animation for widget buttons */
-@keyframes subtle-pulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.08);
-  }
-}
-
-.animate-subtle-pulse {
-  animation: subtle-pulse 2s ease-in-out infinite;
+.animate-slide-in {
+  animation: slideIn 0.5s ease-out forwards;
 }
