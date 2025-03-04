@@ -1,112 +1,70 @@
 
-import { useEffect, useState } from 'react';
+import { useRef } from 'react';
 
-interface SwipeHandlers {
+interface SwipeableOptions {
   onSwipedLeft?: () => void;
   onSwipedRight?: () => void;
   onSwipedUp?: () => void;
   onSwipedDown?: () => void;
+  threshold?: number;
 }
 
-interface SwipeableResult {
-  onTouchStart: (e: React.TouchEvent) => void;
-  onTouchMove: (e: React.TouchEvent) => void;
-  onTouchEnd: () => void;
-  onMouseDown: (e: React.MouseEvent) => void;
-  onMouseMove: (e: React.MouseEvent) => void;
-  onMouseUp: () => void;
-}
-
-export const useSwipeable = (handlers: SwipeHandlers): SwipeableResult => {
-  const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
-  const [touchEnd, setTouchEnd] = useState<{ x: number; y: number } | null>(null);
-  const [mouseDown, setMouseDown] = useState(false);
-
-  // Minimum distance in pixels to be considered a swipe
-  const minSwipeDistance = 50;
-
-  const onTouchStart = (e: React.TouchEvent) => {
-    setTouchEnd(null);
-    setTouchStart({
-      x: e.targetTouches[0].clientX,
-      y: e.targetTouches[0].clientY
-    });
-  };
-
-  const onTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd({
-      x: e.targetTouches[0].clientX,
-      y: e.targetTouches[0].clientY
-    });
-  };
-
-  const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
+export function useSwipeable({
+  onSwipedLeft,
+  onSwipedRight,
+  onSwipedUp,
+  onSwipedDown,
+  threshold = 50
+}: SwipeableOptions) {
+  const touchStart = useRef<[number, number] | null>(null);
+  
+  const handlers = {
+    onTouchStart: (e: React.TouchEvent) => {
+      const touch = e.touches[0];
+      touchStart.current = [touch.clientX, touch.clientY];
+    },
     
-    const distanceX = touchStart.x - touchEnd.x;
-    const distanceY = touchStart.y - touchEnd.y;
-    const isHorizontalSwipe = Math.abs(distanceX) > Math.abs(distanceY);
+    onTouchMove: (e: React.TouchEvent) => {
+      if (!touchStart.current) return;
+      
+      const touch = e.touches[0];
+      const [startX, startY] = touchStart.current;
+      const deltaX = touch.clientX - startX;
+      const deltaY = touch.clientY - startY;
+      
+      // Prevent scrolling when swiping horizontally
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        e.preventDefault();
+      }
+    },
     
-    if (isHorizontalSwipe) {
-      if (Math.abs(distanceX) > minSwipeDistance) {
-        if (distanceX > 0) {
-          handlers.onSwipedLeft?.();
-        } else {
-          handlers.onSwipedRight?.();
+    onTouchEnd: (e: React.TouchEvent) => {
+      if (!touchStart.current) return;
+      
+      const touch = e.changedTouches[0];
+      const [startX, startY] = touchStart.current;
+      const deltaX = touch.clientX - startX;
+      const deltaY = touch.clientY - startY;
+      
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        // Horizontal swipe
+        if (deltaX > threshold) {
+          onSwipedRight?.();
+        } else if (deltaX < -threshold) {
+          onSwipedLeft?.();
+        }
+      } else {
+        // Vertical swipe
+        if (deltaY > threshold) {
+          onSwipedDown?.();
+        } else if (deltaY < -threshold) {
+          onSwipedUp?.();
         }
       }
-    } else {
-      if (Math.abs(distanceY) > minSwipeDistance) {
-        if (distanceY > 0) {
-          handlers.onSwipedUp?.();
-        } else {
-          handlers.onSwipedDown?.();
-        }
-      }
+      
+      touchStart.current = null;
     }
   };
-
-  const onMouseDown = (e: React.MouseEvent) => {
-    setMouseDown(true);
-    setTouchEnd(null);
-    setTouchStart({
-      x: e.clientX,
-      y: e.clientY
-    });
-  };
-
-  const onMouseMove = (e: React.MouseEvent) => {
-    if (!mouseDown) return;
-    setTouchEnd({
-      x: e.clientX,
-      y: e.clientY
-    });
-  };
-
-  const onMouseUp = () => {
-    setMouseDown(false);
-    onTouchEnd();
-  };
-
-  // Clean up event listeners if component unmounts while mouse is down
-  useEffect(() => {
-    const handleGlobalMouseUp = () => {
-      setMouseDown(false);
-    };
-
-    window.addEventListener('mouseup', handleGlobalMouseUp);
-    
-    return () => {
-      window.removeEventListener('mouseup', handleGlobalMouseUp);
-    };
-  }, []);
-
-  return {
-    onTouchStart,
-    onTouchMove,
-    onTouchEnd,
-    onMouseDown,
-    onMouseMove,
-    onMouseUp
-  };
-};
+  
+  return handlers;
+}
