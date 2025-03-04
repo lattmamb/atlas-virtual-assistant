@@ -12,6 +12,7 @@ import BackgroundEffects from "@/components/widgets/BackgroundEffects";
 import { SparklesCore } from "@/components/ui/sparkles";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
+import { TabsDemo } from "@/components/ui/tabs-demo";
 
 const Features = () => {
   const isMobile = useIsMobile();
@@ -67,7 +68,7 @@ const Features = () => {
               showAppGridButton={false}
             />
             
-            <div className="relative z-10 mt-4 mb-8 pt-10">
+            <div className="relative z-10 mt-4 mb-8 pt-4">
               <HeaderSection 
                 isDarkMode={isDarkMode}
                 setShowAppGrid={() => {}}
@@ -82,6 +83,7 @@ const Features = () => {
                 className="flex-1 overflow-y-auto"
               >
                 <div className="animate-fade-in p-4">
+                  <TabsDemo />
                   <TailwindcssButtons />
                 </div>
               </motion.div>
