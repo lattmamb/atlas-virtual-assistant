@@ -7,13 +7,13 @@ export const navigationItems: NavItem[] = [
   {
     name: 'home',
     title: 'Home',
-    icon: React.createElement(Home),
+    icon: React.createElement(Home, { size: 20 }),
     path: '/',
   },
   {
     name: 'chat',
     title: 'Chat',
-    icon: React.createElement(MessageSquare),
+    icon: React.createElement(MessageSquare, { size: 20 }),
     path: '/chat',
     badge: {
       count: 2,
@@ -23,13 +23,13 @@ export const navigationItems: NavItem[] = [
   {
     name: 'settings',
     title: 'Settings',
-    icon: React.createElement(Settings),
+    icon: React.createElement(Settings, { size: 20 }),
     path: '/settings',
   },
   {
     name: 'features',
     title: 'Features',
-    icon: React.createElement(Sparkles),
+    icon: React.createElement(Sparkles, { size: 20 }),
     path: '/features',
   },
 ];

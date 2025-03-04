@@ -1,91 +1,83 @@
 
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '@/context/ThemeContext';
-import { SparklesCore } from '@/components/ui/sparkles';
+import { cn } from '@/lib/utils';
+import { UniverseComponentProps } from '@/lib/types';
 
-interface ARBackgroundProps {
-  scrollY: number;
-}
-
-const ARBackground: React.FC<ARBackgroundProps> = ({ scrollY }) => {
+const ARBackground: React.FC<UniverseComponentProps> = ({ scrollY }) => {
   const { isDarkMode } = useTheme();
-  const particlesRef = useRef<HTMLDivElement>(null);
   
-  // Apply subtle parallax effect to particles based on scroll
-  useEffect(() => {
-    if (particlesRef.current) {
-      const speed = 0.2;
-      particlesRef.current.style.transform = `translateY(${scrollY * speed}px)`;
-    }
-  }, [scrollY]);
-
   return (
-    <div className="fixed inset-0 w-full h-full overflow-hidden">
+    <div className="fixed inset-0 z-0 overflow-hidden">
       {/* Base gradient background */}
-      <div 
-        className={`absolute inset-0 transition-colors duration-1000 ${
+      <div className={cn(
+        "absolute inset-0 transition-colors duration-500",
+        isDarkMode 
+          ? "bg-gradient-to-br from-gray-950 via-gray-900 to-black" 
+          : "bg-gradient-to-br from-gray-100 via-white to-gray-50"
+      )} />
+      
+      {/* Overlay gradient with parallax effect */}
+      <motion.div 
+        className={cn(
+          "absolute inset-0",
           isDarkMode 
-            ? 'bg-gradient-to-b from-black via-slate-900 to-slate-950' 
-            : 'bg-gradient-to-b from-slate-50 via-blue-50 to-indigo-100'
-        }`}
-      />
-      
-      {/* Animated particles */}
-      <div ref={particlesRef} className="absolute inset-0">
-        <SparklesCore
-          id="tsparticlesfullpage"
-          background="transparent"
-          minSize={0.6}
-          maxSize={1.8}
-          particleDensity={isDarkMode ? 45 : 35}
-          className="w-full h-full"
-          particleColor={isDarkMode ? "#FFFFFF" : "#6366f1"}
-          speed={0.2}
-        />
-      </div>
-      
-      {/* Animated ambient glows */}
-      <motion.div 
-        className={`absolute top-20 -right-20 w-[500px] h-[500px] rounded-full opacity-30 blur-[130px] ${
-          isDarkMode ? 'bg-blue-500/20' : 'bg-indigo-500/30'
-        }`}
-        animate={{
-          scale: [1, 1.1, 1],
-          opacity: isDarkMode ? [0.2, 0.3, 0.2] : [0.2, 0.4, 0.2],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          repeatType: "reverse",
-        }}
-      />
-      
-      <motion.div 
-        className={`absolute -bottom-20 -left-20 w-[500px] h-[500px] rounded-full opacity-30 blur-[130px] ${
-          isDarkMode ? 'bg-purple-500/20' : 'bg-blue-500/30'
-        }`}
-        animate={{
-          scale: [1, 1.15, 1],
-          opacity: isDarkMode ? [0.2, 0.3, 0.2] : [0.2, 0.4, 0.2],
-        }}
-        transition={{
-          duration: 10,
-          delay: 1,
-          repeat: Infinity,
-          repeatType: "reverse",
-        }}
-      />
-      
-      {/* Grid overlay */}
-      <div 
-        className={`absolute inset-0 bg-[linear-gradient(to_right,#8882_1px,transparent_1px),linear-gradient(to_bottom,#8882_1px,transparent_1px)] bg-[size:60px_60px] ${
-          isDarkMode ? 'opacity-5' : 'opacity-20'
-        }`}
+            ? "bg-gradient-to-tr from-blue-950/30 via-indigo-950/20 to-purple-950/30" 
+            : "bg-gradient-to-tr from-blue-100/50 via-indigo-100/30 to-purple-100/50"
+        )}
         style={{
-          transform: `translateY(${scrollY * 0.1}px)` 
+          backgroundPosition: `${scrollY * 0.05}% ${scrollY * 0.05}%`
         }}
       />
+      
+      {/* Noise texture for a more natural feel */}
+      <div 
+        className="absolute inset-0 opacity-[0.02] pointer-events-none"
+        style={{
+          backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")',
+        }}
+      />
+      
+      {/* Gradient mesh - subtle overlay */}
+      <div className={cn(
+        "absolute inset-0 opacity-30",
+        isDarkMode 
+          ? "bg-[radial-gradient(at_top_left,rgba(30,60,140,0.15),transparent_50%),radial-gradient(at_bottom_right,rgba(120,40,200,0.15),transparent_50%)]" 
+          : "bg-[radial-gradient(at_top_left,rgba(70,130,255,0.1),transparent_50%),radial-gradient(at_bottom_right,rgba(180,100,255,0.1),transparent_50%)]"
+      )} />
+      
+      {/* Light rays effect */}
+      <motion.div 
+        className={cn(
+          "absolute inset-0 opacity-20",
+          isDarkMode 
+            ? "bg-[conic-gradient(from_0deg_at_50%_-10%,transparent_60%,rgba(100,100,255,0.2)_75%,transparent_80%)]" 
+            : "bg-[conic-gradient(from_0deg_at_50%_-10%,transparent_60%,rgba(150,150,255,0.15)_75%,transparent_80%)]"
+        )}
+        style={{
+          transform: `translateY(${scrollY * 0.1}px) scale(${1 + scrollY * 0.0002})`,
+        }}
+      />
+      
+      {/* Stars/particles for dark mode only */}
+      {isDarkMode && (
+        <div 
+          className="absolute inset-0 opacity-40"
+          style={{
+            backgroundImage: 'radial-gradient(circle at center, white 0.1px, transparent 0.5px)',
+            backgroundSize: '20px 20px',
+            transform: `translateY(${-scrollY * 0.05}px)`,
+          }}
+        />
+      )}
+      
+      {/* Very subtle vignette */}
+      <div className={cn(
+        "absolute inset-0",
+        "bg-[radial-gradient(ellipse_at_center,transparent_65%,rgba(0,0,0,0.2)_100%)]",
+        isDarkMode ? "opacity-80" : "opacity-30"
+      )} />
     </div>
   );
 };

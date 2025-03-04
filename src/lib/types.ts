@@ -1,3 +1,4 @@
+
 export interface NavItem {
   title: string;
   path: string;
@@ -37,6 +38,7 @@ export interface Message {
   content: string;
   role: "user" | "assistant" | "system";
   createdAt: Date;
+  model?: string; // Add the model property
 }
 
 export interface ChatContextType {
@@ -60,6 +62,7 @@ export interface ApiKey {
   google: string | null;
   cohere: string | null;
   openrouter: string | null;
+  user_id?: string;
 }
 
 export interface UniverseComponentProps {

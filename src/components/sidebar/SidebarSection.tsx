@@ -40,12 +40,18 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
               {!isCollapsed && <span>{item.title}</span>}
               
               {!isCollapsed && item.badge && (
-                <span className={cn(
-                  "ml-auto px-1.5 py-0.5 text-xs rounded-full",
-                  `bg-${item.badge.color}-500/20 text-${item.badge.color}-500`
-                )}>
-                  {item.badge.count}
-                </span>
+                typeof item.badge === 'string' ? (
+                  <span className="ml-auto px-1.5 py-0.5 text-xs rounded-full bg-blue-500/20 text-blue-500">
+                    {item.badge}
+                  </span>
+                ) : (
+                  <span className={cn(
+                    "ml-auto px-1.5 py-0.5 text-xs rounded-full",
+                    `bg-${item.badge.color}-500/20 text-${item.badge.color}-500`
+                  )}>
+                    {item.badge.count}
+                  </span>
+                )
               )}
             </button>
           ))}

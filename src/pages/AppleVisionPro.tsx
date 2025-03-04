@@ -13,6 +13,7 @@ import VideoLoop from '@/components/applevision/VideoLoop';
 import FeatureCard from '@/components/applevision/FeatureCard';
 import VisionProSpecs from '@/components/applevision/VisionProSpecs';
 import { LampEffect } from '@/components/ui/LampEffect';
+import { UniverseComponentProps } from '@/lib/types';
 
 const AppleVisionPro: React.FC = () => {
   const { isDarkMode } = useTheme();

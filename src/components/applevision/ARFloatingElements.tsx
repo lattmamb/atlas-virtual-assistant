@@ -3,142 +3,107 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '@/context/ThemeContext';
 import { cn } from '@/lib/utils';
-import { Sparkles, Zap, Globe, Bot, Cloud, Database } from 'lucide-react';
+import { UniverseComponentProps } from '@/lib/types';
 
-type ElementType = 'icon' | 'data' | 'particle';
-
-interface FloatingElement {
-  id: string;
-  x: string;
-  y: string;
-  size: number;
-  type: ElementType;
-  content?: React.ReactNode;
-  delay?: number;
-}
-
-const ARFloatingElements: React.FC = () => {
+const ARFloatingElements: React.FC<UniverseComponentProps> = ({ scrollY }) => {
   const { isDarkMode } = useTheme();
   
-  const floatingElements: FloatingElement[] = [
-    {
-      id: 'element1',
-      x: '10%',
-      y: '20%',
-      size: 40,
-      type: 'icon',
-      content: <Sparkles className="text-blue-400" />,
-      delay: 0.2
-    },
-    {
-      id: 'element2',
-      x: '80%',
-      y: '15%',
-      size: 36,
-      type: 'icon',
-      content: <Globe className="text-purple-400" />,
-      delay: 0.7
-    },
-    {
-      id: 'element3',
-      x: '70%',
-      y: '70%',
-      size: 44,
-      type: 'icon',
-      content: <Bot className="text-cyan-400" />,
-      delay: 1.1
-    },
-    {
-      id: 'element4',
-      x: '25%',
-      y: '65%',
-      size: 38,
-      type: 'icon',
-      content: <Cloud className="text-pink-400" />,
-      delay: 0.5
-    },
-    {
-      id: 'element5',
-      x: '45%',
-      y: '35%',
-      size: 32,
-      type: 'data',
-      content: <div className="text-xs font-mono">U-N-I</div>,
-      delay: 0.9
-    },
-    {
-      id: 'element6',
-      x: '60%',
-      y: '50%',
-      size: 34,
-      type: 'data',
-      content: <div className="text-xs font-mono">Vision Pro</div>,
-      delay: 1.3
-    },
-    {
-      id: 'element7',
-      x: '15%',
-      y: '40%',
-      size: 28,
-      type: 'data',
-      content: <Zap className="text-amber-400" />,
-      delay: 0.4
-    },
-    {
-      id: 'element8',
-      x: '85%',
-      y: '85%',
-      size: 30,
-      type: 'particle',
-      delay: 0.3
-    },
-    {
-      id: 'element9',
-      x: '30%',
-      y: '90%',
-      size: 26,
-      type: 'particle',
-      delay: 0.8
-    }
-  ];
-  
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-      {floatingElements.map((element) => (
-        <motion.div
-          key={element.id}
-          className={cn(
-            "absolute rounded-full flex items-center justify-center",
-            element.type === 'icon' && "backdrop-blur-sm border",
-            element.type === 'data' && "backdrop-blur-md border",
-            element.type === 'particle' && "backdrop-blur-sm bg-gradient-to-br",
-            isDarkMode 
-              ? "border-white/10 from-white/5 to-transparent" 
-              : "border-black/10 from-black/5 to-transparent"
-          )}
-          style={{
-            left: element.x,
-            top: element.y,
-            width: element.size,
-            height: element.size,
-          }}
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ 
-            opacity: element.type === 'particle' ? 0.4 : 0.8, 
-            scale: 1,
-            x: [0, 10, -10, 0],
-            y: [0, -10, 10, 0]
-          }}
-          transition={{
-            duration: 8,
-            delay: element.delay,
-            repeat: Infinity,
-            repeatType: "reverse",
-          }}
-        >
-          {element.content}
-        </motion.div>
-      ))}
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+      {/* Floating Element 1 - Top Right */}
+      <motion.div 
+        className={cn(
+          "absolute top-[15%] right-[10%] h-20 w-20 rounded-full",
+          "bg-gradient-to-br from-blue-500/20 to-violet-500/20",
+          "backdrop-blur-lg"
+        )}
+        style={{
+          boxShadow: isDarkMode ? '0 0 30px 5px rgba(120, 120, 255, 0.15)' : '0 0 30px 5px rgba(120, 120, 255, 0.1)',
+          translateY: -scrollY * 0.2,
+          translateX: scrollY * 0.05
+        }}
+      />
+      
+      {/* Floating Element 2 - Left */}
+      <motion.div 
+        className={cn(
+          "absolute top-[40%] left-[5%] h-32 w-32 rounded-full",
+          "bg-gradient-to-tr from-indigo-500/10 to-purple-500/10",
+          "backdrop-blur-lg"
+        )}
+        style={{
+          boxShadow: isDarkMode ? '0 0 40px 8px rgba(120, 0, 255, 0.1)' : '0 0 40px 8px rgba(120, 0, 255, 0.05)',
+          translateY: scrollY * 0.15
+        }}
+      />
+      
+      {/* Floating Element 3 - Bottom Right */}
+      <motion.div 
+        className={cn(
+          "absolute bottom-[10%] right-[15%] h-16 w-16 rounded-full",
+          "bg-gradient-to-bl from-blue-400/20 to-cyan-400/20",
+          "backdrop-blur-lg"
+        )}
+        style={{
+          boxShadow: isDarkMode ? '0 0 25px 5px rgba(0, 200, 255, 0.15)' : '0 0 25px 5px rgba(0, 200, 255, 0.1)',
+          translateY: -scrollY * 0.1,
+          translateX: -scrollY * 0.05
+        }}
+      />
+      
+      {/* Floating Element 4 - Center Left */}
+      <motion.div 
+        className={cn(
+          "absolute top-[60%] left-[20%] h-24 w-24 rounded-full",
+          "bg-gradient-to-r from-purple-500/15 to-pink-500/15",
+          "backdrop-blur-lg"
+        )}
+        style={{
+          boxShadow: isDarkMode ? '0 0 35px 7px rgba(200, 0, 255, 0.12)' : '0 0 35px 7px rgba(200, 0, 255, 0.07)',
+          translateY: scrollY * 0.05,
+          translateX: scrollY * 0.1
+        }}
+      />
+      
+      {/* Additional floating elements for more depth */}
+      {/* Small Element 1 */}
+      <motion.div 
+        className={cn(
+          "absolute top-[25%] left-[40%] h-8 w-8 rounded-full",
+          "bg-gradient-to-tr from-blue-300/20 to-indigo-300/20",
+          "backdrop-blur-lg"
+        )}
+        style={{
+          boxShadow: isDarkMode ? '0 0 15px 3px rgba(100, 100, 255, 0.15)' : '0 0 15px 3px rgba(100, 100, 255, 0.1)',
+          translateY: -scrollY * 0.3
+        }}
+      />
+      
+      {/* Small Element 2 */}
+      <motion.div 
+        className={cn(
+          "absolute top-[70%] right-[30%] h-12 w-12 rounded-full",
+          "bg-gradient-to-bl from-violet-400/20 to-fuchsia-400/20",
+          "backdrop-blur-lg"
+        )}
+        style={{
+          boxShadow: isDarkMode ? '0 0 20px 4px rgba(150, 0, 255, 0.12)' : '0 0 20px 4px rgba(150, 0, 255, 0.08)',
+          translateY: scrollY * 0.25
+        }}
+      />
+      
+      {/* Background radial gradients */}
+      <div 
+        className={cn(
+          "absolute inset-0 opacity-50",
+          isDarkMode 
+            ? "bg-[radial-gradient(ellipse_at_top_right,_rgba(50,50,180,0.15),_transparent_70%),radial-gradient(ellipse_at_bottom_left,_rgba(100,50,150,0.1),_transparent_70%)]" 
+            : "bg-[radial-gradient(ellipse_at_top_right,_rgba(100,100,255,0.1),_transparent_70%),radial-gradient(ellipse_at_bottom_left,_rgba(150,100,200,0.05),_transparent_70%)]"
+        )}
+        style={{
+          transform: `translateY(${scrollY * 0.05}px)`
+        }}
+      />
     </div>
   );
 };
