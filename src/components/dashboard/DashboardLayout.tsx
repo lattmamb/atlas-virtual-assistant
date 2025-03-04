@@ -1,15 +1,13 @@
 
 import React, { useState } from 'react';
 import AppleNavBar from '@/components/icloud/AppleNavBar';
-import UserProfileCard from '@/components/dashboard/UserProfileCard';
-import { cn } from '@/lib/utils';
-import { useTheme } from '@/context/ThemeContext';
+import { appGridItems } from '@/components/dashboard/constants/appGridItems';
 import AppGridSidebar from '@/components/dashboard/AppGridSidebar';
 import SearchBar from '@/components/dashboard/SearchBar';
-import { appGridItems } from '@/components/dashboard/constants/appGridItems';
+import DashboardBackground from '@/components/dashboard/DashboardBackground';
+import MainContent from '@/components/dashboard/MainContent';
 
 const DashboardLayout: React.FC = () => {
-  const { isDarkMode } = useTheme();
   const [isAppGridOpen, setIsAppGridOpen] = useState(false);
   const [isSearchBarOpen, setIsSearchBarOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -34,12 +32,7 @@ const DashboardLayout: React.FC = () => {
   return (
     <div className="relative h-screen w-full flex flex-col overflow-hidden">
       {/* Background Effects */}
-      <div
-        className={cn(
-          "fixed inset-0 z-0 transition-all duration-700",
-          isDarkMode ? "bg-gradient-to-b from-gray-900 to-black" : "bg-gradient-to-b from-gray-100 to-white"
-        )}
-      />
+      <DashboardBackground />
 
       {/* Apple Navigation Bar */}
       <AppleNavBar
@@ -63,18 +56,7 @@ const DashboardLayout: React.FC = () => {
       />
 
       {/* Main Content Area */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Main Content */}
-        <main className="flex-1 p-4 overflow-y-auto">
-          {/* User Profile Card */}
-          <UserProfileCard
-            name="Trinity Dodge"
-            email="trinity@lovable.engineer"
-            subscription="Pro Plan"
-            avatarUrl="https://avatars.githubusercontent.com/u/1249980?v=4"
-          />
-        </main>
-      </div>
+      <MainContent />
     </div>
   );
 };
