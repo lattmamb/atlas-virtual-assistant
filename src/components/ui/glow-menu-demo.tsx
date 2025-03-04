@@ -1,9 +1,7 @@
 
-"use client"
-
-import { useState } from "react"
-import { Home, Settings, Bell, User } from "lucide-react"
-import { MenuBar } from "@/components/ui/glow-menu"
+import React, { useState } from "react";
+import { Home, Settings, MessageSquare, User } from "lucide-react";
+import { MenuBar } from "@/components/ui/glow-menu";
 
 const menuItems = [
   {
@@ -15,8 +13,8 @@ const menuItems = [
     iconColor: "text-blue-500",
   },
   {
-    icon: Bell,
-    label: "Notifications",
+    icon: MessageSquare,
+    label: "Chat",
     href: "#",
     gradient:
       "radial-gradient(circle, rgba(249,115,22,0.15) 0%, rgba(234,88,12,0.06) 50%, rgba(194,65,12,0) 100%)",
@@ -38,10 +36,10 @@ const menuItems = [
       "radial-gradient(circle, rgba(239,68,68,0.15) 0%, rgba(220,38,38,0.06) 50%, rgba(185,28,28,0) 100%)",
     iconColor: "text-red-500",
   },
-]
+];
 
 export function MenuBarDemo() {
-  const [activeItem, setActiveItem] = useState<string>("Home")
+  const [activeItem, setActiveItem] = useState<string>("Home");
 
   return (
     <MenuBar
@@ -49,5 +47,5 @@ export function MenuBarDemo() {
       activeItem={activeItem}
       onItemClick={setActiveItem}
     />
-  )
+  );
 }
