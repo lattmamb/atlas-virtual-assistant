@@ -4,7 +4,7 @@ import React from 'react';
 export interface NavItem {
   icon?: React.ReactNode;
   title: string;
-  name?: string; // Adding name property
+  name: string; // Making this required
   path: string;
   active?: boolean;
   children?: NavItem[];
@@ -14,7 +14,7 @@ export interface NavItem {
   };
   badgeColor?: string;
   isExternal?: boolean;
-  onClick?: () => void; // Adding onClick property
+  onClick?: () => void;
 }
 
 export interface SidebarSectionProps {
@@ -24,6 +24,7 @@ export interface SidebarSectionProps {
   label?: string;
   items?: NavItem[];
   isActive?: (path: string) => boolean;
+  isCollapsed?: boolean; // Added prop
 }
 
 export interface SubMenuSectionProps {
@@ -35,6 +36,7 @@ export interface SubMenuSectionProps {
   defaultOpen?: boolean;
   activeItem?: string;
   onNavItemClick?: (item: NavItem) => void;
+  isCollapsed?: boolean; // Added prop
 }
 
 export interface SidebarLogoProps {
@@ -43,4 +45,16 @@ export interface SidebarLogoProps {
 
 export interface UserProfileProps {
   isCollapsed?: boolean;
+}
+
+export interface QuickNavProps {
+  buttons?: {
+    icon: React.ReactNode;
+    ariaLabel: string;
+  }[];
+  isCollapsed?: boolean; // Added prop
+}
+
+export interface UniverseComponentProps {
+  scrollY?: number; // Added prop
 }

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '@/context/ThemeContext';
@@ -7,14 +6,12 @@ import { ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { toast } from 'sonner';
 
-// Import components from the Apple Vision Pro page
 import ARBackground from '@/components/applevision/ARBackground';
 import HeroSection from '@/components/applevision/HeroSection';
 import FeaturesSection from '@/components/applevision/FeaturesSection';
 import ParallaxSection from '@/components/applevision/ParallaxSection';
 import PricingSection from '@/components/applevision/PricingSection';
 
-// Import components from other pages for the carousel
 import ChatRoomPanel from '@/components/universe/ChatRoomPanel';
 import AtlasPanel from '@/components/universe/AtlasPanel';
 import WorkflowPanel from '@/components/universe/WorkflowPanel';
@@ -24,8 +21,8 @@ import SectionIndicator from '@/components/universe/SectionIndicator';
 import { useSwipeable } from '@/hooks/use-swipeable';
 
 const sections = [
-  { id: 'vision', title: 'Vision Pro', component: HeroSection },
-  { id: 'features', title: 'Features', component: FeaturesSection },
+  { id: 'vision', title: 'Vision Pro', component: (props: UniverseComponentProps) => <HeroSection {...props} /> },
+  { id: 'features', title: 'Features', component: (props: UniverseComponentProps) => <FeaturesSection {...props} /> },
   { id: 'chat', title: 'Chat', component: ChatRoomPanel },
   { id: 'atlas', title: 'Atlas', component: AtlasPanel },
   { id: 'workflow', title: 'Workflows', component: WorkflowPanel },
@@ -38,13 +35,11 @@ const UniverseHome: React.FC = () => {
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [scrollY, setScrollY] = useState(0);
 
-  // Hook for handling swipe gestures
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => handleNextSection(),
     onSwipedRight: () => handlePrevSection(),
   });
 
-  // Welcome toast notification
   useEffect(() => {
     setTimeout(() => {
       toast.success("Welcome to U-N-I-Verse", {
@@ -55,10 +50,9 @@ const UniverseHome: React.FC = () => {
     }, 1500);
   }, []);
 
-  // Track dummy scroll for parallax effects
   useEffect(() => {
     const interval = setInterval(() => {
-      if (currentSectionIndex === 1) { // Only for features section
+      if (currentSectionIndex === 1) {
         setScrollY(prev => (prev < 300 ? prev + 0.5 : 0));
       } else {
         setScrollY(0);
@@ -90,15 +84,12 @@ const UniverseHome: React.FC = () => {
       )}
       {...swipeHandlers}
     >
-      {/* AR Background with parallax effect */}
       <ARBackground scrollY={scrollY} />
       
-      {/* Content */}
       <div className="relative z-10">
         <UniverseNavBar currentSection={sections[currentSectionIndex].id} />
         
         <main className="flex flex-col items-center">
-          {/* Current Section with Animation */}
           <motion.div 
             key={currentSectionIndex}
             className="min-h-[calc(100vh-120px)] w-full flex items-center justify-center"
@@ -110,7 +101,6 @@ const UniverseHome: React.FC = () => {
             <CurrentSectionComponent scrollY={scrollY} />
           </motion.div>
           
-          {/* Navigation Controls */}
           <div className="fixed bottom-8 left-0 right-0 flex justify-center items-center gap-4 z-20">
             <motion.button
               className={cn(
