@@ -1,7 +1,6 @@
-
 import { useState, FormEvent, KeyboardEvent, useRef, useEffect } from "react";
 import { Send, Loader2, X } from "lucide-react";
-import { useChat } from "@/context/ChatContext";
+import { useChat } from "@/hooks/use-chat";
 
 interface ChatInputProps {
   compact?: boolean;

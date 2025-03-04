@@ -3,13 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Mic, PlusCircle, Image, Send, Sparkles, Zap } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { FormEvent } from "react";
 
 interface ChatInputActionsProps {
   input: string;
   isLoading: boolean;
   selectedProvider: string | null;
   aiMode: 'atlas' | 'grok';
-  onSubmit: () => void;
+  onSubmit: (e?: FormEvent) => void;
 }
 
 const ChatInputActions = ({ 
