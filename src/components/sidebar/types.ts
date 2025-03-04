@@ -11,3 +11,16 @@ export interface NavItem {
     color: string;
   };
 }
+
+export interface SidebarSectionProps {
+  title: string;
+  children: ReactNode;
+  collapsible?: boolean;
+  defaultOpen?: boolean;
+}
+
+export interface SubMenuSectionProps {
+  activeItem: string;
+  items: NavItem[];
+  onNavItemClick?: (item: NavItem) => void;
+}
