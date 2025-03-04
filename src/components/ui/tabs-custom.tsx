@@ -7,6 +7,7 @@ interface Tab {
   title: string;
   value: string;
   content: React.ReactNode;
+  icon?: React.ReactNode;
 }
 
 interface TabsProps {
@@ -15,6 +16,7 @@ interface TabsProps {
   activeTabClassName?: string;
   tabClassName?: string;
   contentClassName?: string;
+  defaultValue?: string;
 }
 
 export function Tabs({
@@ -23,8 +25,9 @@ export function Tabs({
   activeTabClassName,
   tabClassName,
   contentClassName,
+  defaultValue,
 }: TabsProps) {
-  const [activeTab, setActiveTab] = useState(tabs[0].value);
+  const [activeTab, setActiveTab] = useState(defaultValue || tabs[0]?.value);
   const [hoveredTab, setHoveredTab] = useState<string | null>(null);
 
   const activeTabContent = tabs.find((tab) => tab.value === activeTab)?.content;
@@ -44,7 +47,7 @@ export function Tabs({
             onMouseEnter={() => setHoveredTab(tab.value)}
             onMouseLeave={() => setHoveredTab(null)}
             className={cn(
-              "relative px-4 py-2 rounded-full text-sm md:text-base font-medium transition-colors duration-200",
+              "relative px-4 py-2 rounded-full text-sm md:text-base font-medium transition-colors duration-200 flex items-center gap-2",
               tab.value === activeTab
                 ? cn("text-white", activeTabClassName)
                 : cn("text-white/60 hover:text-white/80", tabClassName)
@@ -66,6 +69,7 @@ export function Tabs({
                 style={{ zIndex: -1 }}
               />
             )}
+            {tab.icon && <span className="text-lg">{tab.icon}</span>}
             {tab.title}
           </button>
         ))}
