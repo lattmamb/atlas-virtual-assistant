@@ -13,6 +13,8 @@ import { SparklesCore } from "@/components/ui/sparkles";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { TabsDemo } from "@/components/ui/tabs-demo";
+import { NavbarDemo } from '@/components/ui/navbar-demo';
+import { Separator } from '@/components/ui/separator';
 
 const Features = () => {
   const isMobile = useIsMobile();
@@ -83,7 +85,10 @@ const Features = () => {
                 className="flex-1 overflow-y-auto"
               >
                 <div className="animate-fade-in p-4">
+                  <NavbarDemo />
+                  <Separator className="my-8" />
                   <TabsDemo />
+                  <Separator className="my-8" />
                   <TailwindcssButtons />
                 </div>
               </motion.div>
