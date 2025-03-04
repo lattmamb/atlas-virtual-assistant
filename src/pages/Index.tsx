@@ -1,11 +1,8 @@
 
 import React, { useEffect } from "react";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import AppSidebar from "@/components/AppSidebar";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useTheme } from "@/context/ThemeContext";
-import ICloudLayout from "@/components/icloud/ICloudLayout";
 import WidgetsGrid from "@/components/widgets/WidgetsGrid";
 import HeaderSection from "@/components/widgets/HeaderSection";
 import AppleNavBar from "@/components/icloud/AppleNavBar";
@@ -44,39 +41,35 @@ export default function Index() {
         </div>
       )}
       
-      <SidebarProvider defaultOpen={!isMobile}>
-        <div className={cn(
-          `flex h-screen w-full overflow-hidden theme-${currentTheme}`
-        )}>
-          <AppSidebar activePage="home" />
-          <main className="flex-1 flex flex-col overflow-hidden">
-            <AppleNavBar 
-              showAppGridButton={true} 
-              showAppGrid={showAppGrid}
+      <div className={cn(
+        `flex h-screen w-full overflow-hidden theme-${currentTheme}`
+      )}>
+        <main className="flex-1 flex flex-col overflow-hidden">
+          <AppleNavBar 
+            showAppGridButton={true} 
+            onToggleAppGrid={() => setShowAppGrid(!showAppGrid)}
+          />
+          
+          <div className="relative z-10 mt-4 pt-4">
+            <HeaderSection 
+              isDarkMode={isDarkMode}
               setShowAppGrid={setShowAppGrid}
+              showAppGrid={showAppGrid}
+              title="Atlas Universe"
             />
             
-            <div className="relative z-10 mt-4 pt-4">
-              <HeaderSection 
-                isDarkMode={isDarkMode}
-                setShowAppGrid={setShowAppGrid}
-                showAppGrid={showAppGrid}
-                title="Atlas Universe"
-              />
-              
-              {/* Hero Parallax Section */}
-              <div className="h-screen">
-                <HeroParallaxDemo />
-              </div>
-              
-              {/* Original Widgets Grid (can be below the Hero Parallax if desired) */}
-              <ICloudLayout showAppGrid={showAppGrid}>
-                <WidgetsGrid />
-              </ICloudLayout>
+            {/* Hero Parallax Section */}
+            <div className="h-screen">
+              <HeroParallaxDemo />
             </div>
-          </main>
-        </div>
-      </SidebarProvider>
+            
+            {/* Original Widgets Grid (can be below the Hero Parallax if desired) */}
+            <div className="container mx-auto px-4">
+              <WidgetsGrid />
+            </div>
+          </div>
+        </main>
+      </div>
     </div>
   );
 }

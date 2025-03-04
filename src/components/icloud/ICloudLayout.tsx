@@ -2,9 +2,7 @@
 import React, { useState, ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { SidebarProvider } from '@/components/ui/sidebar';
-import AppSidebar from '@/components/AppSidebar';
-import AppleNavBar from '@/components/icloud/AppleNavBar'; // Updated path
+import AppleNavBar from '@/components/icloud/AppleNavBar';
 import { useLocation } from 'react-router-dom';
 
 interface ICloudLayoutProps {
@@ -33,30 +31,25 @@ const ICloudLayout: React.FC<ICloudLayoutProps> = ({ children, activePage }) => 
   };
 
   return (
-    <SidebarProvider defaultOpen={!isMobile}>
-      <div className={cn(
-        'min-h-screen font-sans transition-all duration-500 relative flex w-full',
-        isDarkMode ? 'bg-[#111111] text-white' : 'bg-gray-50 text-gray-800'
-      )}>
-        {/* Sidebar */}
-        <AppSidebar activePage={getActivePage()} />
+    <div className={cn(
+      'min-h-screen font-sans transition-all duration-500 relative flex w-full',
+      isDarkMode ? 'bg-[#111111] text-white' : 'bg-gray-50 text-gray-800'
+    )}>
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Navigation Bar */}
+        <AppleNavBar 
+          showAppGridButton={true}
+          onToggleAppGrid={() => setIsAppGridOpen(!isAppGridOpen)}
+        />
 
-        {/* Main Content Area */}
-        <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Navigation Bar */}
-          <AppleNavBar 
-            showAppGridButton={true}
-            onToggleAppGrid={() => setIsAppGridOpen(!isAppGridOpen)}
-          />
-
-          {/* Content Area with Proper Spacing for NavBar */}
-          <main className="flex-1 overflow-auto p-2 md:p-6 pt-14">
-            {children}
-          </main>
-        </div>
+        {/* Content Area with Proper Spacing for NavBar */}
+        <main className="flex-1 overflow-auto p-2 md:p-6 pt-14">
+          {children}
+        </main>
       </div>
-    </SidebarProvider>
+    </div>
   );
-};
+}
 
 export default ICloudLayout;
