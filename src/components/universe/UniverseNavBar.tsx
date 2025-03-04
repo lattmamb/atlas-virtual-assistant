@@ -16,7 +16,6 @@ const UniverseNavBar: React.FC<UniverseNavBarProps> = ({ currentSection }) => {
   
   const navItems = [
     { id: 'vision', label: 'Vision Pro', icon: <Apple className="h-4 w-4" />, path: '/' },
-    { id: 'features', label: 'Features', icon: <Sparkles className="h-4 w-4" />, path: '/features' },
     { id: 'chat', label: 'Chat', icon: <MessageSquare className="h-4 w-4" />, path: '/chat' },
     { id: 'atlas', label: 'Atlas', icon: <Sparkles className="h-4 w-4" />, path: '/atlas' },
     { id: 'workflow', label: 'Workflows', icon: <Workflow className="h-4 w-4" />, path: '/workflows' },

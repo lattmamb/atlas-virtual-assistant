@@ -15,12 +15,6 @@ export function HeroParallaxDemo() {
       description: "Experience the future of augmented reality"
     },
     {
-      title: "UI Components",
-      link: "/features",
-      thumbnail: "https://aceternity.com/images/products/thumbnails/new/aceternityui.png",
-      description: "Explore our custom UI component library"
-    },
-    {
       title: "Atlas AI",
       link: "/atlas",
       thumbnail: "https://aceternity.com/images/products/thumbnails/new/moonbeam.png",

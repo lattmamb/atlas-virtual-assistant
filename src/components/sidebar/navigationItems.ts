@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { NavItem } from './types';
-import { Home, MessageSquare, Settings, Sparkles, Car } from 'lucide-react';
+import { Home, MessageSquare, Settings, Car } from 'lucide-react';
 
 export const navigationItems: NavItem[] = [
   {
@@ -19,12 +19,6 @@ export const navigationItems: NavItem[] = [
       count: 2,
       color: 'blue',
     },
-  },
-  {
-    name: 'features',
-    title: 'Features',
-    icon: React.createElement(Sparkles),
-    path: '/features',
   },
   {
     name: 'settings',
