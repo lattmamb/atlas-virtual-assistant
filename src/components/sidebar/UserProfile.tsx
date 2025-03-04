@@ -4,7 +4,11 @@ import { User, MapPin } from 'lucide-react';
 import { SidebarCollapseToggle } from '@/components/ui/sidebar';
 import { motion } from 'framer-motion';
 
-const UserProfile: React.FC = () => {
+interface UserProfileProps {
+  isCollapsed?: boolean;
+}
+
+const UserProfile: React.FC<UserProfileProps> = ({ isCollapsed }) => {
   return (
     <div className="flex justify-between items-center px-2 py-2">
       <div className="flex items-center gap-2 px-2">
@@ -15,13 +19,15 @@ const UserProfile: React.FC = () => {
         >
           <User className="h-4 w-4" />
         </motion.div>
-        <div className="flex flex-col">
-          <span className="text-sm font-medium">Trinity Dodge</span>
-          <span className="text-xs text-muted-foreground flex items-center">
-            <MapPin className="h-3 w-3 mr-1 inline" />
-            Taylorville, IL
-          </span>
-        </div>
+        {!isCollapsed && (
+          <div className="flex flex-col">
+            <span className="text-sm font-medium">Trinity Dodge</span>
+            <span className="text-xs text-muted-foreground flex items-center">
+              <MapPin className="h-3 w-3 mr-1 inline" />
+              Taylorville, IL
+            </span>
+          </div>
+        )}
       </div>
       
       <SidebarCollapseToggle className="text-muted-foreground" />

@@ -4,7 +4,7 @@ import { Sparkles, Cloud } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { SidebarHeaderTitle } from '@/components/ui/sidebar';
 
-const SidebarLogo: React.FC = () => {
+const SidebarLogo: React.FC<{ isCollapsed?: boolean }> = ({ isCollapsed }) => {
   return (
     <SidebarHeaderTitle>
       <div className="relative">
@@ -27,7 +27,7 @@ const SidebarLogo: React.FC = () => {
           </motion.div>
         </motion.div>
       </div>
-      <span className="text-lg font-medium">Atlas Assistant</span>
+      {!isCollapsed && <span className="text-lg font-medium">Atlas Assistant</span>}
     </SidebarHeaderTitle>
   );
 };

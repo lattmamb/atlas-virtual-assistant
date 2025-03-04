@@ -1,33 +1,33 @@
 
-import React from "react";
-import { motion } from "framer-motion";
-import { cn } from "@/lib/utils";
-import { useTheme } from "@/context/ThemeContext";
-import { LucideIcon } from "lucide-react";
+import * as React from "react"
+import { motion } from "framer-motion"
+import { cn } from "@/lib/utils"
+import { LucideIcon } from "lucide-react"
+import { useTheme } from "@/context/ThemeContext"
 
 interface MenuItem {
-  icon: LucideIcon | React.FC;
-  label: string;
-  href: string;
-  gradient: string;
-  iconColor: string;
+  icon: LucideIcon | React.FC
+  label: string
+  href: string
+  gradient: string
+  iconColor: string
 }
 
 interface MenuBarProps extends React.HTMLAttributes<HTMLDivElement> {
-  items: MenuItem[];
-  activeItem?: string;
-  onItemClick?: (label: string) => void;
+  items: MenuItem[]
+  activeItem?: string
+  onItemClick?: (label: string) => void
 }
 
 const itemVariants = {
   initial: { rotateX: 0, opacity: 1 },
   hover: { rotateX: -90, opacity: 0 },
-};
+}
 
 const backVariants = {
   initial: { rotateX: 90, opacity: 0 },
   hover: { rotateX: 0, opacity: 1 },
-};
+}
 
 const glowVariants = {
   initial: { opacity: 0, scale: 0.8 },
@@ -39,7 +39,7 @@ const glowVariants = {
       scale: { duration: 0.5, type: "spring", stiffness: 300, damping: 25 },
     },
   },
-};
+}
 
 const navGlowVariants = {
   initial: { opacity: 0 },
@@ -50,42 +50,40 @@ const navGlowVariants = {
       ease: [0.4, 0, 0.2, 1],
     },
   },
-};
+}
 
 const sharedTransition = {
   type: "spring",
   stiffness: 100,
   damping: 20,
   duration: 0.5,
-};
+}
 
 export const MenuBar = React.forwardRef<HTMLDivElement, MenuBarProps>(
   ({ className, items, activeItem, onItemClick, ...props }, ref) => {
-    const { isDarkMode } = useTheme();
+    const { isDarkMode } = useTheme()
 
     return (
-      <motion.nav
+      <div
         ref={ref}
         className={cn(
           "p-2 rounded-2xl bg-gradient-to-b from-background/80 to-background/40 backdrop-blur-lg border border-border/40 shadow-lg relative overflow-hidden",
           className,
         )}
-        initial="initial"
-        whileHover="hover"
         {...props}
       >
-        <motion.div
+        {/* Using div instead of motion.div to fix type errors */}
+        <div
           className={`absolute -inset-2 bg-gradient-radial from-transparent ${
             isDarkMode
               ? "via-blue-400/30 via-30% via-purple-400/30 via-60% via-red-400/30 via-90%"
               : "via-blue-400/20 via-30% via-purple-400/20 via-60% via-red-400/20 via-90%"
           } to-transparent rounded-3xl z-0 pointer-events-none`}
-          variants={navGlowVariants}
         />
         <ul className="flex items-center gap-2 relative z-10">
           {items.map((item) => {
-            const Icon = item.icon;
-            const isActive = item.label === activeItem;
+            const Icon = item.icon
+            const isActive = item.label === activeItem
 
             return (
               <motion.li key={item.label} className="relative">
@@ -163,12 +161,12 @@ export const MenuBar = React.forwardRef<HTMLDivElement, MenuBarProps>(
                   </motion.div>
                 </button>
               </motion.li>
-            );
+            )
           })}
         </ul>
-      </motion.nav>
-    );
+      </div>
+    )
   },
-);
+)
 
-MenuBar.displayName = "MenuBar";
+MenuBar.displayName = "MenuBar"

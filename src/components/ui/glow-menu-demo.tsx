@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { Home, Settings, Bell, User } from "lucide-react";
 import { MenuBar } from "@/components/ui/glow-menu";
 
@@ -38,7 +38,7 @@ const menuItems = [
   },
 ];
 
-export function MenuBarDemo() {
+export function GlowMenuDemo() {
   const [activeItem, setActiveItem] = useState<string>("Home");
 
   return (
