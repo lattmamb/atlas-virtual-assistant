@@ -1,14 +1,82 @@
-
 "use client";
 import React from "react";
 import { HeroParallax } from "./hero-parallax";
+import { useNavigate } from "react-router-dom";
 
 export function HeroParallaxDemo() {
+  const navigate = useNavigate();
+  
+  // Create an array of app pages to showcase
+  const appPages = [
+    {
+      title: "Vision Pro",
+      link: "/applevisionpro",
+      thumbnail: "/lovable-uploads/c9ad08ff-68c3-4635-af88-f133d638efc9.png",
+      description: "Experience the future of augmented reality"
+    },
+    {
+      title: "UI Components",
+      link: "/features",
+      thumbnail: "https://aceternity.com/images/products/thumbnails/new/aceternityui.png",
+      description: "Explore our custom UI component library"
+    },
+    {
+      title: "Atlas AI",
+      link: "/atlas",
+      thumbnail: "https://aceternity.com/images/products/thumbnails/new/moonbeam.png",
+      description: "Your personal AI assistant"
+    },
+    {
+      title: "Atlas Link",
+      link: "/atlaslink",
+      thumbnail: "https://aceternity.com/images/products/thumbnails/new/editrix.png",
+      description: "Seamlessly connect to AI services"
+    },
+    {
+      title: "Chat Room",
+      link: "/chatroom",
+      thumbnail: "https://aceternity.com/images/products/thumbnails/new/algochurn.png",
+      description: "Engage in meaningful conversations"
+    },
+    {
+      title: "Workflows",
+      link: "/workflows",
+      thumbnail: "https://aceternity.com/images/products/thumbnails/new/smartbridge.png",
+      description: "Create and manage automation workflows"
+    },
+    {
+      title: "U-N-I-Verse",
+      link: "/universe",
+      thumbnail: "https://aceternity.com/images/products/thumbnails/new/renderwork.png",
+      description: "Your gateway to the digital universe"
+    },
+    {
+      title: "Settings",
+      link: "/settings",
+      thumbnail: "https://aceternity.com/images/products/thumbnails/new/tailwindmasterkit.png",
+      description: "Configure your application"
+    },
+    {
+      title: "Trinity Dodge",
+      link: "/",
+      thumbnail: "https://aceternity.com/images/products/thumbnails/new/goldenbellsacademy.png",
+      description: "Explore vehicles at Trinity Dodge"
+    },
+  ];
+
+  // Transform the data structure to match what HeroParallax expects
+  const products = appPages.map(page => ({
+    title: page.title,
+    link: page.link,
+    thumbnail: page.thumbnail,
+    // Add the onClick handler to navigate to the page instead of opening a new tab
+    onClick: () => navigate(page.link),
+    description: page.description
+  }));
+
   return (
     <div className="min-h-screen w-full">
-      <div className="absolute top-0 left-0 w-full">
-        <HeroParallax products={products} />
-      </div>
+      <HeroParallax products={products} />
     </div>
   );
 }

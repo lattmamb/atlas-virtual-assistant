@@ -8,20 +8,24 @@ import {
   useSpring,
   MotionValue,
 } from "framer-motion";
-import { Link } from "react-router-dom";
+
+interface Product {
+  title: string;
+  link: string;
+  thumbnail: string;
+  description?: string;
+  onClick?: () => void;
+}
 
 export const HeroParallax = ({
   products,
 }: {
-  products: {
-    title: string;
-    link: string;
-    thumbnail: string;
-  }[];
+  products: Product[];
 }) => {
-  const firstRow = products.slice(0, 5);
-  const secondRow = products.slice(5, 10);
-  const thirdRow = products.slice(10, 15);
+  const firstRow = products.slice(0, 3);
+  const secondRow = products.slice(3, 6);
+  const thirdRow = products.slice(6, 9);
+  
   const ref = React.useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -51,9 +55,10 @@ export const HeroParallax = ({
     springConfig
   );
   const translateY = useSpring(
-    useTransform(scrollYProgress, [0, 0.2], [-700, 500]),
+    useTransform(scrollYProgress, [0, 0.2], [-700, 100]),
     springConfig
   );
+  
   return (
     <div
       ref={ref}
@@ -105,12 +110,11 @@ export const Header = () => {
   return (
     <div className="max-w-7xl relative mx-auto py-20 md:py-40 px-4 w-full left-0 top-0">
       <h1 className="text-2xl md:text-7xl font-bold dark:text-white">
-        The Ultimate <br /> development studio
+        Welcome to <br /> Atlas Universe
       </h1>
       <p className="max-w-2xl text-base md:text-xl mt-8 dark:text-neutral-200">
-        We build beautiful products with the latest technologies and frameworks.
-        We are a team of passionate developers and designers that love to build
-        amazing products.
+        Explore our suite of applications designed to enhance your digital experience.
+        Discover vision, creativity, and intelligence across our interconnected platforms.
       </p>
     </div>
   );
@@ -120,11 +124,7 @@ export const ProductCard = ({
   product,
   translate,
 }: {
-  product: {
-    title: string;
-    link: string;
-    thumbnail: string;
-  };
+  product: Product;
   translate: MotionValue<number>;
 }) => {
   return (
@@ -138,22 +138,23 @@ export const ProductCard = ({
       key={product.title}
       className="group/product h-96 w-[30rem] relative flex-shrink-0"
     >
-      <a
-        href={product.link}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="block group-hover/product:shadow-2xl"
+      <div
+        onClick={product.onClick}
+        className="block group-hover/product:shadow-2xl cursor-pointer"
       >
         <img
           src={product.thumbnail}
-          className="object-cover object-left-top absolute h-full w-full inset-0"
+          className="object-cover object-left-top absolute h-full w-full inset-0 rounded-xl"
           alt={product.title}
         />
-      </a>
-      <div className="absolute inset-0 h-full w-full opacity-0 group-hover/product:opacity-80 bg-black pointer-events-none"></div>
-      <h2 className="absolute bottom-4 left-4 opacity-0 group-hover/product:opacity-100 text-white">
-        {product.title}
-      </h2>
+      </div>
+      <div className="absolute inset-0 h-full w-full opacity-0 group-hover/product:opacity-80 bg-black pointer-events-none rounded-xl"></div>
+      <div className="absolute bottom-4 left-4 opacity-0 group-hover/product:opacity-100 text-white">
+        <h2 className="text-xl font-bold">{product.title}</h2>
+        {product.description && (
+          <p className="text-sm mt-2 text-white/70">{product.description}</p>
+        )}
+      </div>
     </motion.div>
   );
 };
