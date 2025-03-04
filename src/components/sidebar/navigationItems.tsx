@@ -14,7 +14,8 @@ import {
   Link2,
   Store,
   Book,
-  Key
+  Key,
+  Glasses
 } from 'lucide-react';
 
 // Primary navigation items
@@ -37,6 +38,15 @@ export const getPrimaryNavItems = (): NavItem[] => [
     name: 'Workflows',
     path: '/workflows',
     icon: <Workflow className="h-4 w-4" />
+  },
+  {
+    name: 'Vision Pro',
+    path: '/applevisionpro',
+    icon: <Glasses className="h-4 w-4" />,
+    badge: {
+      count: 'New',
+      color: 'purple-600'
+    }
   }
 ];
 
