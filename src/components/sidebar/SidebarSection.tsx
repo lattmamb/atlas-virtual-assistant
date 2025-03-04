@@ -1,51 +1,62 @@
 
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { SidebarSectionProps } from './types';
-import {
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarGroupContent,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-} from '@/components/ui/sidebar';
+import React, { useState } from 'react';
+import { ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import SubMenuSection from './SubMenuSection';
+import { SidebarSectionProps } from './types';
 
-const SidebarSection: React.FC<SidebarSectionProps> = ({ label, items, isActive }) => {
+interface ExtendedSidebarSectionProps extends SidebarSectionProps {
+  label: string;
+  items: any[];
+  isActive: (path: string) => boolean;
+}
+
+const SidebarSection: React.FC<ExtendedSidebarSectionProps> = ({
+  label,
+  items,
+  isActive,
+  children,
+  collapsible = true,
+  defaultOpen = true
+}) => {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+
   return (
-    <SidebarGroup>
-      <SidebarGroupLabel>{label}</SidebarGroupLabel>
-      <SidebarGroupContent>
-        <SidebarMenu>
-          {items.map((item) => (
-            <SidebarMenuItem key={item.name}>
-              <SidebarMenuButton asChild isActive={isActive(item.path)}>
-                <Link to={item.path} className={cn(
-                  "flex items-center w-full", 
-                  isActive(item.path) ? 'font-medium text-primary' : ''
-                )}>
-                  <span className="flex items-center justify-center h-5 w-5 mr-3">
-                    {item.icon}
-                  </span>
-                  <span className="flex-grow">{item.name}</span>
-                  {item.badge && (
-                    <span className={cn(
-                      "flex h-5 w-5 items-center justify-center rounded-full text-xs font-medium",
-                      item.badge.color.includes('-') 
-                        ? `bg-${item.badge.color} text-white` 
-                        : `bg-${item.badge.color}-600 text-white`
-                    )}>
-                      {item.badge.count}
-                    </span>
-                  )}
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
-        </SidebarMenu>
-      </SidebarGroupContent>
-    </SidebarGroup>
+    <div className="mb-3">
+      {collapsible ? (
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="flex items-center justify-between w-full text-xs font-bold uppercase tracking-wider px-3 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
+        >
+          {label}
+          <ChevronRight
+            className={cn(
+              "h-4 w-4 transition-transform",
+              isOpen && "rotate-90"
+            )}
+          />
+        </button>
+      ) : (
+        <div className="text-xs font-bold uppercase tracking-wider px-3 py-2 text-slate-500 dark:text-slate-400">
+          {label}
+        </div>
+      )}
+
+      {isOpen && (
+        <div className="pl-2">
+          {children ? (
+            children
+          ) : (
+            <SubMenuSection 
+              label={label}
+              items={items}
+              isActive={isActive}
+              activeItem=""
+            />
+          )}
+        </div>
+      )}
+    </div>
   );
 };
 

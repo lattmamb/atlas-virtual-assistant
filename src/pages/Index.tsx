@@ -1,9 +1,8 @@
 
 import React from 'react';
-import DashboardLayout from '@/components/dashboard/DashboardLayout';
+import { Navigate } from 'react-router-dom';
 
+// The Index page now just redirects to the root, which is handled by UniverseHome
 export default function Index() {
-  return (
-    <DashboardLayout />
-  );
+  return <Navigate to="/" replace />;
 }

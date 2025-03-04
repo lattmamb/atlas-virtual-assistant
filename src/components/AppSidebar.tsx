@@ -1,112 +1,161 @@
 
-import React from 'react';
-import { useLocation } from 'react-router-dom';
-import { 
-  Sidebar, 
-  SidebarContent, 
-  SidebarFooter, 
-  SidebarHeader,
-  SidebarSeparator,
-  useSidebar
-} from '@/components/ui/sidebar';
-import { useTheme } from '@/context/ThemeContext';
+import React, { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-
-// Import the refactored components
-import SidebarSection from './sidebar/SidebarSection';
-import SubMenuSection from './sidebar/SubMenuSection';
-import UserProfile from './sidebar/UserProfile';
-import SidebarLogo from './sidebar/SidebarLogo';
+import { SidebarLogo } from '@/components/sidebar/SidebarLogo';
+import { UserProfile } from '@/components/sidebar/UserProfile';
+import SubMenuSection from '@/components/sidebar/SubMenuSection';
+import SidebarSection from '@/components/sidebar/SidebarSection';
+import { useTheme } from '@/context/ThemeContext';
+import { useSidebar } from '@/components/ui/sidebar';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { 
   getPrimaryNavItems, 
   getAtlasNavItems, 
-  getTrinityNavItems, 
-  getToolsNavItems 
-} from './sidebar/navigationItems';
+  getTrinityNavItems,
+  getToolsNavItems
+} from '@/components/sidebar/navigationItems';
 
 interface AppSidebarProps {
   activePage?: string;
 }
 
-const AppSidebar: React.FC<AppSidebarProps> = ({ activePage }) => {
+const AppSidebar: React.FC<AppSidebarProps> = ({ activePage = 'home' }) => {
   const location = useLocation();
-  const { state } = useSidebar();
+  const navigate = useNavigate();
   const { isDarkMode } = useTheme();
-  
-  const isActive = (path: string) => {
-    return location.pathname === path || 
-           (path !== '/' && location.pathname.startsWith(path)) ||
-           (path.includes('?') && location.search.includes(path.split('?')[1]));
+  const { isOpen, setIsOpen } = useSidebar();
+  const [activeItem, setActiveItem] = useState<string>(activePage);
+
+  const isActivePath = (path: string): boolean => {
+    const currentPath = location.pathname;
+    
+    // Check for exact match
+    if (currentPath === path) return true;
+    
+    // Check for subpath match, but only if the path is not '/'
+    if (path !== '/' && currentPath.startsWith(path)) return true;
+    
+    // Special case for query parameters - check for atlas views
+    if (path.includes('?view=') && currentPath === '/atlas') {
+      const searchParams = new URLSearchParams(location.search);
+      const viewParam = searchParams.get('view');
+      const pathViewParam = new URLSearchParams(path.split('?')[1]).get('view');
+      return viewParam === pathViewParam;
+    }
+    
+    return false;
+  };
+
+  const primaryNavItems = getPrimaryNavItems();
+  const atlasNavItems = getAtlasNavItems();
+  const trinityNavItems = getTrinityNavItems();
+  const toolsNavItems = getToolsNavItems();
+
+  const handleNavItemClick = (name: string) => {
+    setActiveItem(name.toLowerCase());
   };
 
   return (
-    <Sidebar
-      variant="sidebar"
-      collapsible="offcanvas"
+    <div
       className={cn(
-        "border-r shadow-sm",
-        isDarkMode 
-          ? "bg-black/90 backdrop-blur-xl border-white/10" 
-          : "bg-white/90 backdrop-blur-xl border-gray-200/70"
+        "relative h-screen",
+        "border-r transition-all duration-300 ease-in-out",
+        isDarkMode ? "bg-black/30 border-white/10" : "bg-white/90 border-gray-200/50",
+        "backdrop-blur-md",
+        isOpen ? "w-60" : "w-16"
       )}
     >
-      <SidebarHeader className={cn(
-        "border-b", 
-        isDarkMode ? "border-white/10" : "border-gray-200/70"
-      )}>
-        <SidebarLogo />
-      </SidebarHeader>
-      
-      <SidebarContent className="pt-4">
-        {/* Primary Navigation */}
-        <SidebarSection 
-          label="Navigation" 
-          items={getPrimaryNavItems()} 
-          isActive={isActive} 
-        />
+      {/* Sidebar Header */}
+      <div className="p-4 flex items-center justify-between">
+        <SidebarLogo isCollapsed={!isOpen} />
         
-        {/* Atlas Submenu - only shown when Atlas is active */}
-        {activePage === 'atlas' && (
-          <>
-            <SidebarSeparator />
-            <SubMenuSection 
-              label="Atlas Features" 
-              items={getAtlasNavItems()} 
-              isActive={isActive}
-              onItemClick={(name) => {
-                console.log(`Clicked on ${name}`);
-                // Handle navigation within Atlas
-              }}
+        {/* Toggle Button */}
+        <button
+          className={cn(
+            "p-1 rounded-md text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200",
+            isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-200/50"
+          )}
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          {isOpen ? (
+            <ChevronLeft className="h-4 w-4" />
+          ) : (
+            <ChevronRight className="h-4 w-4" />
+          )}
+        </button>
+      </div>
+
+      {/* Sidebar Navigation */}
+      <div className="h-[calc(100vh-144px)] overflow-y-auto">
+        <SidebarSection
+          label="Navigation"
+          items={primaryNavItems}
+          isActive={isActivePath}
+          title="Navigation"
+        >
+          <SubMenuSection
+            label="Primary"
+            items={primaryNavItems}
+            isActive={isActivePath}
+            onItemClick={handleNavItemClick}
+            activeItem={activeItem}
+          />
+        </SidebarSection>
+
+        {activeItem === 'atlas' && (
+          <SidebarSection
+            label="Atlas Tools"
+            items={atlasNavItems}
+            isActive={isActivePath}
+            title="Atlas Tools"
+          >
+            <SubMenuSection
+              label="Atlas Tools"
+              items={atlasNavItems}
+              isActive={isActivePath}
+              onItemClick={handleNavItemClick}
+              activeItem={activeItem}
             />
-          </>
+          </SidebarSection>
         )}
-        
-        <SidebarSeparator />
-        
-        {/* Trinity Dodge Navigation */}
-        <SidebarSection 
-          label="Trinity Dodge" 
-          items={getTrinityNavItems()} 
-          isActive={isActive} 
-        />
-        
-        <SidebarSeparator />
-        
-        {/* Tools Navigation */}
-        <SidebarSection 
-          label="Tools" 
-          items={getToolsNavItems()} 
-          isActive={isActive} 
-        />
-      </SidebarContent>
-      
-      <SidebarFooter className={cn(
-        "border-t", 
-        isDarkMode ? "border-white/10" : "border-gray-200/70"
-      )}>
-        <UserProfile />
-      </SidebarFooter>
-    </Sidebar>
+
+        <SidebarSection
+          label="Trinity Dodge"
+          items={trinityNavItems}
+          isActive={isActivePath}
+          title="Trinity Dodge"
+        >
+          <SubMenuSection
+            label="Trinity Dodge"
+            items={trinityNavItems}
+            isActive={isActivePath}
+            onItemClick={handleNavItemClick}
+            activeItem={activeItem}
+          />
+        </SidebarSection>
+
+        <SidebarSection
+          label="Tools"
+          items={toolsNavItems}
+          isActive={isActivePath}
+          title="Tools"
+        >
+          <SubMenuSection
+            label="Tools"
+            items={toolsNavItems}
+            isActive={isActivePath}
+            onItemClick={handleNavItemClick}
+            activeItem={activeItem}
+          />
+        </SidebarSection>
+      </div>
+
+      {/* User Profile */}
+      <div className="absolute bottom-0 left-0 right-0 p-4">
+        <UserProfile isCollapsed={!isOpen} />
+      </div>
+    </div>
   );
 };
 

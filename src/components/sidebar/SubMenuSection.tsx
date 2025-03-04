@@ -1,77 +1,67 @@
 
 import React, { useState } from 'react';
-import { NavItem, SubMenuSectionProps } from './types';
-import {
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarGroupContent,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-} from '@/components/ui/sidebar';
+import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { ChevronDown, ChevronRight } from 'lucide-react';
+import { NavItem, SubMenuSectionProps } from './types';
 
-const SubMenuSection: React.FC<SubMenuSectionProps> = ({ 
-  label, 
-  items, 
-  isActive, 
-  onItemClick, 
-  collapsible = false 
+interface ExtendedSubMenuSectionProps extends SubMenuSectionProps {
+  label: string;
+  isActive?: (path: string) => boolean;
+  onItemClick?: (name: string) => void;
+  collapsible?: boolean;
+}
+
+const SubMenuSection: React.FC<ExtendedSubMenuSectionProps> = ({
+  label,
+  items,
+  activeItem,
+  isActive,
+  onItemClick,
+  collapsible = false,
+  onNavItemClick
 }) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
-
-  const toggleCollapse = () => {
-    if (collapsible) {
-      setIsCollapsed(!isCollapsed);
-    }
-  };
-
   return (
-    <SidebarGroup>
-      <SidebarGroupLabel 
-        onClick={toggleCollapse} 
-        className={collapsible ? "cursor-pointer flex items-center justify-between" : ""}
-      >
-        <span>{label}</span>
-        {collapsible && (
-          isCollapsed 
-            ? <ChevronRight className="h-4 w-4" /> 
-            : <ChevronDown className="h-4 w-4" />
-        )}
-      </SidebarGroupLabel>
-      {!isCollapsed && (
-        <SidebarGroupContent>
-          <SidebarMenu>
-            {items.map((item) => (
-              <SidebarMenuItem key={item.name}>
-                <SidebarMenuButton 
-                  isActive={isActive ? isActive(item.path) : false}
-                  onClick={() => {
-                    if (onItemClick) onItemClick(item.name);
-                  }}
-                >
-                  <div className="flex items-center w-full">
-                    <span className="flex items-center justify-center h-5 w-5 mr-3">
-                      {item.icon}
-                    </span>
-                    <span className="flex-grow">{item.name}</span>
-                    {item.badge && (
-                      <span className={cn(
-                        "flex h-5 w-5 items-center justify-center rounded-full text-xs font-medium",
-                        `bg-${item.badge.color} text-white`
-                      )}>
-                        {item.badge.count}
-                      </span>
-                    )}
-                  </div>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarGroupContent>
-      )}
-    </SidebarGroup>
+    <ul className="space-y-1 py-1">
+      {items.map((item) => (
+        <li key={item.path}>
+          <Link
+            to={item.path}
+            className={cn(
+              "flex items-center justify-between group px-3 py-2 text-sm font-medium rounded-md",
+              "transition-colors duration-200",
+              isActive && isActive(item.path)
+                ? "bg-white/10 text-white"
+                : "text-white/75 hover:text-white hover:bg-white/10"
+            )}
+            onClick={() => {
+              if (onItemClick) onItemClick(item.name);
+              if (onNavItemClick) onNavItemClick(item);
+              if (item.onClick) item.onClick();
+            }}
+          >
+            <span className="flex items-center">
+              {item.icon && (
+                <span className="mr-2 text-white/70 group-hover:text-white/90">
+                  {item.icon}
+                </span>
+              )}
+              {item.name}
+            </span>
+            
+            {item.badge && (
+              <span
+                className={cn(
+                  "px-2 py-0.5 text-xs font-semibold rounded-full",
+                  `bg-${item.badge.color} text-white`
+                )}
+              >
+                {item.badge.count}
+              </span>
+            )}
+          </Link>
+        </li>
+      ))}
+    </ul>
   );
 };
 
