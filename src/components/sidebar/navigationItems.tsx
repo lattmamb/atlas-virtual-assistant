@@ -43,6 +43,11 @@ export const getPrimaryNavItems = (): NavItem[] => [
 // Atlas submenu items - shown when Atlas is active
 export const getAtlasNavItems = (): NavItem[] => [
   {
+    name: 'Chat',
+    path: '/atlas?view=chat',
+    icon: <MessageSquare className="h-4 w-4" />
+  },
+  {
     name: 'Link',
     path: '/atlas?view=link',
     icon: <Link2 className="h-4 w-4" />
