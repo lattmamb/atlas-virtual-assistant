@@ -7,7 +7,7 @@ export interface NavItem {
   badge?: {
     count: number;
     color: string;
-  };
+  } | string;
   onClick?: () => void;
 }
 
@@ -16,6 +16,11 @@ export interface SubMenuSectionProps {
   isActive: (path: string) => boolean;
   title?: string;
   isCollapsed?: boolean;
+  label?: string;
+  activeItem?: string;
+  onItemClick?: (path: string) => void;
+  collapsible?: boolean;
+  onNavItemClick?: (item: NavItem) => void;
 }
 
 export interface SidebarSectionProps {

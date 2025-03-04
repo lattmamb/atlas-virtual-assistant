@@ -1,110 +1,142 @@
 
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '@/context/ThemeContext';
 import { cn } from '@/lib/utils';
+import { Sparkles, Zap, Globe, Bot, Cloud, Database } from 'lucide-react';
+
+type ElementType = 'icon' | 'data' | 'particle';
 
 interface FloatingElement {
-  id: number;
-  x: number;
-  y: number;
+  id: string;
+  x: string;
+  y: string;
   size: number;
-  delay: number;
-  duration: number;
-  type: 'particle' | 'icon' | 'data';
-  icon?: string;
-  label?: string;
+  type: ElementType;
+  content?: React.ReactNode;
+  delay?: number;
 }
 
-interface ARFloatingElementsProps {
-  scrollY: number;
-  density?: 'low' | 'medium' | 'high';
-}
-
-const generateElements = (density: 'low' | 'medium' | 'high'): FloatingElement[] => {
-  const count = density === 'low' ? 15 : density === 'medium' ? 30 : 50;
-  const elements: FloatingElement[] = [];
-  
-  const types = ['particle', 'particle', 'particle', 'icon', 'data'];
-  const icons = ['✉️', '🔔', '📱', '🌐', '⚙️', '📊', '📈', '🔍'];
-  const labels = ['Mail', 'Notifications', 'Messages', 'Safari', 'Settings', 'Analytics', 'Performance', 'Search'];
-  
-  for (let i = 0; i < count; i++) {
-    const type = types[Math.floor(Math.random() * types.length)];
-    elements.push({
-      id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      size: type === 'particle' ? 2 + Math.random() * 4 : 20 + Math.random() * 20,
-      delay: Math.random() * 5,
-      duration: 15 + Math.random() * 20,
-      type,
-      icon: type === 'icon' ? icons[Math.floor(Math.random() * icons.length)] : undefined,
-      label: type === 'data' ? labels[Math.floor(Math.random() * labels.length)] : undefined
-    });
-  }
-  
-  return elements;
-};
-
-const ARFloatingElements: React.FC<ARFloatingElementsProps> = ({ scrollY, density = 'medium' }) => {
+const ARFloatingElements: React.FC = () => {
   const { isDarkMode } = useTheme();
-  const elements = useRef<FloatingElement[]>(generateElements(density));
+  
+  const floatingElements: FloatingElement[] = [
+    {
+      id: 'element1',
+      x: '10%',
+      y: '20%',
+      size: 40,
+      type: 'icon',
+      content: <Sparkles className="text-blue-400" />,
+      delay: 0.2
+    },
+    {
+      id: 'element2',
+      x: '80%',
+      y: '15%',
+      size: 36,
+      type: 'icon',
+      content: <Globe className="text-purple-400" />,
+      delay: 0.7
+    },
+    {
+      id: 'element3',
+      x: '70%',
+      y: '70%',
+      size: 44,
+      type: 'icon',
+      content: <Bot className="text-cyan-400" />,
+      delay: 1.1
+    },
+    {
+      id: 'element4',
+      x: '25%',
+      y: '65%',
+      size: 38,
+      type: 'icon',
+      content: <Cloud className="text-pink-400" />,
+      delay: 0.5
+    },
+    {
+      id: 'element5',
+      x: '45%',
+      y: '35%',
+      size: 32,
+      type: 'data',
+      content: <div className="text-xs font-mono">U-N-I</div>,
+      delay: 0.9
+    },
+    {
+      id: 'element6',
+      x: '60%',
+      y: '50%',
+      size: 34,
+      type: 'data',
+      content: <div className="text-xs font-mono">Vision Pro</div>,
+      delay: 1.3
+    },
+    {
+      id: 'element7',
+      x: '15%',
+      y: '40%',
+      size: 28,
+      type: 'data',
+      content: <Zap className="text-amber-400" />,
+      delay: 0.4
+    },
+    {
+      id: 'element8',
+      x: '85%',
+      y: '85%',
+      size: 30,
+      type: 'particle',
+      delay: 0.3
+    },
+    {
+      id: 'element9',
+      x: '30%',
+      y: '90%',
+      size: 26,
+      type: 'particle',
+      delay: 0.8
+    }
+  ];
   
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-      {elements.current.map((element) => (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+      {floatingElements.map((element) => (
         <motion.div
           key={element.id}
           className={cn(
-            "absolute rounded-full pointer-events-none",
-            element.type === 'particle' ? 'opacity-30' : 'opacity-70'
+            "absolute rounded-full flex items-center justify-center",
+            element.type === 'icon' && "backdrop-blur-sm border",
+            element.type === 'data' && "backdrop-blur-md border",
+            element.type === 'particle' && "backdrop-blur-sm bg-gradient-to-br",
+            isDarkMode 
+              ? "border-white/10 from-white/5 to-transparent" 
+              : "border-black/10 from-black/5 to-transparent"
           )}
           style={{
-            left: `${element.x}%`,
-            top: `${element.y}%`,
-            width: element.type === 'particle' ? `${element.size}px` : `${element.size}px`,
-            height: element.type === 'particle' ? `${element.size}px` : `${element.size}px`,
-            background: element.type === 'particle' 
-              ? isDarkMode 
-                ? `radial-gradient(circle, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 70%)` 
-                : `radial-gradient(circle, rgba(0,122,255,0.3) 0%, rgba(0,122,255,0) 70%)`
-              : 'transparent',
-            transform: `translateY(${scrollY * (0.1 + Math.random() * 0.2)}px)`,
-            zIndex: element.type === 'particle' ? 0 : 10
+            left: element.x,
+            top: element.y,
+            width: element.size,
+            height: element.size,
           }}
-          initial={{ opacity: 0 }}
+          initial={{ opacity: 0, scale: 0 }}
           animate={{ 
-            opacity: element.type === 'particle' ? 0.3 : 0.7,
-            x: [0, Math.random() * 30 - 15, 0],
-            y: [0, Math.random() * 30 - 15, 0]
+            opacity: element.type === 'particle' ? 0.4 : 0.8, 
+            scale: 1,
+            x: [0, 10, -10, 0],
+            y: [0, -10, 10, 0]
           }}
-          transition={{ 
+          transition={{
+            duration: 8,
             delay: element.delay,
-            duration: element.duration, 
             repeat: Infinity,
-            repeatType: "reverse"
+            repeatType: "reverse",
           }}
         >
-          {element.type === 'icon' && (
-            <div className="w-full h-full flex items-center justify-center text-xl">
-              {element.icon}
-            </div>
-          )}
-          
-          {element.type === 'data' && (
-            <div className={cn(
-              "flex flex-col items-center justify-center",
-              "px-3 py-2 rounded-lg backdrop-blur-sm",
-              isDarkMode ? "bg-white/10" : "bg-black/5",
-              isDarkMode ? "text-white" : "text-black"
-            )}>
-              <span className="text-xs font-medium">{element.label}</span>
-              <span className="text-xs opacity-70">
-                {Math.floor(Math.random() * 100)}
-              </span>
-            </div>
-          )}
+          {element.content}
         </motion.div>
       ))}
     </div>

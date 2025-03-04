@@ -1,21 +1,27 @@
 
 import React from 'react';
-import { Sparkles } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { SidebarHeaderTitle } from '@/components/ui/sidebar';
+import { cn } from '@/lib/utils';
 
-const SidebarLogo: React.FC = () => {
+interface SidebarLogoProps {
+  isCollapsed: boolean;
+}
+
+const SidebarLogo: React.FC<SidebarLogoProps> = ({ isCollapsed }) => {
   return (
-    <SidebarHeaderTitle>
-      <motion.div 
-        className="mr-2 flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white"
-        whileHover={{ rotate: 180 }}
-        transition={{ duration: 0.5 }}
-      >
-        <Sparkles className="h-3.5 w-3.5" />
-      </motion.div>
-      <span className="text-lg font-medium">Atlas Assistant</span>
-    </SidebarHeaderTitle>
+    <div className={cn(
+      "flex items-center h-16 px-6",
+      isCollapsed ? "justify-center" : "justify-start"
+    )}>
+      <div className="h-8 w-8 rounded-md bg-sidebar-accent flex items-center justify-center">
+        <span className="text-sidebar-accent-foreground font-bold text-lg">A</span>
+      </div>
+      
+      {!isCollapsed && (
+        <span className="ml-3 font-semibold text-sidebar-foreground">
+          Atlas Assistant
+        </span>
+      )}
+    </div>
   );
 };
 
