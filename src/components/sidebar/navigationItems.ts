@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { NavItem } from './types';
-import { Home, MessageSquare, Settings, Sparkles, Cloud } from 'lucide-react';
+import { Home, MessageSquare, Settings, Sparkles, Car } from 'lucide-react';
 
 export const navigationItems: NavItem[] = [
   {
@@ -35,7 +35,7 @@ export const navigationItems: NavItem[] = [
   {
     name: 'atlas',
     title: 'Atlas',
-    icon: React.createElement(Cloud),
+    icon: React.createElement(Car),
     path: '/atlas',
   },
 ];
