@@ -59,7 +59,19 @@ export function Tabs({
                 className="absolute inset-0 bg-gradient-to-r from-violet-600 to-indigo-600 rounded-full"
                 transition={{ type: "spring", duration: 0.6 }}
                 style={{ zIndex: -1 }}
-              />
+              >
+                <motion.div
+                  className="absolute inset-0 w-full h-full rounded-full opacity-50"
+                  animate={{
+                    background: [
+                      "linear-gradient(to right, rgb(138, 43, 226), rgb(94, 23, 235))",
+                      "linear-gradient(to right, rgb(139, 92, 246), rgb(76, 29, 149))",
+                      "linear-gradient(to right, rgb(138, 43, 226), rgb(94, 23, 235))",
+                    ],
+                  }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                />
+              </motion.div>
             )}
             {hoveredTab === tab.value && tab.value !== activeTab && (
               <motion.div

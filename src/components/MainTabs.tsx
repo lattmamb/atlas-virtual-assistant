@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Home } from "@/icons/Home";
-import { Settings } from "@/icons/Settings";
+import { Settings as SettingsIcon } from "@/icons/Settings";
 import { Tabs } from "@/components/ui/tabs-custom";
 import { SparklesCore } from "@/components/ui/sparkles";
 import { useTheme } from "@/context/ThemeContext";
@@ -14,7 +14,7 @@ import Features from "@/pages/Features";
 import AppleVisionPro from "@/pages/AppleVisionPro";
 import AtlasLink from "@/pages/AtlasLink";
 import ChatRoom from "@/pages/ChatRoom";
-import Settings from "@/pages/Settings";
+import SettingsPage from "@/pages/Settings";
 import Workflows from "@/pages/Workflows";
 
 export function MainTabs() {
@@ -107,10 +107,10 @@ export function MainTabs() {
     {
       title: "Settings",
       value: "settings",
-      icon: <Settings className="h-4 w-4" />,
+      icon: <SettingsIcon className="h-4 w-4" />,
       content: (
         <div className="w-full h-full">
-          <Settings />
+          <SettingsPage />
         </div>
       ),
     },
