@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from "react";
-import { useChat } from "@/context/ChatContext";
+import { useChat } from "@/hooks/use-chat";
 import { useTheme } from "@/context/ThemeContext";
 import { cn } from "@/lib/utils";
 import { GridPattern } from "@/components/ui/grid-pattern";

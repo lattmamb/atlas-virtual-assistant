@@ -1,15 +1,9 @@
 
-import { useContext } from 'react';
-import { ChatContext } from '@/context/ChatContext';
+import { useChatContext } from '@/context/ChatContext';
 
+// Re-export the context hook with a simpler name
 export const useChat = () => {
-  const context = useContext(ChatContext);
-  
-  if (!context) {
-    throw new Error('useChat must be used within a ChatProvider');
-  }
-  
-  return context;
+  return useChatContext();
 };
 
 export default useChat;

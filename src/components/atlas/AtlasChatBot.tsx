@@ -1,7 +1,7 @@
 
 import { useRef } from "react";
-import { useChat } from "@/context/ChatContext";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useChat } from "@/hooks/use-chat";
 import Widget from "@/components/icloud/Widget";
 import ChatHeader from "@/components/chat/ChatHeader";
 import ChatBotContainer from "./ChatBotContainer";
