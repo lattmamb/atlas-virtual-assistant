@@ -1,26 +1,13 @@
 
-import { LucideIcon } from "lucide-react";
+import { ReactNode } from 'react';
 
 export interface NavItem {
   name: string;
   path: string;
-  icon: React.ReactNode;
+  icon: ReactNode;
+  onClick?: () => void;
   badge?: {
-    count: number;
+    count: number | string;
     color: string;
   };
-}
-
-export interface SidebarSectionProps {
-  label: string;
-  items: NavItem[];
-  isActive: (path: string) => boolean;
-}
-
-export interface SubMenuSectionProps {
-  label: string;
-  items: NavItem[];
-  isActive?: (path: string) => boolean;
-  onItemClick?: (name: string) => void;
-  collapsible?: boolean;
 }

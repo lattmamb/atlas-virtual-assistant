@@ -1,135 +1,174 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useTheme } from '@/context/ThemeContext';
 import { cn } from '@/lib/utils';
-import { 
-  Film, 
-  Phone, 
-  Clock, 
-  Users, 
-  Headphones,
-  Glasses
-} from 'lucide-react';
+import { ArrowRight, Smartphone, Globe, Lock, Zap, Sparkles, Layers } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useTheme } from '@/context/ThemeContext';
 
-const FeaturesSection: React.FC = () => {
+const FeatureCard = ({ 
+  icon, 
+  title, 
+  description, 
+  delay = 0,
+  gradient = 'from-blue-500/20 to-purple-500/20'
+}: { 
+  icon: React.ReactNode; 
+  title: string; 
+  description: string;
+  delay?: number;
+  gradient?: string;
+}) => {
   const { isDarkMode } = useTheme();
+  
+  return (
+    <motion.div
+      className={cn(
+        "rounded-2xl overflow-hidden p-6 h-full",
+        "border backdrop-blur-lg",
+        isDarkMode 
+          ? "border-white/10 bg-black/20" 
+          : "border-gray-200 bg-white/60",
+        `bg-gradient-to-br ${gradient}`
+      )}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay }}
+      viewport={{ once: true }}
+    >
+      <div className="mb-4 text-blue-500">
+        {icon}
+      </div>
+      <h3 className="text-xl font-semibold mb-2">{title}</h3>
+      <p className={cn(
+        "mb-4",
+        isDarkMode ? "text-gray-300" : "text-gray-600"
+      )}>
+        {description}
+      </p>
+      <Button 
+        variant="ghost" 
+        className="group p-0" 
+        size="sm"
+      >
+        <span className="text-blue-500">Learn more</span>
+        <ArrowRight className="ml-1 h-4 w-4 text-blue-500 transition-transform group-hover:translate-x-1" />
+      </Button>
+    </motion.div>
+  );
+};
 
-  const featuresList = [
+const BlurredCircle = ({ 
+  className,
+  size = "300px",
+  color = "rgba(59, 130, 246, 0.2)",
+  blur = "80px"
+}: {
+  className?: string;
+  size?: string;
+  color?: string;
+  blur?: string;
+}) => {
+  return (
+    <div 
+      className={cn("rounded-full absolute", className)}
+      style={{
+        width: size,
+        height: size,
+        background: color,
+        filter: `blur(${blur})`,
+        zIndex: 0
+      }}
+    />
+  );
+};
+
+const FeaturesSection = () => {
+  const { isDarkMode } = useTheme();
+  
+  const features = [
     {
-      title: "Entertainment",
-      description: "Experience movies and games with a massive screen that wraps around you.",
-      icon: <Film className="h-6 w-6" />,
-      color: "from-blue-500 to-indigo-600"
+      icon: <Globe className="h-8 w-8" />,
+      title: "Spatial Computing",
+      description: "Experience your digital world in a completely immersive way with revolutionary spatial computing technology.",
+      gradient: "from-blue-500/20 to-indigo-500/20"
     },
     {
-      title: "Communication",
-      description: "Video calls feel like you're in the same room with spatial audio and 3D rendering.",
-      icon: <Phone className="h-6 w-6" />,
-      color: "from-purple-500 to-pink-600"
+      icon: <Smartphone className="h-8 w-8" />,
+      title: "Seamless Integration",
+      description: "Connects flawlessly with your existing Apple devices and services for a unified digital experience.",
+      gradient: "from-purple-500/20 to-pink-500/20"
     },
     {
-      title: "Productivity",
-      description: "Create a multi-display workspace anywhere you go with infinite screen space.",
-      icon: <Clock className="h-6 w-6" />,
-      color: "from-emerald-500 to-teal-600"
+      icon: <Lock className="h-8 w-8" />,
+      title: "Privacy & Security",
+      description: "Advanced security features protect your information with industry-leading encryption and privacy controls.",
+      gradient: "from-indigo-500/20 to-blue-500/20"
     },
     {
-      title: "Social",
-      description: "Share experiences in real-time with friends and family across the globe.",
-      icon: <Users className="h-6 w-6" />,
-      color: "from-orange-500 to-red-600"
+      icon: <Zap className="h-8 w-8" />,
+      title: "Immersive Performance",
+      description: "Powered by Apple's most advanced chips for unparalleled graphics and computational performance.",
+      gradient: "from-pink-500/20 to-rose-500/20"
     },
     {
-      title: "Audio",
-      description: "Spatial audio creates a soundscape that perfectly matches your visual environment.",
-      icon: <Headphones className="h-6 w-6" />,
-      color: "from-cyan-500 to-blue-600"
+      icon: <Sparkles className="h-8 w-8" />,
+      title: "Revolutionary Display",
+      description: "Ultra-high resolution micro-OLED displays deliver stunning visuals with incredible depth and clarity.",
+      gradient: "from-blue-500/20 to-cyan-500/20"
     },
     {
-      title: "Comfort",
-      description: "Lightweight design with balanced weight distribution for all-day wear.",
-      icon: <Glasses className="h-6 w-6" />,
-      color: "from-violet-500 to-purple-600"
+      icon: <Layers className="h-8 w-8" />,
+      title: "Infinite Canvas",
+      description: "Transform any space into your workspace with virtually unlimited screen real estate and 3D capabilities.",
+      gradient: "from-cyan-500/20 to-blue-500/20" 
     }
   ];
 
   return (
-    <section className={cn(
-      "py-20 px-4 sm:px-6 relative",
-      isDarkMode 
-        ? "bg-black/30 backdrop-blur-xl" 
-        : "bg-white/50 backdrop-blur-lg"
-    )}>
+    <section className="relative py-24 px-4 overflow-hidden">
+      {/* Background blur elements */}
+      <BlurredCircle 
+        className="left-1/4 top-1/4 -translate-x-1/2 -translate-y-1/2" 
+        color="rgba(79, 70, 229, 0.15)"
+      />
+      <BlurredCircle 
+        className="right-1/4 bottom-1/4 translate-x-1/2 translate-y-1/2" 
+        color="rgba(236, 72, 153, 0.15)"
+      />
+      
       <div className="max-w-7xl mx-auto">
         <motion.div 
           className="text-center mb-16"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
         >
           <h2 className={cn(
-            "text-3xl sm:text-4xl font-bold",
+            "text-4xl md:text-5xl font-bold mb-4",
             isDarkMode ? "text-white" : "text-gray-900"
           )}>
-            Unlimited Possibilities
+            Unlock New Realities
           </h2>
-          
           <p className={cn(
-            "mt-4 text-xl max-w-3xl mx-auto",
+            "text-xl max-w-3xl mx-auto",
             isDarkMode ? "text-gray-300" : "text-gray-600"
           )}>
-            Discover how Apple Vision Pro transforms the way you work, play, and connect.
+            Apple Vision Pro redefines what's possible with groundbreaking features and capabilities that enhance how you work, play, and connect.
           </p>
         </motion.div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {featuresList.map((feature, index) => (
-            <motion.div
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {features.map((feature, index) => (
+            <FeatureCard
               key={index}
-              className={cn(
-                "rounded-2xl overflow-hidden",
-                "group transition-all duration-300",
-                isDarkMode 
-                  ? "bg-white/5 hover:bg-white/10 border border-white/10" 
-                  : "bg-white/60 hover:bg-white/80 border border-white/30",
-                "backdrop-blur-lg"
-              )}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.5, delay: 0.1 * index }}
-              whileHover={{ y: -5, transition: { duration: 0.2 } }}
-            >
-              <div className="h-2 bg-gradient-to-r w-full" style={{ 
-                backgroundImage: `linear-gradient(to right, var(--tw-gradient-stops))`, 
-                '--tw-gradient-from': `${feature.color.split(' ')[0].split('-')[1]}`,
-                '--tw-gradient-to': `${feature.color.split(' ')[1].split('-')[1]}`,
-              }}></div>
-              
-              <div className="p-6">
-                <div className={cn(
-                  "inline-flex items-center justify-center rounded-xl p-3 mb-4",
-                  `bg-gradient-to-br ${feature.color} text-white`
-                )}>
-                  {feature.icon}
-                </div>
-                
-                <h3 className={cn(
-                  "text-xl font-semibold mb-3",
-                  isDarkMode ? "text-white" : "text-gray-900"
-                )}>
-                  {feature.title}
-                </h3>
-                
-                <p className={cn(
-                  isDarkMode ? "text-gray-300" : "text-gray-600"
-                )}>
-                  {feature.description}
-                </p>
-              </div>
-            </motion.div>
+              icon={feature.icon}
+              title={feature.title}
+              description={feature.description}
+              delay={index * 0.1}
+              gradient={feature.gradient}
+            />
           ))}
         </div>
       </div>

@@ -44,7 +44,7 @@ export const getPrimaryNavItems = (): NavItem[] => [
     path: '/applevisionpro',
     icon: <Glasses className="h-4 w-4" />,
     badge: {
-      count: 'New',
+      count: 'New' as any, // Type assertion to avoid the error
       color: 'purple-600'
     }
   }
