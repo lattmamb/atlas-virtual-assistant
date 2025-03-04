@@ -16,7 +16,8 @@ const UniverseNavBar: React.FC<UniverseNavBarProps> = ({ currentSection }) => {
   
   const navItems = [
     { id: 'vision', label: 'Vision Pro', icon: <Apple className="h-4 w-4" />, path: '/' },
-    { id: 'chat', label: 'Chat', icon: <MessageSquare className="h-4 w-4" />, path: '/chat' },
+    { id: 'parallax', label: 'Explore', icon: <Sparkles className="h-4 w-4" />, path: '/explore' },
+    { id: 'chat', label: 'Chat', icon: <MessageSquare className="h-4 w-4" />, path: '/chatroom' },
     { id: 'atlas', label: 'Atlas', icon: <Sparkles className="h-4 w-4" />, path: '/atlas' },
     { id: 'workflow', label: 'Workflows', icon: <Workflow className="h-4 w-4" />, path: '/workflows' },
     { id: 'settings', label: 'Settings', icon: <Settings className="h-4 w-4" />, path: '/settings' },
@@ -42,7 +43,7 @@ const UniverseNavBar: React.FC<UniverseNavBarProps> = ({ currentSection }) => {
           >
             <Apple className="h-5 w-5 text-white" />
           </motion.div>
-          <span className="text-lg font-semibold">U-N-I-Verse</span>
+          <span className="text-lg font-semibold">Atlas Universe</span>
         </div>
         
         <div className="hidden md:flex items-center space-x-4">

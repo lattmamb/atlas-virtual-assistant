@@ -14,7 +14,7 @@ export const navigationItems: NavItem[] = [
     name: 'chat',
     title: 'Chat',
     icon: React.createElement(MessageSquare),
-    path: '/chat',
+    path: '/chatroom',
     badge: {
       count: 2,
       color: 'blue',

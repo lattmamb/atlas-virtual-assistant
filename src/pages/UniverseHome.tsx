@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '@/context/ThemeContext';
@@ -9,7 +10,6 @@ import { UniverseComponentProps } from '@/lib/types';
 
 import ARBackground from '@/components/applevision/ARBackground';
 import HeroSection from '@/components/applevision/HeroSection';
-import FeaturesSection from '@/components/applevision/FeaturesSection';
 import ParallaxSection from '@/components/applevision/ParallaxSection';
 import PricingSection from '@/components/applevision/PricingSection';
 
@@ -20,6 +20,7 @@ import SettingsPanel from '@/components/universe/SettingsPanel';
 import UniverseNavBar from '@/components/universe/UniverseNavBar';
 import SectionIndicator from '@/components/universe/SectionIndicator';
 import { useSwipeable } from '@/hooks/use-swipeable';
+import { HeroParallaxDemo } from '@/components/ui/hero-parallax.demo';
 
 interface SectionConfig {
   id: string;
@@ -29,7 +30,7 @@ interface SectionConfig {
 
 const sections: SectionConfig[] = [
   { id: 'vision', title: 'Vision Pro', component: HeroSection },
-  { id: 'features', title: 'Features', component: FeaturesSection },
+  { id: 'parallax', title: 'Explore', component: ({ scrollY }) => <HeroParallaxDemo /> },
   { id: 'chat', title: 'Chat', component: ChatRoomPanel },
   { id: 'atlas', title: 'Atlas', component: AtlasPanel },
   { id: 'workflow', title: 'Workflows', component: WorkflowPanel },
@@ -49,7 +50,7 @@ const UniverseHome: React.FC = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      toast.success("Welcome to U-N-I-Verse", {
+      toast.success("Welcome to Atlas Universe", {
         description: "Navigate between sections with the arrows or swipe",
         icon: <Sparkles className="h-5 w-5" />,
         duration: 5000,
@@ -59,7 +60,7 @@ const UniverseHome: React.FC = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (currentSectionIndex === 1) {
+      if (currentSectionIndex === 0) {
         setScrollY(prev => (prev < 300 ? prev + 0.5 : 0));
       } else {
         setScrollY(0);

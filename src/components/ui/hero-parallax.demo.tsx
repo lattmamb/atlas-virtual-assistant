@@ -39,12 +39,6 @@ export function HeroParallaxDemo() {
       description: "Create and manage automation workflows"
     },
     {
-      title: "U-N-I-Verse",
-      link: "/universe",
-      thumbnail: "https://aceternity.com/images/products/thumbnails/new/renderwork.png",
-      description: "Your gateway to the digital universe"
-    },
-    {
       title: "Settings",
       link: "/settings",
       thumbnail: "https://aceternity.com/images/products/thumbnails/new/tailwindmasterkit.png",
@@ -52,7 +46,7 @@ export function HeroParallaxDemo() {
     },
     {
       title: "Trinity Dodge",
-      link: "/",
+      link: "/universe",
       thumbnail: "https://aceternity.com/images/products/thumbnails/new/goldenbellsacademy.png",
       description: "Explore vehicles at Trinity Dodge"
     },

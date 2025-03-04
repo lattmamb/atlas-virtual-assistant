@@ -1,7 +1,6 @@
 
 import { Routes, Route } from 'react-router-dom';
 import { Toaster } from 'sonner';
-import Index from './pages/Index';
 import AppleVisionPro from './pages/AppleVisionPro';
 import Atlas from './pages/Atlas';
 import AtlasLink from './pages/AtlasLink';
@@ -17,7 +16,8 @@ function App() {
     <ThemeProvider>
       <Toaster position="top-center" richColors />
       <Routes>
-        <Route path="/" element={<Index />} />
+        <Route path="/" element={<UniverseHome />} />
+        <Route path="/index" element={<UniverseHome />} />
         <Route path="/applevisionpro" element={<AppleVisionPro />} />
         <Route path="/atlas" element={<Atlas />} />
         <Route path="/atlaslink" element={<AtlasLink />} />
