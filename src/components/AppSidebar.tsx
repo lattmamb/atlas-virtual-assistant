@@ -20,7 +20,7 @@ const useSidebar = (): SidebarContextValue => {
   };
 };
 
-const AppSidebar = () => {
+const AppSidebar = ({ activePage }: { activePage?: string }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { isCollapsed, setIsCollapsed } = useSidebar();

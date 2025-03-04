@@ -10,14 +10,14 @@ import QuickNav from './sidebar/QuickNav';
 // Import and use types from SidebarNavigation
 interface SidebarProps {
   className?: string;
-  activePage: string;
-  onPageChange: (name: string) => void;
+  activePage?: string;
+  onPageChange?: (name: string) => void;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
   className,
-  activePage,
-  onPageChange
+  activePage = "chat",
+  onPageChange = () => {}
 }) => {
   const { isDarkMode } = useTheme();
   

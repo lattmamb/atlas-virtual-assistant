@@ -15,17 +15,20 @@ const getPrimaryItems = (): NavItem[] => [
   {
     icon: "🏠",
     title: "Home",
+    name: "Home",
     path: "home",
   },
   {
     icon: "💬",
     title: "Chat",
+    name: "Chat",
     path: "chat",
     badge: "New"
   },
   {
     icon: "📊",
     title: "Dashboard",
+    name: "Dashboard",
     path: "dashboard",
   }
 ];
@@ -34,11 +37,13 @@ const getSettingsItems = (): NavItem[] => [
   {
     icon: "⚙️",
     title: "Settings",
+    name: "Settings",
     path: "settings",
   },
   {
     icon: "🔒",
     title: "Privacy",
+    name: "Privacy",
     path: "privacy",
   }
 ];

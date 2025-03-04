@@ -4,14 +4,7 @@ import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { NavItem, SubMenuSectionProps } from './types';
 
-interface ExtendedSubMenuSectionProps extends SubMenuSectionProps {
-  label: string;
-  isActive?: (path: string) => boolean;
-  onItemClick?: (name: string) => void;
-  collapsible?: boolean;
-}
-
-const SubMenuSection: React.FC<ExtendedSubMenuSectionProps> = ({
+const SubMenuSection: React.FC<SubMenuSectionProps> = ({
   label,
   items,
   activeItem,
@@ -34,7 +27,7 @@ const SubMenuSection: React.FC<ExtendedSubMenuSectionProps> = ({
                 : "text-white/75 hover:text-white hover:bg-white/10"
             )}
             onClick={() => {
-              if (onItemClick) onItemClick(item.name);
+              if (onItemClick) onItemClick(item.path);
               if (onNavItemClick) onNavItemClick(item);
               if (item.onClick) item.onClick();
             }}
@@ -45,17 +38,19 @@ const SubMenuSection: React.FC<ExtendedSubMenuSectionProps> = ({
                   {item.icon}
                 </span>
               )}
-              {item.name}
+              {item.name || item.title}
             </span>
             
             {item.badge && (
               <span
                 className={cn(
                   "px-2 py-0.5 text-xs font-semibold rounded-full",
-                  `bg-${item.badge.color} text-white`
+                  typeof item.badge === 'object' 
+                    ? `bg-${item.badge.color} text-white` 
+                    : "bg-blue-600 text-white"
                 )}
               >
-                {item.badge.count}
+                {typeof item.badge === 'object' ? item.badge.count : item.badge}
               </span>
             )}
           </Link>

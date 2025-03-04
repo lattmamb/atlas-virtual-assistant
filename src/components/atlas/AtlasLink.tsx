@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { cn } from "@/lib/utils";
 import { AtlasLinkProvider } from './atlasLink/AtlasLinkContext';
 import { useAtlasLink } from './atlasLink/AtlasLinkContext';
@@ -18,6 +18,7 @@ const AtlasLinkContent: React.FC = () => {
   const { celestialMode } = useAtlasLink();
   const { isDarkMode } = useTheme();
   const isMobile = useIsMobile();
+  const [activePage, setActivePage] = useState("chat");
   
   return (
     <motion.div 
@@ -44,7 +45,10 @@ const AtlasLinkContent: React.FC = () => {
           <AppSidebar activePage="atlas" />
           
           {/* Atlas Sidebar with controls and settings */}
-          <Sidebar />
+          <Sidebar 
+            activePage={activePage}
+            onPageChange={setActivePage}
+          />
           
           {/* Main Content - Just the Chat Interface */}
           <div className="flex-1 flex flex-col h-full overflow-hidden relative">

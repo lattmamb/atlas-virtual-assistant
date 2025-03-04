@@ -1,15 +1,23 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
+import { Home, MessageSquare, Settings, Sparkles } from "lucide-react";
 
 interface QuickNavProps {
-  buttons: {
+  buttons?: {
     icon: React.ReactNode;
     ariaLabel: string;
   }[];
 }
 
-const QuickNav: React.FC<QuickNavProps> = ({ buttons }) => {
+const defaultButtons = [
+  { icon: <Home size={18} />, ariaLabel: "Home" },
+  { icon: <MessageSquare size={18} />, ariaLabel: "Chat" },
+  { icon: <Sparkles size={18} />, ariaLabel: "Features" },
+  { icon: <Settings size={18} />, ariaLabel: "Settings" }
+];
+
+const QuickNav: React.FC<QuickNavProps> = ({ buttons = defaultButtons }) => {
   return (
     <div className="flex justify-center space-x-2 mb-4">
       {buttons.map((button, index) => (
