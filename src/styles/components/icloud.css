@@ -1,225 +1,127 @@
-.icloud-widget {
-  @apply rounded-xl shadow-lg border overflow-hidden backdrop-blur-sm;
-  width: 100%;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
-  display: flex;
-  flex-direction: column;
-}
 
-.icloud-widget:hover {
-  @apply shadow-xl;
-}
-
-.icloud-widget-header {
-  @apply flex items-center justify-between p-3 border-b text-sm font-medium;
-}
-
-.icloud-widget-title {
-  @apply flex items-center;
-}
-
-.icloud-widget-body {
-  @apply bg-transparent;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Image handling */
-.icloud-widget-image {
-  width: 100%;
-  height: auto;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-}
-
-.icloud-widget-image-container {
-  overflow: hidden;
-  width: 100%;
-}
-
-/* Touch-friendly controls */
-.touch-control {
-  @apply p-3;
-  touch-action: manipulation;
-}
-
-/* Glass morphism effect for dark theme */
-.glass-dark {
-  @apply backdrop-blur-xl bg-slate-900/40 border border-slate-800/50 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.5)];
-}
-
-.glass-light {
-  @apply backdrop-blur-xl bg-white/40 border border-white/20 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.1)];
-}
-
-/* Apple card styling */
-.apple-card {
-  @apply rounded-xl shadow-md border border-white/20 bg-white/80 backdrop-blur-md p-4 transition-all duration-300;
-}
-
-/* Dark mode apple card */
-.dark-apple-card {
-  @apply bg-slate-800/90 backdrop-blur-lg border border-slate-700 shadow-lg rounded-xl p-4;
-}
-
-/* Mobile optimized widget */
-.mobile-widget {
-  @apply w-full relative my-2 max-w-full;
-  transform: none !important;
-}
-
-/* Celestial mode effects */
-.celestial-bg {
-  @apply bg-gradient-to-br from-slate-900 to-slate-950;
-}
-
-.star {
-  @apply absolute rounded-full bg-white opacity-70;
-  animation: twinkle 3s infinite ease-in-out;
-}
-
-@keyframes twinkle {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; }
-}
-
-/* Dashboard grid layout */
-.dashboard-grid {
-  @apply grid gap-4 p-4;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  height: calc(100vh - 80px);
-  overflow-y: auto;
-}
-
-/* Responsive dashboard grid */
-@media (min-width: 768px) {
-  .dashboard-grid {
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  }
-}
-
-@media (min-width: 1024px) {
-  .dashboard-grid {
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-  }
-}
-
-/* Chat components */
-.chat-box {
-  @apply flex flex-col h-full overflow-hidden rounded-lg border border-slate-200;
-}
-
-.chat-messages {
-  @apply flex-1 overflow-y-auto p-3 space-y-3;
-}
-
-.chat-input-container {
-  @apply border-t p-2 flex items-center;
-}
-
-.user-message {
-  @apply bg-primary text-primary-foreground p-3 rounded-lg ml-auto max-w-[75%];
-}
-
-.ai-message {
-  @apply bg-muted p-3 rounded-lg mr-auto max-w-[75%];
-}
-
-/* Workflow canvas */
-.workflow-canvas {
-  @apply border border-dashed border-slate-300 rounded-lg p-4 h-48 flex items-center justify-center text-muted-foreground;
-}
-
-/* Social feed */
-.social-feed {
-  @apply space-y-3 overflow-y-auto max-h-48;
-}
-
-.social-post {
-  @apply bg-muted/50 p-3 rounded-lg text-sm;
-}
-
-/* Mobility map */
-.mobility-map {
-  @apply bg-slate-100 dark:bg-slate-800 rounded-lg p-4 h-48 flex items-center justify-center text-muted-foreground;
-}
-
-/* iOS 18 Specific Styles */
-.ios-app-icon {
-  @apply rounded-2xl overflow-hidden shadow-md flex items-center justify-center;
-  aspect-ratio: 1 / 1;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.ios-app-icon:active {
-  transform: scale(0.9);
-}
-
-.ios-app-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  padding: 24px 16px;
-}
-
-.ios-page-indicator {
-  @apply flex justify-center space-x-1 mt-4;
-}
-
-.ios-page-dot {
-  @apply w-1.5 h-1.5 rounded-full bg-gray-400;
-}
-
-.ios-page-dot.active {
-  @apply bg-gray-200;
-}
-
+/* iOS Dock */
 .ios-dock {
-  @apply fixed bottom-6 left-1/2 transform -translate-x-1/2 flex justify-center items-center p-2 rounded-3xl;
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(20px);
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 16px;
+  padding: 12px 24px;
+  background: rgba(30, 30, 30, 0.75);
+  backdrop-filter: blur(12px);
+  border-radius: 30px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  width: 90%;
-  max-width: 400px;
+  z-index: 10;
 }
 
 .ios-dock-app {
-  @apply mx-2 rounded-2xl overflow-hidden shadow-md;
-  width: 60px;
-  height: 60px;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
 }
 
-.ios-status-bar {
-  @apply fixed top-0 left-0 right-0 flex items-center justify-between px-5 py-2;
-  background: rgba(0, 0, 0, 0.01);
-  backdrop-filter: blur(10px);
-  height: 44px;
-  z-index: 999;
+/* iOS App Icons */
+.ios-app-icon {
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.ios-widget-stack {
-  @apply space-y-4 p-4;
+/* iOS Widget Specific Styles */
+.ios-widget {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
 }
 
-.ios-widget-container {
-  @apply rounded-3xl overflow-hidden shadow-md;
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+.ios-widget-header {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.ios-lock-screen {
-  @apply flex flex-col items-center justify-between p-8 min-h-screen;
-  background-size: cover;
-  background-position: center;
+.ios-widget-content {
+  height: 100%;
 }
 
-.ios-large-time {
-  @apply text-6xl font-bold text-white;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+/* Page indicators */
+.ios-page-indicator {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin: 16px 0;
 }
 
-.ios-swipe-indicator {
-  @apply w-12 h-1 bg-white/30 rounded-full mx-auto mt-4;
+.ios-page-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.ios-page-dot.active {
+  width: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+/* Trinity Dodge Page Styles */
+.trinity-page {
+  --trinity-red: rgb(230, 30, 30);
+  --trinity-darkred: rgb(180, 20, 20);
+  --trinity-blue: rgb(30, 100, 210);
+  --trinity-darkblue: rgb(20, 70, 180);
+}
+
+.trinity-page .vehicle-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.trinity-page .vehicle-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.trinity-page .vehicle-feature-tag {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  padding: 4px 12px;
+  font-size: 0.75rem;
+}
+
+.trinity-page .vehicle-price-tag {
+  background: var(--trinity-red);
+  color: white;
+  border-radius: 0.5rem;
+  padding: 4px 12px;
+  font-weight: bold;
+}
+
+.trinity-page .action-button {
+  transition: all 0.2s ease;
+}
+
+.trinity-page .action-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.trinity-page .tab-button {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.trinity-page .tab-button.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--trinity-red);
 }

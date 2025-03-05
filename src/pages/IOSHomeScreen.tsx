@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '@/context/ThemeContext';
@@ -7,6 +6,7 @@ import IOSAppGrid from '@/components/ios/IOSAppGrid';
 import IOSWidget from '@/components/ios/IOSWidget';
 import { Clock, Calendar, Cloud, MessageSquare, Settings, Workflow, Music, Image, FileText } from 'lucide-react';
 import BackgroundEffects from '@/components/widgets/BackgroundEffects';
+import { Link } from 'react-router-dom';
 
 const IOSHomeScreen: React.FC = () => {
   const { currentTheme } = useTheme();
@@ -143,10 +143,16 @@ const IOSHomeScreen: React.FC = () => {
               <p className="text-xs opacity-70">$41,000</p>
               <p className="text-[10px] mt-1 opacity-60">Family-friendly SUV</p>
             </div>
-            <div className="bg-black/10 p-2 rounded-lg">
-              <p className="text-xs font-bold">Schedule Test Drive</p>
-              <p className="text-[10px] mt-1 opacity-60">Tap to book appointment</p>
-            </div>
+            <Link to="/trinity" className="block">
+              <motion.div 
+                className="bg-red-500/20 p-2 rounded-lg"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <p className="text-xs font-bold">Visit Trinity Dodge</p>
+                <p className="text-[10px] mt-1 opacity-60">Tap to view inventory</p>
+              </motion.div>
+            </Link>
           </div>
         </div>
       )

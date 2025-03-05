@@ -10,6 +10,7 @@ import UniverseHome from './pages/UniverseHome';
 import Workflows from './pages/Workflows';
 import NotFound from './pages/NotFound';
 import IOSHomeScreen from './pages/IOSHomeScreen';
+import Trinity from './pages/Trinity';
 import { ThemeProvider } from './context/ThemeContext';
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
         <Route path="/chatroom" element={<ChatRoom />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/workflows" element={<Workflows />} />
+        <Route path="/trinity" element={<Trinity />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </ThemeProvider>

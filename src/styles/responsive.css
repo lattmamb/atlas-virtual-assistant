@@ -112,6 +112,31 @@
   .ios-dock {
     bottom: 16px;
   }
+  
+  /* Trinity page responsive styles */
+  .trinity-page .vehicle-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .trinity-page .vehicle-detail-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .trinity-page .price-tag {
+    margin-top: 0.5rem;
+  }
+  
+  .trinity-page .action-button-container {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .trinity-page .tab-navigation {
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 /* Better support for touch controls on mobile */
