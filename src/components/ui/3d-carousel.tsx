@@ -105,7 +105,7 @@ const Carousel = memo(
 
     return (
       <div
-        className="flex h-full items-center justify-center bg-black/10"
+        className="flex h-full items-center justify-center"
         style={{
           perspective: "1000px",
           transformStyle: "preserve-3d",
@@ -142,7 +142,7 @@ const Carousel = memo(
           {cards.map((imgUrl, i) => (
             <motion.div
               key={`key-${imgUrl}-${i}`}
-              className="absolute flex h-full origin-center items-center justify-center rounded-xl backdrop-blur-sm bg-black/5 p-2"
+              className="absolute flex h-full origin-center items-center justify-center rounded-xl p-2"
               style={{
                 width: `${faceWidth}px`,
                 transform: `rotateY(${
@@ -184,7 +184,7 @@ function ThreeDPhotoCarousel() {
     console.log("Cards loaded:", cards)
   }, [cards])
 
-  const handleClick = (imgUrl: string, index: number) => {
+  const handleClick = (imgUrl: string) => {
     setActiveImg(imgUrl)
     setIsCarouselActive(false)
     controls.stop()

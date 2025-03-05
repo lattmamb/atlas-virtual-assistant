@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import { useTheme } from "@/context/ThemeContext";
 import { ChevronLeft, ChevronRight, ChevronUp } from "lucide-react";
 import { toast } from "sonner";
+import { useMediaQuery } from "@/components/ui/3d-carousel";
 
 interface PageInfo {
   path: string;
@@ -135,7 +136,7 @@ const PageCarousel = () => {
   };
 
   // 3D Carousel setup
-  const isScreenSizeSm = window.innerWidth <= 640;
+  const isScreenSizeSm = useMediaQuery("(max-width: 640px)");
   const cylinderWidth = isScreenSizeSm ? 600 : 1200;
   const faceCount = pages.length;
   const faceWidth = cylinderWidth / faceCount;
