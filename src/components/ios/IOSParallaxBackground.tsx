@@ -18,7 +18,6 @@ const IOSParallaxBackground: React.FC<IOSParallaxBackgroundProps> = ({
     <div className={cn(
       "h-[300vh] py-40 overflow-hidden antialiased relative flex flex-col self-auto",
       "[perspective:1000px] [transform-style:preserve-3d]",
-      "bg-gradient-to-b from-[#000B1E] to-[#001E3C]", // Gradient background for depth
       className
     )}>
       {useSplashCursor && (

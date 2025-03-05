@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -11,8 +10,7 @@ import ChatRoom from './ChatRoom';
 import AtlasLink from './AtlasLink';
 import WorkflowDashboard from '@/components/workflow';
 import HeaderSection from '@/components/widgets/HeaderSection';
-import BackgroundEffects from '@/components/widgets/BackgroundEffects';
-import { SparklesCore } from '@/components/ui/sparkles';
+import SplashCursor from '@/components/effects/SplashCursor';
 import { toast } from "sonner";
 import { motion } from 'framer-motion';
 import { HeroParallax } from '@/components/ui/hero-parallax';
@@ -120,26 +118,17 @@ const Atlas = () => {
 
   return (
     <div className={`min-h-screen w-full overflow-hidden theme-${currentTheme}`}>
-      {showHeroParallax ? (
+      {/* SplashCursor component for the fluid effect */}
+      <SplashCursor 
+        BACK_COLOR={{ r: 0.0, g: 0.0, b: 0.15 }}
+        SPLAT_RADIUS={0.25}
+        DENSITY_DISSIPATION={3.0}
+        TRANSPARENT={true}
+      />
+      
+      {showHeroParallax && (
         <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
           <HeroParallax products={products} />
-        </div>
-      ) : (
-        <BackgroundEffects currentTheme={currentTheme} />
-      )}
-      
-      {isDarkMode && !showHeroParallax && (
-        <div className="fixed inset-0 pointer-events-none z-0 opacity-50">
-          <SparklesCore
-            id="tsparticlesfullpage"
-            background="transparent"
-            minSize={0.6}
-            maxSize={1.4}
-            particleDensity={20}
-            className="w-full h-full"
-            particleColor="#FFFFFF"
-            speed={0.5}
-          />
         </div>
       )}
       

@@ -17,7 +17,7 @@ const IOSMainLayout: React.FC<IOSMainLayoutProps> = ({
   useSplashCursor = true
 }) => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#000B1E] to-[#001E3C] text-white">
+    <div className="min-h-screen text-white">
       <IOSStatusBar />
       
       <IOSParallaxBackground 
