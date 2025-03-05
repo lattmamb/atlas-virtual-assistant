@@ -1,20 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
-
-interface PulseChatProps {
-  language: string;
-  atxBalance: number;
-  setAtxBalance: React.Dispatch<React.SetStateAction<number>>;
-}
-
-interface Message {
-  id?: string;
-  text: string;
-  sender: string;
-  created_at: string;
-}
+import { PulseChatProps, Message } from './types/pulse-types';
+import { aiResponses, toTask, mockDatabaseOperation } from './utils/pulse-utils';
+import AISelector from './components/AISelector';
+import MessageList from './components/MessageList';
+import ChatInput from './components/ChatInput';
 
 const PulseChat: React.FC<PulseChatProps> = ({ language, atxBalance, setAtxBalance }) => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -34,13 +25,14 @@ const PulseChat: React.FC<PulseChatProps> = ({ language, atxBalance, setAtxBalan
 
   useEffect(() => {
     const fetchMessages = async () => {
-      const { data } = await supabase
-        .from('messages')
-        .select('*')
-        .order('created_at');
-      
-      if (data) {
-        setMessages(data);
+      try {
+        // Using mock function until database tables are properly set up
+        console.log('Fetching messages...');
+        // In real implementation, this would be:
+        // const { data } = await supabase.from('messages').select('*').order('created_at');
+        // setMessages(data || []);
+      } catch (error) {
+        console.error('Error fetching messages:', error);
       }
     };
     
@@ -58,13 +50,10 @@ const PulseChat: React.FC<PulseChatProps> = ({ language, atxBalance, setAtxBalan
           if (payload.new.sender === 'user') {
             const lowerText = payload.new.text.toLowerCase();
             if (['do', 'task', 'check'].some((kw) => lowerText.includes(kw))) {
-              supabase
-                .from('tasks')
-                .insert({
-                  text: payload.new.text,
-                  created_at: new Date().toISOString(),
-                })
-                .then();
+              mockDatabaseOperation('tasks', {
+                text: payload.new.text,
+                created_at: new Date().toISOString(),
+              });
             }
           }
         }
@@ -76,33 +65,6 @@ const PulseChat: React.FC<PulseChatProps> = ({ language, atxBalance, setAtxBalan
     };
   }, []);
 
-  const aiResponses = {
-    atlas: (msg: string) =>
-      `${
-        language === 'en' ? 'Atlas: Noted "' : 'Atlas: Anotado "'
-      }${msg}". ${
-        language === 'en' ? "What's next?" : "¿Qué sigue?"
-      }`,
-    grok: (msg: string) =>
-      `${
-        language === 'en' ? 'Grok: Cool, "' : 'Grok: Genial, "'
-      }${msg}". ${
-        language === 'en' ? "Got any spicy follow-ups?" : "¿Tienes algo más interesante?"
-      }`,
-    gemini: (msg: string) =>
-      `${
-        language === 'en' ? 'Gemini: Analyzing "' : 'Gemini: Analizando "'
-      }${msg}". ${
-        language === 'en' ? "Need a visual?" : "¿Necesitas una visualización?"
-      }`,
-    claude: (msg: string) =>
-      `${
-        language === 'en' ? 'Claude: Reflecting on "' : 'Claude: Reflexionando sobre "'
-      }${msg}". ${
-        language === 'en' ? "Let's dive deeper." : "Profundicemos."
-      }`,
-  };
-
   const sendMessage = async (text: string) => {
     if (!text) return;
     
@@ -112,34 +74,47 @@ const PulseChat: React.FC<PulseChatProps> = ({ language, atxBalance, setAtxBalan
       created_at: new Date().toISOString(),
     };
     
-    await supabase.from('messages').insert(userMessage);
+    // Add message to UI immediately for better UX
+    setMessages(prev => [...prev, userMessage]);
+    
+    // Using mock function until database tables are properly set up
+    await mockDatabaseOperation('messages', userMessage);
     setInput('');
 
     // Condition-based logic
     const lowerText = text.toLowerCase();
     if (lowerText.startsWith('post ')) {
       // Insert into Agora
-      await supabase
-        .from('posts')
-        .insert({ text: text.slice(5), created_at: new Date().toISOString() });
+      await mockDatabaseOperation('posts', { 
+        text: text.slice(5), 
+        created_at: new Date().toISOString() 
+      });
     } else if (lowerText.startsWith('track ')) {
       // Update Fleet
-      await supabase.from('fleet').update({ status: 'Tracking' }).eq('name', text.slice(6));
+      await mockDatabaseOperation('fleet', { 
+        status: 'Tracking', 
+        name: text.slice(6) 
+      });
     } else if (lowerText.startsWith('add ')) {
       // Mindstream idea
-      await supabase
-        .from('ideas')
-        .insert({ text: text.slice(4), created_at: new Date().toISOString() });
+      await mockDatabaseOperation('ideas', { 
+        text: text.slice(4), 
+        created_at: new Date().toISOString() 
+      });
     }
 
     // AI response
     const aiResponse: Message = {
-      text: aiResponses[activeAI as keyof typeof aiResponses](text),
+      text: aiResponses[activeAI as keyof typeof aiResponses](text, language),
       sender: activeAI,
       created_at: new Date().toISOString(),
     };
     
-    setTimeout(() => supabase.from('messages').insert(aiResponse), 1000);
+    // Add AI response to UI immediately for better UX
+    setTimeout(() => setMessages(prev => [...prev, aiResponse]), 1000);
+    
+    // In real implementation, this would be:
+    // setTimeout(() => supabase.from('messages').insert(aiResponse), 1000);
   };
 
   const toggleListening = () => {
@@ -167,25 +142,7 @@ const PulseChat: React.FC<PulseChatProps> = ({ language, atxBalance, setAtxBalan
       };
       
       recognition.onerror = () => setIsListening(false);
-    }
-  };
-
-  const toTask = (text: string) =>
-    supabase.from('tasks').insert({ text, created_at: new Date().toISOString() });
-
-  const premiumAIs = ['grok', 'gemini', 'claude'];
-  
-  const unlockAI = (ai: string) => {
-    if (atxBalance >= 10) {
-      setAtxBalance((prev) => prev - 10);
-      setActiveAI(ai);
-    } else {
-      alert(
-        language === 'en'
-          ? 'Need 10 ATX to unlock!'
-          : '¡Necesitas 10 ATX para desbloquear!'
-      );
-    }
+    };
   };
 
   return (
@@ -195,78 +152,30 @@ const PulseChat: React.FC<PulseChatProps> = ({ language, atxBalance, setAtxBalan
       </h1>
       
       {/* AI Switch Buttons */}
-      <div className="p-4 flex gap-2">
-        {['atlas', 'grok', 'gemini', 'claude'].map((ai) => (
-          <button
-            key={ai}
-            onClick={() => (premiumAIs.includes(ai) ? unlockAI(ai) : setActiveAI(ai))}
-            className={`p-2 rounded ${
-              activeAI === ai ? 'bg-cyan-400 text-black' : 'bg-gray-700'
-            }`}
-            disabled={premiumAIs.includes(ai) && atxBalance < 10}
-            aria-label={`Switch to ${ai}`}
-          >
-            {ai.charAt(0).toUpperCase() + ai.slice(1)}
-          </button>
-        ))}
-      </div>
+      <AISelector 
+        activeAI={activeAI}
+        setActiveAI={setActiveAI}
+        language={language}
+        atxBalance={atxBalance}
+        setAtxBalance={setAtxBalance}
+      />
       
-      {/* Chat */}
-      <motion.div
-        className="flex-1 overflow-y-auto p-4"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-      >
-        {messages.map((msg, i) => (
-          <motion.div
-            key={i}
-            className={`mb-2 p-2 ${
-              msg.sender === 'user' ? 'text-right' : 'text-left'
-            }`}
-            drag="x"
-            dragConstraints={{ left: 0, right: 0 }}
-            onDragEnd={(e, { offset }) =>
-              offset.x < -100 &&
-              setMessages((prev) => prev.filter((_, idx) => idx !== i))
-            }
-            role="listitem"
-            aria-label={msg.text}
-          >
-            <span className="bg-pink-500 p-2 rounded">{msg.text}</span>
-            {msg.sender === 'user' && (
-              <button
-                onClick={() => toTask(msg.text)}
-                className="ml-2 p-1 bg-cyan-400 text-black rounded"
-                aria-label="Convert to Task"
-              >
-                ➡️ Task
-              </button>
-            )}
-          </motion.div>
-        ))}
-      </motion.div>
+      {/* Chat Messages */}
+      <MessageList 
+        messages={messages}
+        toTask={toTask}
+        language={language}
+      />
       
-      {/* Controls */}
-      <div className="p-4 flex gap-2">
-        <input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && sendMessage(input)}
-          className="flex-1 p-2 bg-gray-900 border-cyan-400 border rounded"
-          placeholder={
-            language === 'en' ? 'Talk to your AI...' : 'Habla con tu IA...'
-          }
-          aria-label="Chat Input"
-        />
-        <button
-          onClick={toggleListening}
-          className={`p-2 rounded ${
-            isListening ? 'bg-red-500' : 'bg-cyan-400'
-          } text-black`}
-        >
-          {isListening ? '🎙️ Stop' : '🎙️ Speak'}
-        </button>
-      </div>
+      {/* Input Area */}
+      <ChatInput 
+        input={input}
+        setInput={setInput}
+        sendMessage={sendMessage}
+        isListening={isListening}
+        toggleListening={toggleListening}
+        language={language}
+      />
     </div>
   );
 };
