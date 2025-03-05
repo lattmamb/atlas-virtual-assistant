@@ -1,0 +1,16 @@
+
+/* Apple card styling */
+.apple-card {
+  @apply rounded-xl shadow-md border border-white/20 bg-white/80 backdrop-blur-md p-4 transition-all duration-300;
+}
+
+/* Dark mode apple card */
+.dark-apple-card {
+  @apply bg-slate-800/90 backdrop-blur-lg border border-slate-700 shadow-lg rounded-xl p-4;
+}
+
+/* Mobile optimized widget */
+.mobile-widget {
+  @apply w-full relative my-2 max-w-full;
+  transform: none !important;
+}

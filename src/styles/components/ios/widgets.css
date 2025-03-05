@@ -1,0 +1,19 @@
+
+/* Workflow canvas */
+.workflow-canvas {
+  @apply border border-dashed border-slate-300 rounded-lg p-4 h-48 flex items-center justify-center text-muted-foreground;
+}
+
+/* Social feed */
+.social-feed {
+  @apply space-y-3 overflow-y-auto max-h-48;
+}
+
+.social-post {
+  @apply bg-muted/50 p-3 rounded-lg text-sm;
+}
+
+/* Mobility map */
+.mobility-map {
+  @apply bg-slate-100 dark:bg-slate-800 rounded-lg p-4 h-48 flex items-center justify-center text-muted-foreground;
+}

@@ -1,0 +1,18 @@
+
+/* iOS 18 Specific Styles */
+.ios-app-icon {
+  @apply rounded-2xl overflow-hidden shadow-md flex items-center justify-center;
+  aspect-ratio: 1 / 1;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ios-app-icon:active {
+  transform: scale(0.9);
+}
+
+.ios-app-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  padding: 24px 16px;
+}

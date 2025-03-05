@@ -1,0 +1,21 @@
+
+/* Chat components */
+.chat-box {
+  @apply flex flex-col h-full overflow-hidden rounded-lg border border-slate-200;
+}
+
+.chat-messages {
+  @apply flex-1 overflow-y-auto p-3 space-y-3;
+}
+
+.chat-input-container {
+  @apply border-t p-2 flex items-center;
+}
+
+.user-message {
+  @apply bg-primary text-primary-foreground p-3 rounded-lg ml-auto max-w-[75%];
+}
+
+.ai-message {
+  @apply bg-muted p-3 rounded-lg mr-auto max-w-[75%];
+}

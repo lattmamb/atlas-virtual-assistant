@@ -1,0 +1,21 @@
+
+/* Dashboard grid layout */
+.dashboard-grid {
+  @apply grid gap-4 p-4;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  height: calc(100vh - 80px);
+  overflow-y: auto;
+}
+
+/* Responsive dashboard grid */
+@media (min-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  }
+}

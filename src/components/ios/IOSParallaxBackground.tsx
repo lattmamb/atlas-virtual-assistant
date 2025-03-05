@@ -1,13 +1,15 @@
 
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
 interface IOSParallaxBackgroundProps {
   className?: string;
+  children?: ReactNode;
 }
 
 const IOSParallaxBackground: React.FC<IOSParallaxBackgroundProps> = ({ 
-  className 
+  className,
+  children
 }) => {
   return (
     <div className={cn(
@@ -16,6 +18,7 @@ const IOSParallaxBackground: React.FC<IOSParallaxBackgroundProps> = ({
       "[perspective:1000px] [transform-style:preserve-3d]",
       className
     )}>
+      {children}
     </div>
   );
 };

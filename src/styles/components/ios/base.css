@@ -1,0 +1,55 @@
+
+.icloud-widget {
+  @apply rounded-xl shadow-lg border overflow-hidden backdrop-blur-sm;
+  width: 100%;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.icloud-widget:hover {
+  @apply shadow-xl;
+}
+
+.icloud-widget-header {
+  @apply flex items-center justify-between p-3 border-b text-sm font-medium;
+}
+
+.icloud-widget-title {
+  @apply flex items-center;
+}
+
+.icloud-widget-body {
+  @apply bg-transparent;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Image handling */
+.icloud-widget-image {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.icloud-widget-image-container {
+  overflow: hidden;
+  width: 100%;
+}
+
+/* Touch-friendly controls */
+.touch-control {
+  @apply p-3;
+  touch-action: manipulation;
+}
+
+/* Glass morphism effect for dark theme */
+.glass-dark {
+  @apply backdrop-blur-xl bg-slate-900/40 border border-slate-800/50 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.5)];
+}
+
+.glass-light {
+  @apply backdrop-blur-xl bg-white/40 border border-white/20 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.1)];
+}

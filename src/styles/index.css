@@ -3,7 +3,7 @@
 @import './base.css';
 
 /* Import component styles */
-@import './components/icloud.css';
+@import './components/ios-index.css';
 @import './components/glassmorphism.css';
 @import './theme.css';
 

@@ -1,0 +1,12 @@
+
+.ios-page-indicator {
+  @apply flex justify-center space-x-1 mt-4;
+}
+
+.ios-page-dot {
+  @apply w-1.5 h-1.5 rounded-full bg-gray-400;
+}
+
+.ios-page-dot.active {
+  @apply bg-gray-200;
+}

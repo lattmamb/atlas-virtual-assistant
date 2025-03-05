@@ -1,0 +1,15 @@
+
+/* Celestial mode effects */
+.celestial-bg {
+  @apply bg-gradient-to-br from-slate-900 to-slate-950;
+}
+
+.star {
+  @apply absolute rounded-full bg-white opacity-70;
+  animation: twinkle 3s infinite ease-in-out;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
