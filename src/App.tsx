@@ -4,6 +4,7 @@ import { Toaster } from 'sonner';
 import AppleVisionPro from './pages/AppleVisionPro';
 import Atlas from './pages/Atlas';
 import AtlasLink from './pages/AtlasLink';
+import AtlasUniverse from './pages/AtlasUniverse';
 import ChatRoom from './pages/ChatRoom';
 import Settings from './pages/Settings';
 import UniverseHome from './pages/UniverseHome';
@@ -24,6 +25,7 @@ function App() {
         <Route path="/applevisionpro" element={<AppleVisionPro />} />
         <Route path="/atlas" element={<Atlas />} />
         <Route path="/atlaslink" element={<AtlasLink />} />
+        <Route path="/atlasuniverse" element={<AtlasUniverse />} />
         <Route path="/chatroom" element={<ChatRoom />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/workflows" element={<Workflows />} />

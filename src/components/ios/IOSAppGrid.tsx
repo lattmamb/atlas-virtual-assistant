@@ -1,21 +1,14 @@
 
 import React from 'react';
-import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
 import { 
-  MessageSquare, 
-  Cloud, 
-  Calendar, 
-  Settings, 
-  Image, 
-  Music, 
-  Workflow, 
-  Map, 
-  FileText, 
-  Phone,
-  Mail,
-  Car,
-  ShoppingCart
+  Camera, Mail, Safari, Music, 
+  AppWindow, MessageSquare, Settings,
+  Cloud, Map, Image, Calendar, Clock,
+  Workflow, Webhook, FolderCog, BrainCircuit,
+  Shield
 } from 'lucide-react';
 
 interface AppIconProps {
@@ -28,19 +21,17 @@ interface AppIconProps {
 
 const AppIcon: React.FC<AppIconProps> = ({ name, icon, color, to, onClick }) => {
   const content = (
-    <motion.div 
+    <motion.div
       className="flex flex-col items-center"
-      whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.9 }}
-      onClick={onClick}
     >
-      <div 
-        className="ios-app-icon w-14 h-14 flex items-center justify-center mb-1"
-        style={{ background: color }}
+      <motion.div 
+        className="ios-app-icon h-14 w-14 flex items-center justify-center" 
+        style={{ backgroundColor: color }}
       >
         {icon}
-      </div>
-      <span className="ios-app-label text-xs">{name}</span>
+      </motion.div>
+      <span className="ios-app-label mt-1">{name}</span>
     </motion.div>
   );
   
@@ -48,40 +39,100 @@ const AppIcon: React.FC<AppIconProps> = ({ name, icon, color, to, onClick }) => 
     return <Link to={to}>{content}</Link>;
   }
   
-  return content;
+  return <div onClick={onClick}>{content}</div>;
 };
 
 const IOSAppGrid: React.FC = () => {
-  const apps = [
-    { name: 'Messages', icon: <MessageSquare className="h-7 w-7 text-white" />, color: 'rgb(0, 122, 255)', to: '/chatroom' },
-    { name: 'Cloud', icon: <Cloud className="h-7 w-7 text-white" />, color: 'rgb(52, 199, 89)', to: '/atlas' },
-    { name: 'Calendar', icon: <Calendar className="h-7 w-7 text-white" />, color: 'rgb(255, 59, 48)' },
-    { name: 'Photos', icon: <Image className="h-7 w-7 text-white" />, color: 'rgb(175, 82, 222)' },
-    { name: 'Settings', icon: <Settings className="h-7 w-7 text-white" />, color: 'rgb(88, 86, 214)', to: '/settings' },
-    { name: 'Music', icon: <Music className="h-7 w-7 text-white" />, color: 'rgb(255, 45, 85)' },
-    { name: 'Notes', icon: <FileText className="h-7 w-7 text-white" />, color: 'rgb(255, 204, 0)' },
-    { name: 'Workflows', icon: <Workflow className="h-7 w-7 text-white" />, color: 'rgb(90, 200, 250)', to: '/workflows' },
-    { name: 'Maps', icon: <Map className="h-7 w-7 text-white" />, color: 'rgb(255, 149, 0)' },
-    { name: 'Phone', icon: <Phone className="h-7 w-7 text-white" />, color: 'rgb(0, 122, 255)' },
-    { name: 'Mail', icon: <Mail className="h-7 w-7 text-white" />, color: 'rgb(52, 199, 89)' },
-    { name: 'Trinity', icon: <Car className="h-7 w-7 text-white" />, color: 'rgb(255, 59, 48)', to: '/trinity' },
-    { name: 'Store', icon: <ShoppingCart className="h-7 w-7 text-white" />, color: 'rgb(175, 82, 222)' },
-    { name: 'Atlas Link', icon: <Cloud className="h-7 w-7 text-white" />, color: 'rgb(0, 122, 255)', to: '/atlaslink' },
-    { name: 'Universe', icon: <Cloud className="h-7 w-7 text-white" />, color: 'rgb(175, 82, 222)', to: '/universe' },
-    { name: 'Vision Pro', icon: <Cloud className="h-7 w-7 text-white" />, color: 'rgb(52, 199, 89)', to: '/applevisionpro' }
-  ];
-  
   return (
-    <div className="ios-app-grid p-4 grid grid-cols-4 gap-4">
-      {apps.map((app, index) => (
-        <AppIcon 
-          key={index} 
-          name={app.name} 
-          icon={app.icon} 
-          color={app.color}
-          to={app.to}
-        />
-      ))}
+    <div className="ios-app-grid grid grid-cols-4 gap-4 px-4">
+      <AppIcon 
+        name="Messages" 
+        icon={<MessageSquare className="h-7 w-7 text-white" />} 
+        color="#44bd54"
+        to="/chatroom"
+      />
+      <AppIcon 
+        name="Safari" 
+        icon={<Safari className="h-7 w-7 text-white" />} 
+        color="#1d7fff"
+      />
+      <AppIcon 
+        name="Mail" 
+        icon={<Mail className="h-7 w-7 text-white" />} 
+        color="#3993ef"
+      />
+      <AppIcon 
+        name="Photos" 
+        icon={<Image className="h-7 w-7 text-white" />} 
+        color="#e74c3c"
+      />
+      <AppIcon 
+        name="Camera" 
+        icon={<Camera className="h-7 w-7 text-white" />} 
+        color="#333333"
+      />
+      <AppIcon 
+        name="Maps" 
+        icon={<Map className="h-7 w-7 text-white" />} 
+        color="#5e66d5"
+      />
+      <AppIcon 
+        name="Clock" 
+        icon={<Clock className="h-7 w-7 text-white" />} 
+        color="#1a1a1a"
+      />
+      <AppIcon 
+        name="Calendar" 
+        icon={<Calendar className="h-7 w-7 text-white" />} 
+        color="#ef4d3d"
+      />
+      <AppIcon 
+        name="Music" 
+        icon={<Music className="h-7 w-7 text-white" />} 
+        color="#fc3158"
+      />
+      <AppIcon 
+        name="Cloud" 
+        icon={<Cloud className="h-7 w-7 text-white" />} 
+        color="#3693ef"
+        to="/atlas"
+      />
+      <AppIcon 
+        name="Universe" 
+        icon={<BrainCircuit className="h-7 w-7 text-white" />} 
+        color="#9b87f5"
+        to="/universe"
+      />
+      <AppIcon 
+        name="Settings" 
+        icon={<Settings className="h-7 w-7 text-white" />} 
+        color="#8e8e8e"
+        to="/settings"
+      />
+      <AppIcon 
+        name="Workflows" 
+        icon={<Workflow className="h-7 w-7 text-white" />} 
+        color="#7e69ab"
+        to="/workflows"
+      />
+      <AppIcon 
+        name="Vision Pro" 
+        icon={<AppWindow className="h-7 w-7 text-white" />} 
+        color="#000000"
+        to="/applevisionpro"
+      />
+      <AppIcon 
+        name="Atlas Link" 
+        icon={<Webhook className="h-7 w-7 text-white" />} 
+        color="#6e59a5"
+        to="/atlaslink"
+      />
+      <AppIcon 
+        name="Atlas Universe" 
+        icon={<Shield className="h-7 w-7 text-white" />} 
+        color="#0A84FF"
+        to="/atlasuniverse"
+      />
     </div>
   );
 };
