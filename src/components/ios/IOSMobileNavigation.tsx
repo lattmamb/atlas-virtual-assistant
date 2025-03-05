@@ -2,28 +2,28 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { MessageSquare, Home, Settings, Workflow, Grid, Cloud } from 'lucide-react';
+import { MessageSquare, Home, Settings, Workflow, Grid, ChevronUp } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
 import { useTheme } from '@/context/ThemeContext';
 
+// This component now serves as a minimal fixed navigation at the bottom
+// Most navigation functionality has moved to the PageCarousel
 const IOSMobileNavigation: React.FC = () => {
   const location = useLocation();
   const { isDarkMode } = useTheme();
   
-  const navItems = [
+  const mainItems = [
     { icon: Home, path: '/', label: 'Home' },
-    { icon: MessageSquare, path: '/chat', label: 'Chat' },
-    { icon: Workflow, path: '/workflows', label: 'Flows' },
-    { icon: Settings, path: '/settings', label: 'Settings' }
+    { icon: MessageSquare, path: '/chatroom', label: 'Chat' },
   ];
   
   return (
     <div className={cn(
-      "ios-dock fixed bottom-4 left-4 right-4 z-50",
-      "backdrop-blur-xl bg-black/40 border border-white/10 rounded-xl"
+      "ios-dock fixed bottom-4 left-1/2 -translate-x-1/2 z-40",
+      "backdrop-blur-xl bg-black/40 border border-white/10 rounded-xl",
+      "flex items-center justify-between px-2 py-1 w-auto"
     )}>
-      {navItems.map((item) => {
+      {mainItems.map((item) => {
         const isActive = location.pathname === item.path;
         const Icon = item.icon;
         
@@ -32,7 +32,8 @@ const IOSMobileNavigation: React.FC = () => {
             <motion.div
               whileTap={{ scale: 0.9 }}
               className={cn(
-                "ios-dock-app flex items-center justify-center",
+                "ios-dock-mini flex items-center justify-center p-3 mx-1",
+                "rounded-full",
                 isActive 
                   ? "bg-gradient-to-b from-blue-500 to-blue-600" 
                   : isDarkMode 
@@ -42,7 +43,7 @@ const IOSMobileNavigation: React.FC = () => {
             >
               <Icon 
                 className={cn(
-                  "h-6 w-6",
+                  "h-5 w-5",
                   isActive ? "text-white" : "text-white/80"
                 )} 
               />
@@ -50,6 +51,22 @@ const IOSMobileNavigation: React.FC = () => {
           </Link>
         );
       })}
+      
+      {/* Indicator to swipe up for page carousel */}
+      <motion.div
+        className={cn(
+          "ios-dock-mini flex items-center justify-center p-3 mx-1 rounded-full",
+          isDarkMode ? "bg-white/10" : "bg-black/10"
+        )}
+        animate={{ y: [0, -5, 0] }}
+        transition={{ 
+          repeat: Infinity, 
+          duration: 1.5,
+          repeatType: "loop" 
+        }}
+      >
+        <ChevronUp className="h-5 w-5 text-white/80" />
+      </motion.div>
     </div>
   );
 };

@@ -12,6 +12,7 @@ import NotFound from './pages/NotFound';
 import { ThemeProvider } from './context/ThemeContext';
 import IOSLayout from './components/ios/IOSLayout';
 import SplashCursor from './components/effects/SplashCursor';
+import PageCarousel from './components/navigation/PageCarousel';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           TRANSPARENT={true}
         />
       </div>
+      
       <Routes>
         {/* All routes use the IOSLayout without other background effects */}
         <Route element={<IOSLayout />}>
@@ -41,6 +43,9 @@ function App() {
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
+      
+      {/* Add the PageCarousel navigation to all routes */}
+      <PageCarousel />
     </ThemeProvider>
   );
 }

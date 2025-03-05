@@ -14,6 +14,12 @@
   height: 60px;
 }
 
+.ios-dock-mini {
+  @apply rounded-full overflow-hidden shadow-md;
+  width: 40px;
+  height: 40px;
+}
+
 .ios-status-bar {
   display: flex;
   justify-content: space-between;
@@ -21,4 +27,32 @@
   height: 24px;
   padding: 0 16px;
   font-size: 12px;
+}
+
+.page-carousel-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  overflow: hidden;
+  transition: height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.page-card {
+  @apply flex flex-col items-center justify-center p-4 rounded-xl;
+  @apply text-white shadow-lg;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.swipe-indicator {
+  width: 36px;
+  height: 5px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.3);
+  margin: 10px auto;
 }
