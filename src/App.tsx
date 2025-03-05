@@ -18,7 +18,7 @@ function App() {
       <Toaster position="top-center" richColors />
       <Routes>
         {/* Main routes with the immersive IOSLayout */}
-        <Route element={<IOSLayout />}>
+        <Route element={<IOSLayout useCelestial={true} />}>
           <Route path="/" element={<UniverseHome />} />
           <Route path="/index" element={<UniverseHome />} />
           <Route path="/applevisionpro" element={<AppleVisionPro />} />

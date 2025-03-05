@@ -8,17 +8,19 @@ import IOSParallaxBackground from './IOSParallaxBackground';
 interface IOSMainLayoutProps {
   children: ReactNode;
   className?: string;
+  useCelestial?: boolean;
 }
 
 const IOSMainLayout: React.FC<IOSMainLayoutProps> = ({ 
   children,
-  className 
+  className,
+  useCelestial = true
 }) => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#000B1E] to-[#001E3C] text-white">
       <IOSStatusBar />
       
-      <IOSParallaxBackground>
+      <IOSParallaxBackground useCelestialBackground={useCelestial}>
         <main className={cn(
           "pt-12 pb-20",
           className
