@@ -2,10 +2,8 @@
 import React, { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { useTheme } from '@/context/ThemeContext';
-import IOSStatusBar from './IOSStatusBar';
-import IOSMobileNavigation from './IOSMobileNavigation';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { cn } from '@/lib/utils';
+import IOSMainLayout from './IOSMainLayout';
 
 const IOSLayout: React.FC = () => {
   const { currentTheme, setTheme } = useTheme();
@@ -19,20 +17,9 @@ const IOSLayout: React.FC = () => {
   }, [isMobile, currentTheme, setTheme]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#000B1E] to-[#001E3C] text-white">
-      <IOSStatusBar />
-      
-      <main className={cn(
-        "pt-12 pb-20",
-        // Add the HeroParallax styling for consistent immersive feel
-        "h-[300vh] py-40 overflow-hidden antialiased relative flex flex-col self-auto",
-        "[perspective:1000px] [transform-style:preserve-3d]"
-      )}>
-        <Outlet />
-      </main>
-      
-      <IOSMobileNavigation />
-    </div>
+    <IOSMainLayout>
+      <Outlet />
+    </IOSMainLayout>
   );
 };
 
