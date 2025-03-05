@@ -9,18 +9,23 @@ interface IOSMainLayoutProps {
   children: ReactNode;
   className?: string;
   useCelestial?: boolean;
+  useSplashCursor?: boolean;
 }
 
 const IOSMainLayout: React.FC<IOSMainLayoutProps> = ({ 
   children,
   className,
-  useCelestial = true
+  useCelestial = true,
+  useSplashCursor = true
 }) => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#000B1E] to-[#001E3C] text-white">
       <IOSStatusBar />
       
-      <IOSParallaxBackground useCelestialBackground={useCelestial}>
+      <IOSParallaxBackground 
+        useCelestialBackground={useCelestial}
+        useSplashCursor={useSplashCursor}
+      >
         <main className={cn(
           "pt-12 pb-20 relative z-10",
           className

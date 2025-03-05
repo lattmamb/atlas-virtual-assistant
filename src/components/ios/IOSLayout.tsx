@@ -8,6 +8,7 @@ import IOSMainLayout from './IOSMainLayout';
 const IOSLayout: React.FC = () => {
   const { currentTheme, setTheme } = useTheme();
   const isMobile = useIsMobile();
+  const location = useLocation();
   
   // Automatically set to iOS theme on mobile
   useEffect(() => {
@@ -16,8 +17,15 @@ const IOSLayout: React.FC = () => {
     }
   }, [isMobile, currentTheme, setTheme]);
 
+  // Determine if we should use the splash cursor based on route
+  // Homepage and universe pages get the full immersive experience
+  const isHomePage = location.pathname === '/' || location.pathname === '/index' || location.pathname === '/universe';
+  
   return (
-    <IOSMainLayout useCelestial={true}>
+    <IOSMainLayout 
+      useCelestial={true}
+      useSplashCursor={isHomePage} // Only use on homepage for better performance on other pages
+    >
       <Outlet />
     </IOSMainLayout>
   );

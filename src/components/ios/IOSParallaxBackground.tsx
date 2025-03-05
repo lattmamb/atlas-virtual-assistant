@@ -2,17 +2,20 @@
 import React, { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 import CelestialBackground from '@/components/effects/CelestialBackground';
+import SplashCursor from '@/components/effects/SplashCursor';
 
 interface IOSParallaxBackgroundProps {
   className?: string;
   children?: ReactNode;
   useCelestialBackground?: boolean;
+  useSplashCursor?: boolean;
 }
 
 const IOSParallaxBackground: React.FC<IOSParallaxBackgroundProps> = ({ 
   className,
   children,
-  useCelestialBackground = true
+  useCelestialBackground = true,
+  useSplashCursor = true
 }) => {
   return (
     <div className={cn(
@@ -21,6 +24,14 @@ const IOSParallaxBackground: React.FC<IOSParallaxBackgroundProps> = ({
       "[perspective:1000px] [transform-style:preserve-3d]",
       className
     )}>
+      {useSplashCursor && (
+        <SplashCursor 
+          BACK_COLOR={{ r: 0.0, g: 0.0, b: 0.15 }}
+          SPLAT_RADIUS={0.25}
+          DENSITY_DISSIPATION={3.0}
+          TRANSPARENT={true}
+        />
+      )}
       {useCelestialBackground && <CelestialBackground />}
       <div className="relative z-10">
         {children}
