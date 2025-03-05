@@ -22,7 +22,7 @@ const IOSMainLayout: React.FC<IOSMainLayoutProps> = ({
       
       <IOSParallaxBackground useCelestialBackground={useCelestial}>
         <main className={cn(
-          "pt-12 pb-20",
+          "pt-12 pb-20 relative z-10",
           className
         )}>
           {children}

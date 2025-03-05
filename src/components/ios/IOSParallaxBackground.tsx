@@ -22,7 +22,9 @@ const IOSParallaxBackground: React.FC<IOSParallaxBackgroundProps> = ({
       className
     )}>
       {useCelestialBackground && <CelestialBackground />}
-      {children}
+      <div className="relative z-10">
+        {children}
+      </div>
     </div>
   );
 };
