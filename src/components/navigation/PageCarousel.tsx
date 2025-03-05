@@ -20,6 +20,7 @@ interface PageInfo {
   description: string;
   color: string;
   icon: string;
+  imageUrl?: string;
 }
 
 const PageCarousel = () => {
@@ -29,6 +30,9 @@ const PageCarousel = () => {
   const [isFullyOpened, setIsFullyOpened] = useState(false);
   const [activePageIndex, setActivePageIndex] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [activeImg, setActiveImg] = useState<string | null>(null);
+  const [isCarouselActive, setIsCarouselActive] = useState(true);
   const controls = useAnimation();
   const carouselRef = useRef<HTMLDivElement>(null);
   
@@ -38,42 +42,48 @@ const PageCarousel = () => {
       title: "Home", 
       description: "Your Atlas Universe Hub",
       color: "from-blue-500 to-purple-600",
-      icon: "🏠"
+      icon: "🏠",
+      imageUrl: "https://picsum.photos/300/300?sky"
     },
     { 
       path: "/universe", 
       title: "U-N-I-Verse", 
       description: "Explore the unified space",
       color: "from-violet-500 to-indigo-600",
-      icon: "🌌"
+      icon: "🌌",
+      imageUrl: "https://picsum.photos/300/300?universe"
     },
     { 
       path: "/chatroom", 
       title: "Chat Room", 
       description: "Talk to Atlas AI assistant",
       color: "from-green-500 to-teal-600",
-      icon: "💬"
+      icon: "💬",
+      imageUrl: "https://picsum.photos/300/300?chat"
     },
     { 
       path: "/atlaslink", 
       title: "Atlas Link", 
       description: "Connect with Trinity Dodge",
       color: "from-amber-500 to-orange-600",
-      icon: "🔗"
+      icon: "🔗",
+      imageUrl: "https://picsum.photos/300/300?link"
     },
     { 
       path: "/applevisionpro", 
       title: "Vision Pro", 
       description: "Experience Apple Vision Pro",
       color: "from-gray-700 to-gray-900",
-      icon: "👁️"
+      icon: "👁️",
+      imageUrl: "https://picsum.photos/300/300?vision"
     },
     { 
       path: "/settings", 
       title: "Settings", 
       description: "Configure your experience",
       color: "from-slate-500 to-slate-700",
-      icon: "⚙️"
+      icon: "⚙️",
+      imageUrl: "https://picsum.photos/300/300?settings"
     }
   ], []);
 
@@ -96,10 +106,21 @@ const PageCarousel = () => {
   const handlePageChange = (index: number) => {
     if (index >= 0 && index < pages.length) {
       setActivePageIndex(index);
-      navigate(pages[index].path);
+      setIsTransitioning(true);
+      setActiveImg(pages[index].imageUrl || null);
+      setIsCarouselActive(false);
       
-      // Show confirmation toast
-      toast.success(`Navigating to ${pages[index].title}`);
+      // Delay navigation to allow for animation
+      setTimeout(() => {
+        navigate(pages[index].path);
+        toast.success(`Navigating to ${pages[index].title}`);
+        setIsTransitioning(false);
+        // Reset carousel after navigation
+        setTimeout(() => {
+          setActiveImg(null);
+          setIsCarouselActive(true);
+        }, 500);
+      }, 800);
     }
   };
 
@@ -115,7 +136,7 @@ const PageCarousel = () => {
 
   // 3D Carousel setup
   const isScreenSizeSm = window.innerWidth <= 640;
-  const cylinderWidth = isScreenSizeSm ? 1100 : 1800;
+  const cylinderWidth = isScreenSizeSm ? 600 : 1200;
   const faceCount = pages.length;
   const faceWidth = cylinderWidth / faceCount;
   const radius = cylinderWidth / (2 * Math.PI);
@@ -138,10 +159,14 @@ const PageCarousel = () => {
     });
   }, [activePageIndex, controls, faceCount, rotation]);
 
+  const handleCardClick = (path: string, index: number) => {
+    handlePageChange(index);
+  };
+
   return (
     <div 
       className={cn(
-        "fixed inset-0 z-40 pointer-events-auto",
+        "fixed inset-0 z-40 pointer-events-auto transition-colors duration-300",
         isExpanded ? "bg-black/50 backdrop-blur-md" : "bg-transparent pointer-events-none"
       )}
       {...swipeHandlers}
@@ -202,25 +227,37 @@ const PageCarousel = () => {
                     transformStyle: "preserve-3d",
                   }}
                   animate={controls}
+                  drag="x"
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={0.1}
+                  onDrag={(_, info) => {
+                    rotation.set(rotation.get() + info.offset.x * 0.05);
+                  }}
+                  onDragEnd={(_, info) => {
+                    const newIndex = Math.round(rotation.get() / (360 / faceCount)) % faceCount;
+                    const normalizedIndex = newIndex < 0 ? faceCount + newIndex : newIndex;
+                    setActivePageIndex(normalizedIndex);
+                  }}
                 >
                   {pages.map((page, i) => (
                     <motion.div
                       key={`page-${page.path}`}
                       className={cn(
-                        "absolute flex h-full origin-center items-center justify-center rounded-xl p-2",
+                        "absolute flex h-full origin-center items-center justify-center rounded-xl",
                         "backdrop-blur-md border border-white/10"
                       )}
                       style={{
                         width: `${faceWidth}px`,
                         transform: `rotateY(${i * (360 / faceCount)}deg) translateZ(${radius}px)`,
                       }}
-                      onClick={() => handlePageChange(i)}
+                      onClick={() => handleCardClick(page.path, i)}
                     >
                       <motion.div
                         className={cn(
                           "w-full h-full rounded-lg flex flex-col items-center justify-center text-white",
                           "bg-gradient-to-br", page.color
                         )}
+                        layoutId={`page-card-${page.path}`}
                       >
                         <span className="text-4xl mb-4">{page.icon}</span>
                         <h3 className="text-xl font-bold mb-2">{page.title}</h3>
@@ -263,6 +300,7 @@ const PageCarousel = () => {
                 animate={{
                   scale: i === activePageIndex ? 1.2 : 1
                 }}
+                onClick={() => handlePageChange(i)}
               />
             ))}
           </div>
@@ -296,6 +334,42 @@ const PageCarousel = () => {
           </motion.div>
         )}
       </motion.div>
+      
+      {/* Page transition animation overlay */}
+      <AnimatePresence>
+        {activeImg && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md"
+            onClick={() => {
+              setActiveImg(null);
+              setIsCarouselActive(true);
+            }}
+          >
+            <motion.div
+              layoutId={`page-transition-${activePageIndex}`}
+              className="w-64 h-64 md:w-96 md:h-96 rounded-2xl overflow-hidden"
+              initial={{ scale: 0.8, opacity: 0.5 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 1.2, opacity: 0 }}
+              transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+            >
+              <div className={cn(
+                "w-full h-full flex flex-col items-center justify-center bg-gradient-to-br rounded-xl",
+                pages[activePageIndex].color
+              )}>
+                <span className="text-6xl mb-6">{pages[activePageIndex].icon}</span>
+                <h2 className="text-2xl text-white font-bold mb-2">{pages[activePageIndex].title}</h2>
+                <p className="text-white/80 text-sm text-center max-w-[80%]">
+                  {pages[activePageIndex].description}
+                </p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

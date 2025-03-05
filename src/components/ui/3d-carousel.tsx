@@ -184,7 +184,7 @@ function ThreeDPhotoCarousel() {
     console.log("Cards loaded:", cards)
   }, [cards])
 
-  const handleClick = (imgUrl: string) => {
+  const handleClick = (imgUrl: string, index: number) => {
     setActiveImg(imgUrl)
     setIsCarouselActive(false)
     controls.stop()

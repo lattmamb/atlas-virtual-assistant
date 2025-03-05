@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { MessageSquare, Home, Settings, ChevronUp } from 'lucide-react';
+import { MessageSquare, Home, ChevronUp } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTheme } from '@/context/ThemeContext';
 
