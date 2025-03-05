@@ -1,320 +1,303 @@
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Calendar, Car, Headphones, Map, Phone, Star, Tool, User, Users } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { Car, ArrowLeft, Phone, Calendar, MapPin, Clock, InfoIcon, Settings, Wrench } from 'lucide-react';
+import UniversalThemeSwitcher from '@/components/theme/UniversalThemeSwitcher';
 import { cn } from '@/lib/utils';
-import IOSStatusBar from '@/components/ios/IOSStatusBar';
-import BackgroundEffects from '@/components/widgets/BackgroundEffects';
-import { useTheme } from '@/context/ThemeContext';
 
+// Vehicle type
+interface Vehicle {
+  id: string;
+  model: string;
+  year: number;
+  price: string;
+  image: string;
+  description: string;
+  features: string[];
+}
+
+// Component for Trinity Dodge dealership
 const Trinity: React.FC = () => {
-  const { currentTheme } = useTheme();
-  const [activeTab, setActiveTab] = useState('vehicles');
+  const navigate = useNavigate();
+  const [selectedTab, setSelectedTab] = useState<'vehicles' | 'service' | 'about'>('vehicles');
   
-  // Vehicle data
-  const vehicles = [
+  // Sample vehicle data
+  const vehicles: Vehicle[] = [
     {
-      id: 1,
-      name: "Dodge Ram 1500",
-      price: "$38,000",
-      image: "/lovable-uploads/832b4165-5082-4a12-9ea7-84ebd50a41a2.png",
-      features: ["12,750 lbs towing", "Crew cab", "V8 engine", "4WD"],
-      description: "The perfect truck for Taylorville roads and farm work. Powerful, reliable, and comfortable."
+      id: 'ram-1500',
+      model: 'Dodge Ram 1500',
+      year: 2025,
+      price: '$38,000',
+      image: 'https://images.unsplash.com/photo-1599256621730-535171e28c2a?q=80&w=1000',
+      description: 'The powerful 2025 Ram 1500 with towing capacity up to 12,750 lbs, perfect for Taylorville farmers and rural use.',
+      features: ['Crew Cab', '5.7L V8 Engine', '4WD', 'Apple CarPlay', 'Trailer Tow Package']
     },
     {
-      id: 2,
-      name: "Dodge Charger",
-      price: "$32,000",
-      image: "/lovable-uploads/85c5470c-e869-42d4-a384-94b139a50bf0.png",
-      features: ["V6 engine", "SXT Trim", "Sporty design", "Touchscreen"],
-      description: "Experience performance and style with the iconic Dodge Charger. Turn heads in Taylorville."
+      id: 'charger',
+      model: 'Dodge Charger',
+      year: 2025,
+      price: '$32,000',
+      image: 'https://images.unsplash.com/photo-1612911912304-5f59094b4602?q=80&w=1000',
+      description: 'The sleek and powerful 2025 Dodge Charger, designed for performance enthusiasts in Taylorville.',
+      features: ['SXT Trim', '3.6L V6 Engine', 'RWD', 'Leather Seats', 'Sport Mode']
     },
     {
-      id: 3,
-      name: "Dodge Durango",
-      price: "$41,000",
-      image: "/lovable-uploads/c9ad08ff-68c3-4635-af88-f133d638efc9.png",
-      features: ["7 seats", "8,700 lbs towing", "SUV", "AWD"],
-      description: "The family-friendly SUV that doesn't compromise on power. Perfect for Illinois winters."
-    }
+      id: 'durango',
+      model: 'Dodge Durango',
+      year: 2025,
+      price: '$41,000',
+      image: 'https://images.unsplash.com/photo-1581540222534-4c3e43b9b2fa?q=80&w=1000',
+      description: 'The spacious 7-seat 2025 Dodge Durango SUV with towing up to 8,700 lbs, ideal for Taylorville families and Illinois winters.',
+      features: ['7 Passenger Seating', '5.7L V8 Engine', 'AWD', 'Heated Seats', 'Tow Package']
+    },
   ];
   
-  // Current active vehicle (first one by default)
-  const [activeVehicle, setActiveVehicle] = useState(vehicles[0]);
-  
   return (
-    <div className="trinity-page min-h-screen bg-black text-white relative overflow-hidden">
-      <BackgroundEffects currentTheme={currentTheme} />
-      <IOSStatusBar />
-      
-      <div className="p-4 pb-24">
-        {/* Header with back button */}
-        <div className="flex items-center mb-6">
-          <Link to="/">
-            <motion.div 
-              whileTap={{ scale: 0.9 }}
-              className="w-10 h-10 rounded-full flex items-center justify-center bg-black/20 backdrop-blur-lg"
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-black">
+      {/* Header */}
+      <header className="backdrop-blur-lg bg-white/70 dark:bg-black/70 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-10">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={() => navigate('/')} 
+              className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800"
             >
               <ArrowLeft className="h-5 w-5" />
-            </motion.div>
-          </Link>
-          <h1 className="text-2xl font-bold ml-3">Trinity Dodge</h1>
+            </button>
+            <h1 className="text-xl font-semibold">Trinity Dodge</h1>
+          </div>
+          
+          <div className="flex items-center gap-3">
+            <a href="tel:+12175551234" className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800">
+              <Phone className="h-5 w-5" />
+            </a>
+            <UniversalThemeSwitcher variant="minimal" />
+          </div>
         </div>
         
-        {/* Tab navigation */}
-        <div className="flex overflow-x-auto space-x-4 mb-6 tab-navigation">
-          <button 
-            className={cn("tab-button pb-2 px-1 text-sm font-medium", activeTab === 'vehicles' && "active")}
-            onClick={() => setActiveTab('vehicles')}
-          >
-            Vehicles
-          </button>
-          <button 
-            className={cn("tab-button pb-2 px-1 text-sm font-medium", activeTab === 'services' && "active")}
-            onClick={() => setActiveTab('services')}
-          >
-            Services
-          </button>
-          <button 
-            className={cn("tab-button pb-2 px-1 text-sm font-medium", activeTab === 'dealership' && "active")}
-            onClick={() => setActiveTab('dealership')}
-          >
-            About Us
-          </button>
-          <button 
-            className={cn("tab-button pb-2 px-1 text-sm font-medium", activeTab === 'contact' && "active")}
-            onClick={() => setActiveTab('contact')}
-          >
-            Contact
-          </button>
+        {/* Navigation Tabs */}
+        <div className="container mx-auto px-4 pb-2">
+          <div className="flex gap-1">
+            {[
+              { id: 'vehicles', label: 'Vehicles', icon: <Car className="h-4 w-4" /> },
+              { id: 'service', label: 'Service', icon: <Wrench className="h-4 w-4" /> },
+              { id: 'about', label: 'About', icon: <InfoIcon className="h-4 w-4" /> }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setSelectedTab(tab.id as any)}
+                className={cn(
+                  "flex items-center gap-2 px-4 py-2 rounded-lg transition-colors",
+                  selectedTab === tab.id 
+                    ? "bg-primary text-white" 
+                    : "hover:bg-gray-200 dark:hover:bg-gray-800"
+                )}
+              >
+                {tab.icon}
+                <span>{tab.label}</span>
+              </button>
+            ))}
+          </div>
         </div>
-        
-        {/* Vehicles tab content */}
-        {activeTab === 'vehicles' && (
-          <div>
-            {/* Current vehicle view */}
-            <div className="bg-black/30 backdrop-blur-xl rounded-3xl p-4 mb-6 border border-white/10">
-              <div className="vehicle-detail-header flex justify-between items-center mb-4">
-                <h2 className="text-xl font-bold">{activeVehicle.name}</h2>
-                <span className="vehicle-price-tag">{activeVehicle.price}</span>
-              </div>
-              
-              <div className="mb-4 rounded-xl overflow-hidden">
-                <img 
-                  src={activeVehicle.image} 
-                  alt={activeVehicle.name} 
-                  className="w-full h-48 object-cover object-center"
-                />
-              </div>
-              
-              <p className="text-sm opacity-80 mb-4">{activeVehicle.description}</p>
-              
-              <div className="mb-4 flex flex-wrap gap-2">
-                {activeVehicle.features.map((feature, idx) => (
-                  <span key={idx} className="vehicle-feature-tag">{feature}</span>
-                ))}
-              </div>
-              
-              <div className="flex space-x-2 action-button-container">
-                <motion.button 
-                  className="flex-1 action-button bg-red-600 text-white rounded-xl px-4 py-2 text-sm font-medium"
-                  whileTap={{ scale: 0.95 }}
-                >
-                  Test Drive
-                </motion.button>
-                <motion.button 
-                  className="flex-1 action-button bg-white/10 backdrop-blur-sm text-white rounded-xl px-4 py-2 text-sm font-medium border border-white/20"
-                  whileTap={{ scale: 0.95 }}
-                >
-                  Get Quote
-                </motion.button>
-              </div>
-            </div>
+      </header>
+      
+      {/* Main Content */}
+      <main className="container mx-auto px-4 py-8">
+        {/* Vehicles Tab */}
+        {selectedTab === 'vehicles' && (
+          <div className="space-y-8">
+            <h2 className="text-2xl font-bold mb-6">Featured Vehicles</h2>
             
-            {/* Vehicle selection grid */}
-            <h3 className="text-lg font-semibold mb-3">Our Inventory</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 vehicle-grid">
-              {vehicles.map(vehicle => (
-                <motion.div
-                  key={vehicle.id}
-                  className={cn(
-                    "vehicle-card bg-black/20 backdrop-blur-lg rounded-2xl p-3 border",
-                    activeVehicle.id === vehicle.id 
-                      ? "border-red-500" 
-                      : "border-white/10"
-                  )}
-                  whileHover={{ scale: 1.03 }}
-                  onClick={() => setActiveVehicle(vehicle)}
-                >
-                  <div className="mb-2 rounded-xl overflow-hidden">
-                    <img 
-                      src={vehicle.image} 
-                      alt={vehicle.name} 
-                      className="w-full h-24 object-cover object-center"
-                    />
-                  </div>
-                  <h3 className="font-medium">{vehicle.name}</h3>
-                  <div className="flex items-center justify-between mt-1">
-                    <span className="text-sm opacity-80">{vehicle.price}</span>
-                    <div className="flex">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="h-3 w-3 text-yellow-500" fill={i < 4 ? "currentColor" : "none"} />
-                      ))}
-                    </div>
-                  </div>
-                </motion.div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {vehicles.map((vehicle) => (
+                <VehicleCard key={vehicle.id} vehicle={vehicle} />
               ))}
             </div>
           </div>
         )}
         
-        {/* Services tab content */}
-        {activeTab === 'services' && (
-          <div className="space-y-4">
-            <div className="bg-black/30 backdrop-blur-xl rounded-3xl p-4 border border-white/10">
-              <div className="flex items-center mb-2">
-                <Tool className="h-5 w-5 mr-2 text-red-500" />
-                <h3 className="text-lg font-semibold">Maintenance & Repairs</h3>
-              </div>
-              <p className="text-sm opacity-80 mb-3">Professional service for all Dodge vehicles. Oil changes, tune-ups, and more.</p>
-              <motion.button 
-                className="action-button bg-white/10 backdrop-blur-sm text-white rounded-xl px-4 py-2 text-sm font-medium border border-white/20 w-full"
-                whileTap={{ scale: 0.95 }}
-              >
-                Schedule Service
-              </motion.button>
-            </div>
+        {/* Service Tab */}
+        {selectedTab === 'service' && (
+          <div className="space-y-8">
+            <h2 className="text-2xl font-bold mb-6">Service Department</h2>
             
-            <div className="bg-black/30 backdrop-blur-xl rounded-3xl p-4 border border-white/10">
-              <div className="flex items-center mb-2">
-                <Car className="h-5 w-5 mr-2 text-red-500" />
-                <h3 className="text-lg font-semibold">Parts Department</h3>
-              </div>
-              <p className="text-sm opacity-80 mb-3">Genuine Dodge parts to keep your vehicle performing at its best.</p>
-              <motion.button 
-                className="action-button bg-white/10 backdrop-blur-sm text-white rounded-xl px-4 py-2 text-sm font-medium border border-white/20 w-full"
-                whileTap={{ scale: 0.95 }}
-              >
-                Order Parts
-              </motion.button>
-            </div>
-            
-            <div className="bg-black/30 backdrop-blur-xl rounded-3xl p-4 border border-white/10">
-              <div className="flex items-center mb-2">
-                <Headphones className="h-5 w-5 mr-2 text-red-500" />
-                <h3 className="text-lg font-semibold">Customer Support</h3>
-              </div>
-              <p className="text-sm opacity-80 mb-3">Our team is ready to assist with any questions or concerns about your vehicle.</p>
-              <motion.button 
-                className="action-button bg-white/10 backdrop-blur-sm text-white rounded-xl px-4 py-2 text-sm font-medium border border-white/20 w-full"
-                whileTap={{ scale: 0.95 }}
-              >
-                Contact Support
-              </motion.button>
-            </div>
-          </div>
-        )}
-        
-        {/* Dealership tab content */}
-        {activeTab === 'dealership' && (
-          <div className="space-y-4">
-            <div className="bg-black/30 backdrop-blur-xl rounded-3xl p-4 border border-white/10">
-              <h3 className="text-lg font-semibold mb-3">About Trinity Dodge</h3>
-              <p className="text-sm opacity-80 mb-4">
-                Trinity Dodge has been serving Taylorville and the surrounding areas for over 20 years. 
-                We pride ourselves on exceptional customer service and quality vehicles.
-              </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <ServiceCard 
+                title="Oil Change & Maintenance"
+                description="Regular maintenance services to keep your Dodge running smoothly."
+                price="From $49.95"
+                icon={<Wrench className="h-6 w-6 text-red-500" />}
+              />
               
-              <div className="flex items-center mb-3">
-                <Users className="h-5 w-5 mr-2 text-red-500" />
-                <h4 className="font-medium">Our Team</h4>
-              </div>
-              <p className="text-sm opacity-80 mb-4">
-                Our staff consists of experienced professionals who are passionate about helping 
-                customers find the perfect vehicle for their needs.
-              </p>
+              <ServiceCard 
+                title="Tire Service"
+                description="Rotation, balancing, and replacement for all Dodge vehicles."
+                price="From $29.95"
+                icon={<Settings className="h-6 w-6 text-blue-500" />}
+              />
               
-              <div className="flex items-center mb-3">
-                <Map className="h-5 w-5 mr-2 text-red-500" />
-                <h4 className="font-medium">Location</h4>
-              </div>
-              <p className="text-sm opacity-80">
-                We're conveniently located at 123 Main Street, Taylorville, IL 62568.
-                Just 30 miles southeast of Springfield.
-              </p>
+              <ServiceCard 
+                title="Brake Service"
+                description="Complete brake inspection and repair services."
+                price="From $99.95"
+                icon={<Wrench className="h-6 w-6 text-orange-500" />}
+              />
+              
+              <ServiceCard 
+                title="Battery Service"
+                description="Testing and replacement of batteries for all Dodge models."
+                price="From $39.95"
+                icon={<Settings className="h-6 w-6 text-green-500" />}
+              />
             </div>
             
-            <div className="bg-black/30 backdrop-blur-xl rounded-3xl p-4 border border-white/10">
-              <div className="flex items-center mb-3">
-                <Calendar className="h-5 w-5 mr-2 text-red-500" />
-                <h4 className="font-medium">Business Hours</h4>
-              </div>
-              <div className="grid grid-cols-2 gap-2 text-sm">
-                <div>Monday - Friday</div>
-                <div>9:00 AM - 8:00 PM</div>
-                <div>Saturday</div>
-                <div>10:00 AM - 6:00 PM</div>
-                <div>Sunday</div>
-                <div>Closed</div>
+            <div className="mt-8 p-6 rounded-xl bg-white dark:bg-gray-800 shadow-sm">
+              <h3 className="text-xl font-semibold mb-4">Schedule Service</h3>
+              <p className="mb-4">Book your next service appointment at Trinity Dodge in Taylorville:</p>
+              
+              <div className="flex flex-col md:flex-row gap-4">
+                <button className="flex-1 bg-primary hover:bg-primary/90 text-white px-4 py-3 rounded-lg flex items-center justify-center gap-2">
+                  <Calendar className="h-5 w-5" />
+                  <span>Schedule Online</span>
+                </button>
+                
+                <button className="flex-1 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 px-4 py-3 rounded-lg flex items-center justify-center gap-2">
+                  <Phone className="h-5 w-5" />
+                  <span>Call: (217) 555-1234</span>
+                </button>
               </div>
             </div>
           </div>
         )}
         
-        {/* Contact tab content */}
-        {activeTab === 'contact' && (
-          <div className="space-y-4">
-            <div className="bg-black/30 backdrop-blur-xl rounded-3xl p-4 border border-white/10">
-              <div className="flex items-center mb-3">
-                <Phone className="h-5 w-5 mr-2 text-red-500" />
-                <h4 className="font-medium">Call Us</h4>
-              </div>
-              <p className="text-sm opacity-80 mb-3">
-                Sales: (217) 555-1234<br />
-                Service: (217) 555-5678<br />
-                Parts: (217) 555-9101
+        {/* About Tab */}
+        {selectedTab === 'about' && (
+          <div className="space-y-8">
+            <h2 className="text-2xl font-bold mb-6">About Trinity Dodge</h2>
+            
+            <div className="p-6 rounded-xl bg-white dark:bg-gray-800 shadow-sm">
+              <p className="mb-4">
+                Trinity Dodge is Taylorville's premier Dodge dealership, serving central Illinois with a wide selection of new and pre-owned vehicles. 
+                Our friendly staff is dedicated to providing exceptional customer service to help you find the perfect vehicle for your needs.
               </p>
-              <motion.button 
-                className="action-button bg-red-600 text-white rounded-xl px-4 py-2 text-sm font-medium w-full"
-                whileTap={{ scale: 0.95 }}
-              >
-                Call Now
-              </motion.button>
+              
+              <div className="mt-6 space-y-4">
+                <div className="flex items-start gap-3">
+                  <MapPin className="h-5 w-5 text-primary mt-1" />
+                  <div>
+                    <h4 className="font-medium">Location</h4>
+                    <p>123 Main Street, Taylorville, IL 62568</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3">
+                  <Clock className="h-5 w-5 text-primary mt-1" />
+                  <div>
+                    <h4 className="font-medium">Hours</h4>
+                    <p>Monday - Friday: 8:00 AM - 7:00 PM</p>
+                    <p>Saturday: 9:00 AM - 5:00 PM</p>
+                    <p>Sunday: Closed</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3">
+                  <Phone className="h-5 w-5 text-primary mt-1" />
+                  <div>
+                    <h4 className="font-medium">Contact</h4>
+                    <p>Sales: (217) 555-1234</p>
+                    <p>Service: (217) 555-5678</p>
+                    <p>Email: info@trinitydodge.com</p>
+                  </div>
+                </div>
+              </div>
             </div>
             
-            <div className="bg-black/30 backdrop-blur-xl rounded-3xl p-4 border border-white/10">
-              <div className="flex items-center mb-3">
-                <User className="h-5 w-5 mr-2 text-red-500" />
-                <h4 className="font-medium">Send a Message</h4>
-              </div>
-              <form className="space-y-3">
-                <input
-                  type="text"
-                  placeholder="Your Name"
-                  className="w-full bg-black/20 border border-white/20 rounded-xl px-4 py-2 text-sm"
-                />
-                <input
-                  type="email"
-                  placeholder="Your Email"
-                  className="w-full bg-black/20 border border-white/20 rounded-xl px-4 py-2 text-sm"
-                />
-                <textarea
-                  placeholder="Your Message"
-                  rows={3}
-                  className="w-full bg-black/20 border border-white/20 rounded-xl px-4 py-2 text-sm"
-                ></textarea>
-                <motion.button 
-                  className="action-button bg-red-600 text-white rounded-xl px-4 py-2 text-sm font-medium w-full"
-                  whileTap={{ scale: 0.95 }}
-                >
-                  Send Message
-                </motion.button>
-              </form>
+            <div className="mt-8 p-6 rounded-xl bg-primary/10 shadow-sm">
+              <h3 className="text-xl font-semibold mb-4">Our Mission</h3>
+              <p>
+                At Trinity Dodge, we strive to provide exceptional service and quality vehicles to our Taylorville community. 
+                We believe in building long-lasting relationships with our customers through transparency, integrity, and dedication.
+              </p>
             </div>
           </div>
         )}
-      </div>
+      </main>
     </div>
+  );
+};
+
+// Vehicle Card Component
+const VehicleCard: React.FC<{ vehicle: Vehicle }> = ({ vehicle }) => {
+  return (
+    <motion.div 
+      className="rounded-xl overflow-hidden bg-white dark:bg-gray-800 shadow-sm"
+      whileHover={{ y: -5, transition: { duration: 0.2 } }}
+    >
+      <div className="aspect-[16/9] relative overflow-hidden">
+        <img 
+          src={vehicle.image} 
+          alt={vehicle.model} 
+          className="object-cover w-full h-full"
+        />
+        <div className="absolute top-2 right-2 bg-primary text-white text-sm px-2 py-1 rounded">
+          {vehicle.year}
+        </div>
+      </div>
+      
+      <div className="p-4">
+        <h3 className="text-lg font-semibold">{vehicle.model}</h3>
+        <p className="text-xl font-bold text-primary mt-1">{vehicle.price}</p>
+        <p className="text-gray-600 dark:text-gray-300 text-sm mt-2">{vehicle.description}</p>
+        
+        <div className="mt-4">
+          <h4 className="text-sm font-medium mb-2">Key Features:</h4>
+          <ul className="grid grid-cols-2 gap-1">
+            {vehicle.features.map((feature, index) => (
+              <li key={index} className="text-sm flex items-center gap-1.5">
+                <div className="w-1.5 h-1.5 rounded-full bg-primary/80"></div>
+                {feature}
+              </li>
+            ))}
+          </ul>
+        </div>
+        
+        <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex justify-between">
+          <button className="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded">
+            View Details
+          </button>
+          <button className="border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 px-4 py-2 rounded">
+            Test Drive
+          </button>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+// Service Card Component
+const ServiceCard: React.FC<{ 
+  title: string;
+  description: string;
+  price: string;
+  icon: React.ReactNode;
+}> = ({ title, description, price, icon }) => {
+  return (
+    <motion.div 
+      className="p-6 rounded-xl bg-white dark:bg-gray-800 shadow-sm"
+      whileHover={{ y: -5, transition: { duration: 0.2 } }}
+    >
+      <div className="flex items-start gap-4">
+        <div className="p-3 rounded-lg bg-gray-100 dark:bg-gray-700">
+          {icon}
+        </div>
+        <div>
+          <h3 className="text-lg font-semibold">{title}</h3>
+          <p className="text-gray-600 dark:text-gray-300 text-sm mt-1">{description}</p>
+          <p className="text-primary font-semibold mt-2">{price}</p>
+        </div>
+      </div>
+    </motion.div>
   );
 };
 

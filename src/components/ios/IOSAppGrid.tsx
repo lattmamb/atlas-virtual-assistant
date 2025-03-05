@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { 
-  Camera, Mail, Safari, Music, 
+  Camera, Mail, Globe, Music, 
   AppWindow, MessageSquare, Settings,
   Cloud, Map, Image, Calendar, Clock,
   Workflow, Webhook, FolderCog, BrainCircuit,
-  Shield
+  Shield, Store
 } from 'lucide-react';
 
 interface AppIconProps {
@@ -53,7 +53,7 @@ const IOSAppGrid: React.FC = () => {
       />
       <AppIcon 
         name="Safari" 
-        icon={<Safari className="h-7 w-7 text-white" />} 
+        icon={<Globe className="h-7 w-7 text-white" />} 
         color="#1d7fff"
       />
       <AppIcon 
@@ -132,6 +132,12 @@ const IOSAppGrid: React.FC = () => {
         icon={<Shield className="h-7 w-7 text-white" />} 
         color="#0A84FF"
         to="/atlasuniverse"
+      />
+      <AppIcon 
+        name="Trinity" 
+        icon={<Store className="h-7 w-7 text-white" />} 
+        color="#E947FF"
+        to="/trinity"
       />
     </div>
   );

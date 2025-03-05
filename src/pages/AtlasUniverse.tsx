@@ -1,390 +1,326 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
 import AtlasLockScreen from '@/components/atlas/universe/AtlasLockScreen';
 import AtlasParticleCore from '@/components/atlas/universe/AtlasParticleCore';
-import AtlasIcon from '@/components/atlas/universe/AtlasIconSet';
-import { useTheme } from '@/context/ThemeContext';
-import IOSStatusBar from '@/components/ios/IOSStatusBar';
-import { Clock, Calendar, MessageSquare, Shield, Settings } from 'lucide-react';
+import UniversalThemeSwitcher from '@/components/theme/UniversalThemeSwitcher';
+import { CalendarDays, Cloud, Settings, BrainCircuit, Route, Clock, Battery, Wifi } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
-// Define the themes
-type ThemeMode = 'dawn' | 'command' | 'warpspace' | 'nebula';
+interface WidgetProps {
+  icon: React.ReactNode;
+  title: string;
+  children: React.ReactNode;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  className?: string;
+}
 
-const AtlasUniverse: React.FC = () => {
-  const { isDarkMode } = useTheme();
-  const [isLocked, setIsLocked] = useState(true);
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const [currentTheme, setCurrentTheme] = useState<ThemeMode>('command');
+// Universe Dashboard Widget component
+const Widget: React.FC<WidgetProps> = ({ 
+  icon, 
+  title, 
+  children, 
+  size = 'md',
+  className 
+}) => {
+  const sizeClasses = {
+    sm: 'col-span-1',
+    md: 'col-span-1 md:col-span-2',
+    lg: 'col-span-2 md:col-span-3',
+    xl: 'col-span-2 md:col-span-4',
+  };
+
+  return (
+    <motion.div 
+      className={cn(
+        "rounded-xl overflow-hidden backdrop-blur-lg border border-white/10",
+        "bg-black/30 text-white shadow-xl",
+        sizeClasses[size],
+        className
+      )}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      whileHover={{ y: -5, transition: { duration: 0.2 } }}
+    >
+      <div className="p-4">
+        <div className="flex items-center gap-2 mb-3">
+          <div className="bg-primary/20 p-1.5 rounded-full">
+            {icon}
+          </div>
+          <h3 className="font-medium">{title}</h3>
+        </div>
+        <div className="text-white/90">
+          {children}
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+// Gets appropriate theme based on time of day
+const getTimeBasedTheme = (): 'dawn' | 'command' | 'warpspace' | 'nebula' => {
+  const hour = new Date().getHours();
   
-  // Update time every minute
+  if (hour >= 5 && hour < 10) return 'dawn'; // Morning
+  if (hour >= 10 && hour < 18) return 'command'; // Day/Work
+  if (hour >= 18 && hour < 22) return 'warpspace'; // Evening
+  return 'nebula'; // Night
+};
+
+// Main Atlas Universe component
+const AtlasUniverse: React.FC = () => {
+  const [isLocked, setIsLocked] = useState(true);
+  const [currentMode, setCurrentMode] = useState<'dashboard' | 'mission' | 'fleet'>('dashboard');
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [lockScreenTheme, setLockScreenTheme] = useState<'dawn' | 'command' | 'warpspace' | 'nebula'>(getTimeBasedTheme());
+  
+  // Update time periodically
   useEffect(() => {
     const interval = setInterval(() => {
       const now = new Date();
       setCurrentTime(now);
       
-      // Change theme based on time of day
-      const hour = now.getHours();
-      if (hour >= 5 && hour < 10) {
-        setCurrentTheme('dawn'); // Morning
-      } else if (hour >= 10 && hour < 17) {
-        setCurrentTheme('command'); // Work hours
-      } else if (hour >= 17 && hour < 22) {
-        setCurrentTheme('warpspace'); // Evening
-      } else {
-        setCurrentTheme('nebula'); // Night
-      }
-      
-    }, 60000);
+      // Update theme based on time of day
+      setLockScreenTheme(getTimeBasedTheme());
+    }, 60000); // Update every minute
     
     return () => clearInterval(interval);
   }, []);
   
-  // Format time display
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString('en-US', {
-      hour: 'numeric',
+  const handleUnlock = () => {
+    setIsLocked(false);
+  };
+  
+  // Generate greeting based on time
+  const getGreeting = () => {
+    const hour = currentTime.getHours();
+    if (hour < 12) return 'Good Morning';
+    if (hour < 18) return 'Good Afternoon';
+    return 'Good Evening';
+  };
+  
+  // Format current time
+  const formatTime = () => {
+    return currentTime.toLocaleTimeString('en-US', {
+      hour: '2-digit',
       minute: '2-digit',
       hour12: true
     });
   };
   
-  // Theme color configurations
-  const themeConfig = {
-    dawn: {
-      colors: ['#F5C06D', '#00D8FF'],
-      background: 'linear-gradient(135deg, #1A1F2C, #394050)'
-    },
-    command: {
-      colors: ['#1C1548', '#E947FF'],
-      background: 'linear-gradient(135deg, #0A0A15, #1C1548)'
-    },
-    warpspace: {
-      colors: ['#E947FF', '#FF4500'],
-      background: 'linear-gradient(135deg, #190419, #5A0632)'
-    },
-    nebula: {
-      colors: ['#1A237E', '#B39DDB'],
-      background: 'linear-gradient(135deg, #0F1135, #1A237E)'
-    }
-  };
-  
-  // Handle unlock
-  const handleUnlock = () => {
-    setIsLocked(false);
-  };
-  
-  // Reusable ambient widget component
-  const AmbientWidget = ({ 
-    title, 
-    icon, 
-    size = 'medium',
-    children 
-  }: { 
-    title: string;
-    icon: React.ReactNode;
-    size?: 'small' | 'medium' | 'large';
-    children: React.ReactNode;
-  }) => {
-    const sizeClasses = {
-      small: 'col-span-1 row-span-1',
-      medium: 'col-span-2 row-span-1',
-      large: 'col-span-2 row-span-2'
-    };
-    
-    return (
-      <motion.div
-        className={`${sizeClasses[size]} overflow-hidden backdrop-blur-xl border rounded-3xl`}
-        style={{
-          background: `${themeConfig[currentTheme].colors[0]}10`,
-          borderColor: `${themeConfig[currentTheme].colors[0]}30`
-        }}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        whileHover={{ scale: 1.02 }}
-      >
-        <div className="p-3 border-b"
-          style={{ borderColor: `${themeConfig[currentTheme].colors[0]}20` }}>
-          <div className="flex items-center">
-            {icon}
-            <h3 className="ml-2 text-sm font-medium">{title}</h3>
-          </div>
-        </div>
-        <div className="p-3">
-          {children}
-        </div>
-      </motion.div>
-    );
-  };
-  
   return (
-    <div 
-      className="min-h-screen w-full relative overflow-hidden"
-      style={{ background: themeConfig[currentTheme].background }}
-    >
+    <div className="fixed inset-0 bg-black">
+      {/* Lock Screen */}
       <AnimatePresence>
         {isLocked && (
-          <motion.div
-            key="lockscreen"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute inset-0 z-50"
-          >
-            <AtlasLockScreen 
-              onUnlock={handleUnlock} 
-              theme={currentTheme}
-            />
-          </motion.div>
+          <AtlasLockScreen onUnlock={handleUnlock} theme={lockScreenTheme} />
         )}
       </AnimatePresence>
       
-      {!isLocked && (
-        <>
-          <IOSStatusBar />
-          
-          {/* Home screen header */}
-          <div className="pt-16 px-6 flex flex-col items-center">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="mb-6"
-            >
-              <AtlasParticleCore 
-                size={120}
-                colors={themeConfig[currentTheme].colors}
-                pulseEffect={true}
-              />
-            </motion.div>
-            
-            <motion.h1
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-2xl font-bold text-white mb-1"
-            >
-              Atlas Universe
-            </motion.h1>
-            
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.8 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="text-white/80 text-sm mb-6"
-            >
-              Welcome, Commander
-            </motion.p>
-            
-            {/* Core command icons */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="flex space-x-6 mb-10"
-            >
-              <AtlasIcon
-                name="atlasCore"
-                color={themeConfig[currentTheme].colors[0]}
-                secondaryColor={themeConfig[currentTheme].colors[1]}
-              />
-              
-              <AtlasIcon
-                name="missionControl"
-                color={themeConfig[currentTheme].colors[0]}
-                secondaryColor={themeConfig[currentTheme].colors[1]}
-              />
-              
-              <AtlasIcon
-                name="workflows"
-                color={themeConfig[currentTheme].colors[0]}
-                secondaryColor={themeConfig[currentTheme].colors[1]}
-              />
-              
-              <AtlasIcon
-                name="neuralNet"
-                color={themeConfig[currentTheme].colors[0]}
-                secondaryColor={themeConfig[currentTheme].colors[1]}
-              />
-            </motion.div>
-          </div>
-          
-          {/* Widget grid */}
-          <div className="px-4 pb-24">
-            <div className="grid grid-cols-4 gap-3">
-              <AmbientWidget
-                title="Time & Status"
-                icon={<Clock className="h-4 w-4" style={{ color: themeConfig[currentTheme].colors[0] }} />}
-                size="medium"
-              >
-                <div className="flex flex-col items-center">
-                  <h2 className="text-xl font-bold text-white">{formatTime(currentTime)}</h2>
-                  <p className="text-white/60 text-xs mt-1">{currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1)} Mode Active</p>
-                  
-                  <div className="mt-3 w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
-                    <motion.div
-                      className="h-full rounded-full"
-                      style={{ background: themeConfig[currentTheme].colors[0] }}
-                      initial={{ width: '0%' }}
-                      animate={{ width: '85%' }}
-                      transition={{ duration: 1 }}
-                    />
-                  </div>
-                  <p className="text-white/60 text-xs mt-1">System Integrity: 85%</p>
-                </div>
-              </AmbientWidget>
-              
-              <AmbientWidget
-                title="Calendar"
-                icon={<Calendar className="h-4 w-4" style={{ color: themeConfig[currentTheme].colors[1] }} />}
-                size="medium"
-              >
-                <div className="space-y-2">
-                  <div style={{ background: `${themeConfig[currentTheme].colors[0]}20` }} className="p-2 rounded-lg">
-                    <p className="text-xs font-bold text-white">9:00 AM</p>
-                    <p className="text-xs text-white/80">Trinity Dodge Team Meeting</p>
-                  </div>
-                  <div style={{ background: `${themeConfig[currentTheme].colors[1]}20` }} className="p-2 rounded-lg">
-                    <p className="text-xs font-bold text-white">2:30 PM</p>
-                    <p className="text-xs text-white/80">Review Sales Performance</p>
-                  </div>
-                </div>
-              </AmbientWidget>
-              
-              <AmbientWidget
-                title="Messages"
-                icon={<MessageSquare className="h-4 w-4" style={{ color: themeConfig[currentTheme].colors[0] }} />}
-                size="large"
-              >
-                <div className="flex flex-col h-full">
-                  <div className="flex-1 space-y-2">
-                    <div style={{ background: `${themeConfig[currentTheme].colors[0]}15` }} className="p-2 rounded-lg">
-                      <p className="text-xs font-bold text-white">Atlas Assistant</p>
-                      <p className="text-xs text-white/80 truncate">I've analyzed today's sales data. Would you like a report?</p>
-                    </div>
-                    <div style={{ background: `${themeConfig[currentTheme].colors[1]}15` }} className="p-2 rounded-lg">
-                      <p className="text-xs font-bold text-white">Marketing Team</p>
-                      <p className="text-xs text-white/80 truncate">New Dodge Charger campaign is ready for review</p>
-                    </div>
-                    <div style={{ background: `${themeConfig[currentTheme].colors[0]}15` }} className="p-2 rounded-lg">
-                      <p className="text-xs font-bold text-white">Service Department</p>
-                      <p className="text-xs text-white/80 truncate">5 vehicles scheduled for maintenance tomorrow</p>
-                    </div>
-                  </div>
-                  
-                  <Link to="/chatroom">
-                    <motion.button
-                      className="w-full mt-2 py-2 rounded-xl text-sm font-medium"
-                      style={{ background: themeConfig[currentTheme].colors[0] }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      View All Messages
-                    </motion.button>
-                  </Link>
-                </div>
-              </AmbientWidget>
-              
-              <AmbientWidget
-                title="Security"
-                icon={<Shield className="h-4 w-4" style={{ color: themeConfig[currentTheme].colors[1] }} />}
-                size="small"
-              >
-                <div className="flex flex-col items-center justify-center h-full">
-                  <div 
-                    className="w-10 h-10 rounded-full flex items-center justify-center mb-1"
-                    style={{ background: `${themeConfig[currentTheme].colors[1]}30` }}
-                  >
-                    <Shield className="h-5 w-5" fill={themeConfig[currentTheme].colors[1]} />
-                  </div>
-                  <p className="text-xs text-white/80">System Secure</p>
-                </div>
-              </AmbientWidget>
-              
-              <Link to="/trinity" className="col-span-2 row-span-1">
-                <motion.div
-                  className="h-full overflow-hidden backdrop-blur-xl border rounded-3xl"
-                  style={{
-                    background: `rgba(230, 30, 30, 0.2)`,
-                    borderColor: `rgba(230, 30, 30, 0.3)`
-                  }}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }}
-                  whileHover={{ scale: 1.02 }}
-                >
-                  <div className="p-3 border-b border-red-500/20">
-                    <div className="flex items-center">
-                      <Car className="h-4 w-4 text-red-500" />
-                      <h3 className="ml-2 text-sm font-medium">Trinity Dodge</h3>
-                    </div>
-                  </div>
-                  <div className="p-3">
-                    <div className="grid grid-cols-2 gap-2">
-                      <div style={{ background: `rgba(230, 30, 30, 0.15)` }} className="p-2 rounded-lg">
-                        <p className="text-xs font-bold text-white">Dodge Ram 1500</p>
-                        <p className="text-xs text-white/80">$38,000</p>
-                      </div>
-                      <div style={{ background: `rgba(230, 30, 30, 0.15)` }} className="p-2 rounded-lg">
-                        <p className="text-xs font-bold text-white">Dodge Charger</p>
-                        <p className="text-xs text-white/80">$32,000</p>
-                      </div>
-                    </div>
-                    <p className="text-center text-xs text-white/60 mt-2">Tap to view inventory</p>
-                  </div>
-                </motion.div>
-              </Link>
-              
-              <Link to="/settings" className="col-span-1 row-span-1">
-                <motion.div
-                  className="h-full overflow-hidden backdrop-blur-xl border rounded-3xl"
-                  style={{
-                    background: `${themeConfig[currentTheme].colors[0]}10`,
-                    borderColor: `${themeConfig[currentTheme].colors[0]}30`
-                  }}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }}
-                  whileHover={{ scale: 1.02 }}
-                >
-                  <div className="p-3 border-b"
-                    style={{ borderColor: `${themeConfig[currentTheme].colors[0]}20` }}>
-                    <div className="flex items-center">
-                      <Settings className="h-4 w-4" style={{ color: themeConfig[currentTheme].colors[0] }} />
-                      <h3 className="ml-2 text-sm font-medium">Settings</h3>
-                    </div>
-                  </div>
-                  <div className="p-3 flex flex-col items-center justify-center h-full">
-                    <Settings className="h-8 w-8 mb-1" style={{ color: themeConfig[currentTheme].colors[0] }} />
-                    <p className="text-xs text-white/80">Configure System</p>
-                  </div>
-                </motion.div>
-              </Link>
-            </div>
-          </div>
-          
-          {/* Bottom dock */}
-          <motion.div
-            className="fixed bottom-8 left-1/2 transform -translate-x-1/2 px-6 py-4 rounded-2xl backdrop-blur-lg border z-10"
-            style={{
-              background: `${themeConfig[currentTheme].colors[0]}20`,
-              borderColor: `${themeConfig[currentTheme].colors[0]}30`,
-              boxShadow: `0 10px 25px ${themeConfig[currentTheme].colors[0]}20`
-            }}
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
+      {/* Main Dashboard */}
+      <AnimatePresence>
+        {!isLocked && (
+          <motion.div 
+            className="absolute inset-0 bg-gradient-to-b from-gray-900 to-black overflow-hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
           >
-            <div className="flex space-x-6">
-              <AtlasIcon name="atlasCore" size={30} color={themeConfig[currentTheme].colors[0]} secondaryColor={themeConfig[currentTheme].colors[1]} />
-              <AtlasIcon name="missionControl" size={30} color={themeConfig[currentTheme].colors[0]} secondaryColor={themeConfig[currentTheme].colors[1]} />
-              <AtlasIcon name="workflows" size={30} color={themeConfig[currentTheme].colors[0]} secondaryColor={themeConfig[currentTheme].colors[1]} />
-              <AtlasIcon name="haloNotifications" size={30} color={themeConfig[currentTheme].colors[0]} secondaryColor={themeConfig[currentTheme].colors[1]} />
+            {/* Background Particle Effect */}
+            <div className="fixed inset-0 z-0">
+              <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                <AtlasParticleCore 
+                  size={400} 
+                  density={100}
+                  speed={0.5}
+                  colors={['#0A84FF', '#E947FF']}
+                  pulseEffect={true}
+                />
+              </div>
             </div>
+            
+            {/* Status Bar */}
+            <div className="fixed top-0 left-0 right-0 flex justify-between items-center px-6 py-3 z-10">
+              <div className="text-white/90 text-sm">{formatTime()}</div>
+              <div className="flex items-center space-x-3">
+                <Wifi className="h-4 w-4 text-white/90" />
+                <Battery className="h-4 w-4 text-white/90" />
+              </div>
+            </div>
+            
+            {/* Main Content */}
+            <div className="absolute inset-0 pt-14 pb-20 px-6 overflow-y-auto z-10">
+              {/* Header Section */}
+              <div className="mb-8 text-center">
+                <motion.h1 
+                  className="text-4xl font-bold bg-gradient-to-r from-white via-white/95 to-white/85 bg-clip-text text-transparent"
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  {getGreeting()}
+                </motion.h1>
+                <motion.p 
+                  className="text-white/70 mt-2"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  Welcome to Atlas Universe
+                </motion.p>
+              </div>
+              
+              {/* Navigation */}
+              <motion.div 
+                className="flex gap-3 justify-center mb-8"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                {['dashboard', 'mission', 'fleet'].map((mode) => (
+                  <button
+                    key={mode}
+                    className={`px-4 py-2 rounded-full transition-all ${
+                      currentMode === mode 
+                        ? 'bg-primary text-white' 
+                        : 'bg-white/10 text-white/70 hover:bg-white/20'
+                    }`}
+                    onClick={() => setCurrentMode(mode as any)}
+                  >
+                    {mode.charAt(0).toUpperCase() + mode.slice(1)}
+                  </button>
+                ))}
+              </motion.div>
+              
+              {/* Widget Grid */}
+              <motion.div 
+                className="grid grid-cols-2 md:grid-cols-4 gap-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+              >
+                {/* Widgets */}
+                <Widget 
+                  icon={<CalendarDays className="h-5 w-5 text-primary" />} 
+                  title="Today" 
+                  size="md"
+                >
+                  <div className="space-y-2">
+                    <div className="text-lg font-semibold">
+                      {currentTime.toLocaleDateString('en-US', { weekday: 'long' })}
+                    </div>
+                    <div className="text-sm text-white/70">
+                      {currentTime.toLocaleDateString('en-US', { 
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric'
+                      })}
+                    </div>
+                    <div className="mt-3 text-sm">
+                      <div className="flex items-center gap-2 mb-1">
+                        <div className="w-2 h-2 rounded-full bg-green-400"></div>
+                        <span>9:00 AM - Morning Briefing</span>
+                      </div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <div className="w-2 h-2 rounded-full bg-blue-400"></div>
+                        <span>2:30 PM - Fleet Management</span>
+                      </div>
+                    </div>
+                  </div>
+                </Widget>
+                
+                <Widget 
+                  icon={<BrainCircuit className="h-5 w-5 text-primary" />} 
+                  title="AI Status" 
+                  size="md"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span>Intelligence</span>
+                      <span className="text-primary">98%</span>
+                    </div>
+                    <div className="h-2 bg-white/20 rounded-full overflow-hidden">
+                      <div className="h-full bg-primary rounded-full" style={{ width: '98%' }}></div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between mt-4 mb-2">
+                      <span>Memory Sync</span>
+                      <span className="text-primary">86%</span>
+                    </div>
+                    <div className="h-2 bg-white/20 rounded-full overflow-hidden">
+                      <div className="h-full bg-primary rounded-full" style={{ width: '86%' }}></div>
+                    </div>
+                  </div>
+                </Widget>
+                
+                <Widget 
+                  icon={<Route className="h-5 w-5 text-primary" />} 
+                  title="Fleet Status" 
+                  size="md"
+                >
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span>Vehicles Online</span>
+                      <span className="text-green-400">3/4</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center">
+                        <Clock className="h-4 w-4 text-white" />
+                      </div>
+                      <div className="text-sm">
+                        <div>Dodge Charger</div>
+                        <div className="text-white/60 text-xs">Last ping: 10 mins ago</div>
+                      </div>
+                    </div>
+                  </div>
+                </Widget>
+                
+                <Widget 
+                  icon={<Cloud className="h-5 w-5 text-primary" />} 
+                  title="System Status" 
+                  size="md"
+                >
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span>Cloud Storage</span>
+                      <span>2.4 TB / 5 TB</span>
+                    </div>
+                    <div className="h-2 bg-white/20 rounded-full overflow-hidden">
+                      <div className="h-full bg-blue-500 rounded-full" style={{ width: '48%' }}></div>
+                    </div>
+                    
+                    <div className="flex justify-between mt-3">
+                      <span>Network</span>
+                      <span className="text-green-400">Secure</span>
+                    </div>
+                  </div>
+                </Widget>
+                
+                <Widget 
+                  icon={<Settings className="h-5 w-5 text-primary" />} 
+                  title="Quick Controls" 
+                  size="lg"
+                >
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {['Mission Mode', 'Fleet Sync', 'Security', 'Voice Assist'].map((control) => (
+                      <button 
+                        key={control}
+                        className="bg-white/10 hover:bg-white/20 transition-colors p-3 rounded-lg text-sm"
+                      >
+                        {control}
+                      </button>
+                    ))}
+                  </div>
+                </Widget>
+              </motion.div>
+            </div>
+            
+            {/* Theme Switcher */}
+            <UniversalThemeSwitcher position="floating" variant="minimal" />
           </motion.div>
-        </>
-      )}
+        )}
+      </AnimatePresence>
     </div>
   );
 };
