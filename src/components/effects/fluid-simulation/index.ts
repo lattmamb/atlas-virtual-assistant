@@ -1,6 +1,7 @@
 
 export * from './types';
-export * from './webgl-utils';
-export * from './program-utils';
-export * from './shaders';
 export * from './fluid-simulation';
+export * from './shaders';
+export * from './program-utils';
+// Re-export selectively to avoid ambiguity
+export { getWebGLContext, getResolution, createBlit } from './webgl-utils';

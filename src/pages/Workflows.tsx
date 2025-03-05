@@ -8,7 +8,6 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useTheme } from "@/context/ThemeContext";
 import AppleNavBar from "@/components/icloud/AppleNavBar";
 import HeaderSection from "@/components/widgets/HeaderSection";
-import SplashCursor from "@/components/effects/SplashCursor";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 
@@ -39,13 +38,6 @@ const Workflows = () => {
 
   return (
     <div className={`min-h-screen w-full overflow-hidden theme-${currentTheme}`}>
-      <SplashCursor 
-        BACK_COLOR={{ r: 0.0, g: 0.0, b: 0.15 }}
-        SPLAT_RADIUS={0.25}
-        DENSITY_DISSIPATION={3.0}
-        TRANSPARENT={true}
-      />
-      
       <SidebarProvider defaultOpen={!isMobile}>
         <div className={cn(
           `flex h-screen w-full overflow-hidden theme-${currentTheme}`

@@ -17,7 +17,6 @@ const IOSParallaxBackground: React.FC<IOSParallaxBackgroundProps> = ({
   return (
     <div className={cn(
       "h-[300vh] py-40 overflow-hidden antialiased relative flex flex-col self-auto",
-      "[perspective:1000px] [transform-style:preserve-3d]",
       className
     )}>
       {useSplashCursor && (

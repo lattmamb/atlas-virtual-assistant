@@ -1,153 +1,79 @@
 
-export function getWebGLContext(canvas: HTMLCanvasElement) {
+import { WebGLContext } from './types';
+
+export function getWebGLContext(canvas: HTMLCanvasElement): WebGLContext {
   const params = { 
     alpha: true, 
     depth: false, 
     stencil: false, 
     antialias: false, 
     preserveDrawingBuffer: false,
-    desynchronized: false,
     premultipliedAlpha: true
   };
 
-  let gl: WebGLRenderingContext | WebGL2RenderingContext | null = null;
+  let gl = canvas.getContext('webgl2', params) as WebGL2RenderingContext;
+  const isWebGL2 = !!gl;
   
-  // Try to get WebGL2 context first
-  gl = canvas.getContext('webgl2', params) as WebGL2RenderingContext | null;
-  
-  // Fall back to WebGL1 if WebGL2 is not available
   if (!gl) {
-    gl = canvas.getContext('webgl', params) as WebGLRenderingContext | null;
+    gl = (
+      canvas.getContext('webgl', params) || 
+      canvas.getContext('experimental-webgl', params)
+    ) as WebGLRenderingContext;
   }
-  
+
   if (!gl) {
     throw new Error('WebGL not supported');
   }
-  
+
+  // Extension handling
   const ext = {
     formatRGBA: null,
     formatRG: null,
     formatR: null,
     halfFloatTexType: null,
-    supportLinearFiltering: null
+    supportLinearFiltering: false
   };
-  
-  if (gl instanceof WebGLRenderingContext) {
-    // WebGL1 context
-    ext.formatRGBA = { internalFormat: gl.RGBA, format: gl.RGBA };
-    ext.formatRG = { internalFormat: gl.RGBA, format: gl.RGBA };
-    ext.formatR = { internalFormat: gl.RGBA, format: gl.RGBA };
-    
-    const textureFloat = gl.getExtension('OES_texture_float');
-    if (textureFloat) {
-      ext.halfFloatTexType = gl.FLOAT;
-    } else {
-      ext.halfFloatTexType = gl.UNSIGNED_BYTE;
-    }
-    
-    const textureHalfFloat = gl.getExtension('OES_texture_half_float');
-    if (textureHalfFloat) {
-      ext.halfFloatTexType = textureHalfFloat.HALF_FLOAT_OES;
-    }
-    
-    const floatLinearFiltering = gl.getExtension('OES_texture_float_linear');
-    const halfFloatLinearFiltering = gl.getExtension('OES_texture_half_float_linear');
-    
-    ext.supportLinearFiltering = !!(floatLinearFiltering || halfFloatLinearFiltering);
+
+  if (isWebGL2) {
+    gl.getExtension('EXT_color_buffer_float');
+    ext.supportLinearFiltering = gl.getExtension('OES_texture_float_linear') !== null;
   } else {
-    // WebGL2 context
-    ext.formatRGBA = { internalFormat: gl.RGBA8, format: gl.RGBA };
-    ext.formatRG = { internalFormat: gl.RG8, format: gl.RG };
-    ext.formatR = { internalFormat: gl.R8, format: gl.RED };
-    
-    const textureHalfFloat = gl.getExtension('EXT_color_buffer_half_float');
-    if (textureHalfFloat) {
-      ext.halfFloatTexType = gl.HALF_FLOAT;
-    } else {
-      ext.halfFloatTexType = gl.UNSIGNED_BYTE;
-    }
-    
-    ext.supportLinearFiltering = true;
+    ext.formatRGBA = gl.getExtension('EXT_sRGB');
+    ext.formatRG = gl.getExtension('EXT_sRGB');
+    ext.formatR = gl.getExtension('EXT_sRGB');
+    ext.halfFloatTexType = gl.getExtension('OES_texture_half_float')?.HALF_FLOAT_OES || gl.HALF_FLOAT;
+    ext.supportLinearFiltering = gl.getExtension('OES_texture_half_float_linear') !== null;
   }
-  
+
   return { gl, ext };
 }
 
-// Rest of your WebGL utility functions
-export function createTexture(
-  gl: WebGLRenderingContext | WebGL2RenderingContext, 
-  width: number, 
-  height: number, 
-  internalFormat: number, 
-  format: number, 
-  type: number, 
-  param: number
-) {
-  gl.activeTexture(gl.TEXTURE0);
-  const texture = gl.createTexture();
-  gl.bindTexture(gl.TEXTURE_2D, texture);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, param);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, param);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-  gl.texImage2D(gl.TEXTURE_2D, 0, internalFormat, width, height, 0, format, type, null);
-  
-  return texture;
+// Add getResolution function
+export function getResolution(canvas: HTMLCanvasElement, resolution: number): { width: number, height: number } {
+  let aspectRatio = canvas.width / canvas.height;
+  if (aspectRatio < 1) aspectRatio = 1.0 / aspectRatio;
+
+  let width = Math.round(resolution);
+  let height = Math.round(width / aspectRatio);
+
+  if (canvas.width > canvas.height) {
+    return { width, height };
+  } else {
+    return { width: height, height: width };
+  }
 }
 
-export function createDoubleFBO(
-  gl: WebGLRenderingContext | WebGL2RenderingContext, 
-  width: number, 
-  height: number, 
-  internalFormat: number, 
-  format: number, 
-  type: number, 
-  param: number
-) {
-  let fbo1 = createFBO(gl, width, height, internalFormat, format, type, param);
-  let fbo2 = createFBO(gl, width, height, internalFormat, format, type, param);
-  
-  return {
-    read: fbo1,
-    write: fbo2,
-    swap: () => {
-      const temp = fbo1;
-      fbo1 = fbo2;
-      fbo2 = temp;
-    }
-  };
-}
+// Add createBlit function
+export function createBlit(gl: WebGLRenderingContext | WebGL2RenderingContext) {
+  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, -1, 1, 1, 1, 1, -1]), gl.STATIC_DRAW);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([0, 1, 2, 0, 2, 3]), gl.STATIC_DRAW);
+  gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(0);
 
-export function createFBO(
-  gl: WebGLRenderingContext | WebGL2RenderingContext, 
-  width: number, 
-  height: number, 
-  internalFormat: number, 
-  format: number, 
-  type: number, 
-  param: number
-) {
-  const texture = createTexture(gl, width, height, internalFormat, format, type, param);
-  const fbo = gl.createFramebuffer();
-  gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
-  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
-  gl.viewport(0, 0, width, height);
-  gl.clear(gl.COLOR_BUFFER_BIT);
-  
-  const texelSizeX = 1.0 / width;
-  const texelSizeY = 1.0 / height;
-  
-  return {
-    texture,
-    fbo,
-    width,
-    height,
-    texelSizeX,
-    texelSizeY,
-    attach: (id: number) => {
-      gl.activeTexture(gl.TEXTURE0 + id);
-      gl.bindTexture(gl.TEXTURE_2D, texture);
-      return id;
-    }
-  };
+  return (destination: WebGLFramebuffer | null) => {
+    gl.bindFramebuffer(gl.FRAMEBUFFER, destination);
+    gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
+  }
 }

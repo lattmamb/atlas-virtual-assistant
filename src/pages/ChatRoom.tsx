@@ -3,17 +3,12 @@ import React, { useState, useEffect, useRef } from "react";
 import { useChat } from "@/context/ChatContext";
 import { useTheme } from "@/context/ThemeContext";
 import { cn } from "@/lib/utils";
-import { GridPattern } from "@/components/ui/grid-pattern";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChatBackgroundEffect } from "@/components/effects/ChatBackgroundEffect";
-import AmbientGlow from "@/components/effects/AmbientGlow";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import { useToast } from "@/hooks/use-toast";
 import ChatRoomHeader from "@/components/chat/ChatRoomHeader";
 import ChatRoomContainer from "@/components/chat/ChatRoomContainer";
 import ChatTimelinePanel from "@/components/chat/ChatTimelinePanel";
-import { HeroParallax } from "@/components/ui/hero-parallax";
-import { products } from "@/components/ui/hero-parallax.demo";
 import ChatNavBar from "@/components/chat/ChatNavBar";
 
 // Sample timeline items for the demo
@@ -39,23 +34,10 @@ const ChatRoom = () => {
   const [showTimeline, setShowTimeline] = useState(false);
   const [starredMessage, setStarredMessage] = useState<string | null>(null);
   const [typingStatus, setTypingStatus] = useState<string>("Ready");
-  const [showHeroParallax, setShowHeroParallax] = useState(false);
   const [aiMode, setAIMode] = useState<'atlas' | 'grok'>('atlas');
   const { ref: scrollRef, scrollProgress } = useScrollAnimation();
   const { toast } = useToast();
   const [showSearch, setShowSearch] = useState(false);
-
-  // Toggle hero parallax with keyboard shortcut
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'h' && e.ctrlKey) {
-        setShowHeroParallax(prev => !prev);
-      }
-    };
-    
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
 
   // Toggle theme on specific message patterns
   useEffect(() => {
@@ -75,18 +57,6 @@ const ChatRoom = () => {
           toast({
             title: "Theme changed",
             description: "Light mode activated",
-          });
-        } else if (lastMessage.content.toLowerCase().includes('show parallax')) {
-          setShowHeroParallax(true);
-          toast({
-            title: "Parallax Effect",
-            description: "Hero parallax effect activated",
-          });
-        } else if (lastMessage.content.toLowerCase().includes('hide parallax')) {
-          setShowHeroParallax(false);
-          toast({
-            title: "Parallax Effect",
-            description: "Hero parallax effect deactivated",
           });
         } else if (lastMessage.content.toLowerCase().includes('switch to grok') ||
                  lastMessage.content.toLowerCase().includes('use grok')) {
@@ -149,34 +119,6 @@ const ChatRoom = () => {
 
   return (
     <div className="flex flex-col h-full relative">
-      {showHeroParallax && (
-        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-          <HeroParallax products={products} />
-        </div>
-      )}
-      
-      <div 
-        className={cn(
-          "fixed inset-0 z-0 transition-all duration-700",
-          showHeroParallax ? "opacity-0" : "opacity-100"
-        )}
-        style={{ background: `var(--background-gradient)` }}
-      >
-        <GridPattern 
-          width={40} 
-          height={40} 
-          className={cn(
-            "absolute inset-0 fill-white/[0.01] stroke-white/[0.05]",
-            "[mask-image:radial-gradient(1000px_circle_at_center,white,transparent)]"
-          )}
-          strokeDasharray="1 3"
-        />
-        
-        {/* Apply background effects based on AI mode */}
-        <AmbientGlow aiMode={aiMode} />
-        <ChatBackgroundEffect isDarkMode={isDarkMode} />
-      </div>
-      
       {/* Chat NavBar */}
       <ChatNavBar onSearch={handleSearch} className="z-10" />
       

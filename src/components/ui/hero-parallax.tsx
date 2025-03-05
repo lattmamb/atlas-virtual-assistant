@@ -22,86 +22,40 @@ export const HeroParallax = ({
 }: {
   products: Product[];
 }) => {
+  // Simplified component with no background effects
   const firstRow = products.slice(0, 3);
   const secondRow = products.slice(3, 6);
   const thirdRow = products.slice(6, 9);
   
-  const ref = React.useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"],
-  });
-
-  const springConfig = { stiffness: 300, damping: 30, bounce: 100 };
-
-  const translateX = useSpring(
-    useTransform(scrollYProgress, [0, 1], [0, 1000]),
-    springConfig
-  );
-  const translateXReverse = useSpring(
-    useTransform(scrollYProgress, [0, 1], [0, -1000]),
-    springConfig
-  );
-  const rotateX = useSpring(
-    useTransform(scrollYProgress, [0, 0.2], [15, 0]),
-    springConfig
-  );
-  const opacity = useSpring(
-    useTransform(scrollYProgress, [0, 0.2], [0.2, 1]),
-    springConfig
-  );
-  const rotateZ = useSpring(
-    useTransform(scrollYProgress, [0, 0.2], [20, 0]),
-    springConfig
-  );
-  const translateY = useSpring(
-    useTransform(scrollYProgress, [0, 0.2], [-700, 100]),
-    springConfig
-  );
-  
   return (
-    <div
-      ref={ref}
-      className="h-[300vh] py-40 overflow-hidden antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]"
-    >
+    <div className="py-40 relative flex flex-col self-auto">
       <Header />
-      <motion.div
-        style={{
-          rotateX,
-          rotateZ,
-          translateY,
-          opacity,
-        }}
-        className=""
-      >
-        <motion.div className="flex flex-row-reverse space-x-reverse space-x-20 mb-20">
+      <div className="">
+        <div className="flex flex-row-reverse space-x-reverse space-x-20 mb-20">
           {firstRow.map((product) => (
             <ProductCard
               product={product}
-              translate={translateX}
               key={product.title}
             />
           ))}
-        </motion.div>
-        <motion.div className="flex flex-row mb-20 space-x-20">
+        </div>
+        <div className="flex flex-row mb-20 space-x-20">
           {secondRow.map((product) => (
             <ProductCard
               product={product}
-              translate={translateXReverse}
               key={product.title}
             />
           ))}
-        </motion.div>
-        <motion.div className="flex flex-row-reverse space-x-reverse space-x-20">
+        </div>
+        <div className="flex flex-row-reverse space-x-reverse space-x-20">
           {thirdRow.map((product) => (
             <ProductCard
               product={product}
-              translate={translateX}
               key={product.title}
             />
           ))}
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </div>
   );
 };
@@ -122,20 +76,12 @@ export const Header = () => {
 
 export const ProductCard = ({
   product,
-  translate,
 }: {
   product: Product;
-  translate: MotionValue<number>;
+  translate?: MotionValue<number>;
 }) => {
   return (
-    <motion.div
-      style={{
-        x: translate,
-      }}
-      whileHover={{
-        y: -20,
-      }}
-      key={product.title}
+    <div
       className="group/product h-96 w-[30rem] relative flex-shrink-0"
     >
       <div
@@ -155,6 +101,6 @@ export const ProductCard = ({
           <p className="text-sm mt-2 text-white/70">{product.description}</p>
         )}
       </div>
-    </motion.div>
+    </div>
   );
 };

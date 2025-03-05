@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTheme } from '@/context/ThemeContext';
-import SplashCursor from '@/components/effects/SplashCursor';
 import HeroSection from '@/components/applevision/HeroSection';
 import ParallaxSection from '@/components/applevision/ParallaxSection';
 import FeaturesSection from '@/components/applevision/FeaturesSection';
@@ -47,14 +46,6 @@ const AppleVisionPro = () => {
         "relative min-h-screen w-full overflow-x-hidden",
         isDarkMode ? "text-white" : "text-gray-900"
       )}>
-        {/* SplashCursor instead of AR Background */}
-        <SplashCursor 
-          BACK_COLOR={{ r: 0.0, g: 0.0, b: 0.15 }}
-          SPLAT_RADIUS={0.25}
-          DENSITY_DISSIPATION={3.0}
-          TRANSPARENT={true}
-        />
-        
         {/* App Sidebar */}
         <AppSidebar activePage="applevisionpro" />
         
