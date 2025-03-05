@@ -1,30 +1,17 @@
-
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { useTheme } from '@/context/ThemeContext';
 import IOSStatusBar from '@/components/ios/IOSStatusBar';
 import IOSAppGrid from '@/components/ios/IOSAppGrid';
 import IOSWidget from '@/components/ios/IOSWidget';
-import { Clock, Calendar, Cloud, MessageSquare, Settings as SettingsIcon, Workflow, Music, Image, FileText } from 'lucide-react';
+import { Clock, Calendar, Cloud, MessageSquare, Settings, Workflow, Music, Image, FileText } from 'lucide-react';
 import BackgroundEffects from '@/components/widgets/BackgroundEffects';
-
-// Import all pages
-import UniverseHome from './UniverseHome';
-import AppleVisionPro from './AppleVisionPro';
-import Atlas from './Atlas';
-import AtlasLink from './AtlasLink';
-import AtlasUniverse from './AtlasUniverse';
-import ChatRoom from './ChatRoom';
-import Settings from './Settings';
-import Workflows from './Workflows';
-import Trinity from './Trinity';
+import { Link } from 'react-router-dom';
 
 const IOSHomeScreen: React.FC = () => {
   const { currentTheme } = useTheme();
   const [time, setTime] = useState(new Date());
   const [weather, setWeather] = useState({ temp: '72°', condition: 'Sunny' });
-  const [activePage, setActivePage] = useState<string | null>(null);
   
   // Update time every minute
   useEffect(() => {
@@ -237,132 +224,58 @@ const IOSHomeScreen: React.FC = () => {
     }
   ];
 
-  // Function to handle app icon clicks
-  const handleAppClick = (appName: string) => {
-    setActivePage(appName);
-  };
-
-  // Function to go back to home screen
-  const handleBackToHome = () => {
-    setActivePage(null);
-  };
-
-  const renderActivePage = () => {
-    switch (activePage) {
-      case 'Messages':
-        return <ChatRoom />;
-      case 'Universe':
-        return <UniverseHome />;
-      case 'Vision Pro':
-        return <AppleVisionPro />;
-      case 'Cloud':
-        return <Atlas />;
-      case 'Atlas Link':
-        return <AtlasLink />;
-      case 'Atlas Universe':
-        return <AtlasUniverse />;
-      case 'Settings':
-        return <Settings />;
-      case 'Workflows':
-        return <Workflows />;
-      case 'Trinity':
-        return <Trinity />;
-      default:
-        return null;
-    }
-  };
-
   return (
     <div className="ios-home-screen min-h-screen overflow-y-auto pb-24">
       <BackgroundEffects currentTheme={currentTheme} />
-      <IOSStatusBar onBackClick={activePage ? handleBackToHome : undefined} />
+      <IOSStatusBar />
       
-      <AnimatePresence mode="wait">
-        {activePage ? (
-          <motion.div
-            key="active-page"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.3 }}
-            className="pt-16"
-          >
-            {renderActivePage()}
-          </motion.div>
-        ) : (
-          <motion.div
-            key="home-screen"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            {/* Widgets section */}
-            <div className="ios-widget-stack mt-12 mb-6">
-              <div className="grid grid-cols-4 gap-3 p-4">
-                {widgets.map(widget => (
-                  <IOSWidget 
-                    key={widget.id}
-                    title={widget.title}
-                    size={widget.size as 'small' | 'medium' | 'large'}
-                  >
-                    {widget.content}
-                  </IOSWidget>
-                ))}
-              </div>
-            </div>
-            
-            {/* Page indicator */}
-            <div className="ios-page-indicator">
-              <div className="ios-page-dot active"></div>
-              <div className="ios-page-dot"></div>
-            </div>
-            
-            {/* App grid */}
-            <IOSAppGrid onAppClick={handleAppClick} />
-            
-            {/* iOS-style dock at bottom */}
-            <div className="ios-dock">
-              <motion.div 
-                className="ios-dock-app bg-green-500" 
-                whileTap={{ scale: 0.9 }}
-                onClick={() => handleAppClick('Messages')}
-              >
-                <div className="w-full h-full flex items-center justify-center">
-                  <MessageSquare className="h-6 w-6 text-white" />
-                </div>
-              </motion.div>
-              <motion.div 
-                className="ios-dock-app bg-blue-500" 
-                whileTap={{ scale: 0.9 }}
-                onClick={() => handleAppClick('Cloud')}
-              >
-                <div className="w-full h-full flex items-center justify-center">
-                  <Cloud className="h-6 w-6 text-white" />
-                </div>
-              </motion.div>
-              <motion.div 
-                className="ios-dock-app bg-purple-500" 
-                whileTap={{ scale: 0.9 }}
-                onClick={() => handleAppClick('Workflows')}
-              >
-                <div className="w-full h-full flex items-center justify-center">
-                  <Workflow className="h-6 w-6 text-white" />
-                </div>
-              </motion.div>
-              <motion.div 
-                className="ios-dock-app bg-gray-700" 
-                whileTap={{ scale: 0.9 }}
-                onClick={() => handleAppClick('Settings')}
-              >
-                <div className="w-full h-full flex items-center justify-center">
-                  <SettingsIcon className="h-6 w-6 text-white" />
-                </div>
-              </motion.div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Widgets section */}
+      <div className="ios-widget-stack mt-12 mb-6">
+        <div className="grid grid-cols-4 gap-3 p-4">
+          {widgets.map(widget => (
+            <IOSWidget 
+              key={widget.id}
+              title={widget.title}
+              size={widget.size as 'small' | 'medium' | 'large'}
+            >
+              {widget.content}
+            </IOSWidget>
+          ))}
+        </div>
+      </div>
+      
+      {/* Page indicator */}
+      <div className="ios-page-indicator">
+        <div className="ios-page-dot active"></div>
+        <div className="ios-page-dot"></div>
+      </div>
+      
+      {/* App grid */}
+      <IOSAppGrid />
+      
+      {/* iOS-style dock at bottom */}
+      <div className="ios-dock">
+        <motion.div className="ios-dock-app bg-green-500" whileTap={{ scale: 0.9 }}>
+          <div className="w-full h-full flex items-center justify-center">
+            <MessageSquare className="h-6 w-6 text-white" />
+          </div>
+        </motion.div>
+        <motion.div className="ios-dock-app bg-blue-500" whileTap={{ scale: 0.9 }}>
+          <div className="w-full h-full flex items-center justify-center">
+            <Cloud className="h-6 w-6 text-white" />
+          </div>
+        </motion.div>
+        <motion.div className="ios-dock-app bg-purple-500" whileTap={{ scale: 0.9 }}>
+          <div className="w-full h-full flex items-center justify-center">
+            <Workflow className="h-6 w-6 text-white" />
+          </div>
+        </motion.div>
+        <motion.div className="ios-dock-app bg-gray-700" whileTap={{ scale: 0.9 }}>
+          <div className="w-full h-full flex items-center justify-center">
+            <Settings className="h-6 w-6 text-white" />
+          </div>
+        </motion.div>
+      </div>
     </div>
   );
 };

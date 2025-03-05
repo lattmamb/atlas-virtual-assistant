@@ -1,322 +1,416 @@
-
-/* Base responsive styles */
-
-/* Mobile first approach */
-.container {
-  width: 100%;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* Small devices (phones) */
-@media (min-width: 640px) {
-  .container {
-    max-width: 640px;
+/* Mobile-specific styles */
+@media (max-width: 640px) {
+  .icloud-widget {
+    position: relative !important;
+    transform: none !important;
+    margin-bottom: 1rem;
+    width: 100% !important;
+    max-width: 100%;
+    height: auto !important;
   }
   
-  .sm-hidden {
-    display: none;
-  }
-}
-
-/* Medium devices (tablets) */
-@media (min-width: 768px) {
-  .container {
-    max-width: 768px;
+  .icloud-widget-header {
+    @apply p-2;
   }
   
-  .md-hidden {
-    display: none;
-  }
-}
-
-/* Large devices (desktops) */
-@media (min-width: 1024px) {
-  .container {
-    max-width: 1024px;
-  }
-  
-  .lg-hidden {
-    display: none;
-  }
-}
-
-/* Extra large devices */
-@media (min-width: 1280px) {
-  .container {
-    max-width: 1280px;
+  /* Improved widget placement for mobile */
+  .dashboard-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 0.5rem;
+    height: auto;
+    padding-bottom: 5rem; /* Space for bottom nav */
   }
   
-  .xl-hidden {
-    display: none;
+  /* Adjust button sizing for mobile */
+  .mode-switcher-buttons {
+    @apply bottom-16 right-2 flex-col gap-1;
   }
-}
-
-/* iPhone responsive tweaks */
-@media (max-width: 390px) {
+  
+  /* Improve scrolling on mobile */
+  .widget-scroll-container {
+    -webkit-overflow-scrolling: touch;
+    max-height: 70vh;
+  }
+  
+  /* Bottom navigation for mobile */
+  .mobile-navigation {
+    @apply fixed bottom-0 left-0 right-0 flex justify-around items-center p-2 bg-background/80 backdrop-blur-md border-t z-50;
+  }
+  
+  /* Main container padding to accommodate fixed elements */
+  .main-container {
+    @apply pb-16;
+  }
+  
+  /* Chat page specific mobile styles */
+  .chat-page-mobile {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
+  /* Make chat input stand out on mobile */
+  .chat-input-mobile {
+    position: sticky;
+    bottom: 0;
+    margin: 0 -0.5rem;
+    padding: 0.5rem;
+    background-color: var(--background);
+    border-top: 1px solid var(--border);
+    z-index: 10;
+  }
+  
+  /* Avoid covering the input with the keyboard on mobile */
+  .chat-messages-container {
+    max-height: calc(100vh - 150px);
+  }
+  
+  /* Improve floating action buttons on mobile */
+  .floating-chat-actions {
+    position: fixed;
+    bottom: 80px;
+    right: 16px;
+    z-index: 100;
+  }
+  
+  /* PIP widget adjustments for mobile */
+  .pip-widget-mobile {
+    position: fixed !important;
+    bottom: 60px !important; 
+    right: 10px !important;
+    width: calc(100% - 20px) !important;
+    max-width: 300px !important;
+    z-index: 40 !important;
+  }
+  
+  /* Position the pip manager for mobile devices */
+  .pip-manager-controls {
+    bottom: 70px !important;
+    right: 10px !important;
+  }
+  
+  /* Make sure PIP widgets don't overlap with navbar on mobile */
+  .pip-manager-container {
+    max-height: calc(100vh - 130px);
+    overflow: auto;
+  }
+  
+  /* iOS app grid layout for mobile */
   .ios-app-grid {
     grid-template-columns: repeat(4, 1fr);
-    gap: 0.75rem;
-    padding: 0.75rem;
+    gap: 16px;
+    padding: 16px;
   }
   
-  .ios-app-icon {
-    height: 3rem;
-    width: 3rem;
+  /* iOS Status Bar */
+  .ios-status-bar {
+    height: 44px;
   }
   
-  .ios-app-label {
-    font-size: 0.7rem;
+  /* iOS Dock */
+  .ios-dock {
+    bottom: 16px;
+  }
+  
+  /* Trinity page responsive styles */
+  .trinity-page .vehicle-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .trinity-page .vehicle-detail-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .trinity-page .price-tag {
+    margin-top: 0.5rem;
+  }
+  
+  .trinity-page .action-button-container {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .trinity-page .tab-navigation {
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
   }
 }
 
-/* iOS 18 specific responsive adjustments */
-.ios18-layout {
+/* Better support for touch controls on mobile */
+@media (pointer: coarse) {
+  button, a, .clickable {
+    @apply min-h-[44px] min-w-[44px];
+  }
+  
+  input, select, textarea {
+    @apply text-base;
+  }
+  
+  /* Improve touch targets */
+  .icloud-widget-header {
+    @apply min-h-[48px];
+  }
+  
+  /* Add pull-to-refresh feeling */
+  .overscroll-bounce {
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Haptic feedback utility classes */
+  .tap-highlight {
+    -webkit-tap-highlight-color: rgba(0,0,0,0.1);
+  }
+  
+  /* Prevent text selection on interactive elements */
+  .no-select {
+    user-select: none;
+  }
+  
+  /* Improve chat interaction on mobile */
+  .chat-message {
+    max-width: 85% !important;
+  }
+  
+  /* Make message actions more accessible on touch */
+  .message-action-button {
+    @apply min-h-[36px] min-w-[36px];
+    opacity: 1 !important;
+  }
+  
+  /* Improve PIP widget controls for touch */
+  .pip-controls button {
+    @apply min-h-[32px] min-w-[32px];
+    margin: 0 2px;
+  }
+  
+  /* iOS Touch improvements */
+  .ios-app-icon {
+    min-height: 60px;
+    min-width: 60px;
+  }
+  
+  .ios-app-icon:active {
+    transform: scale(0.9);
+  }
+  
+  /* iOS folder touch improvements */
+  .ios-folder {
+    min-height: 60px;
+    min-width: 60px;
+  }
+}
+
+/* Handle different screen heights */
+@media (max-height: 700px) {
+  .icloud-widget {
+    max-height: 80vh !important;
+  }
+  
+  .dashboard-grid {
+    padding-bottom: 4rem;
+  }
+  
+  /* Adjust chat container height */
+  .chat-container-compact {
+    max-height: calc(100vh - 110px);
+  }
+  
+  /* PIP widget smaller on short screens */
+  .pip-widget-container {
+    max-height: 250px;
+  }
+  
+  /* iOS Dock position for short screens */
+  .ios-dock {
+    bottom: 8px;
+  }
+}
+
+/* Landscape orientation adjustments */
+@media (max-width: 896px) and (orientation: landscape) {
+  .dashboard-grid {
+    @apply grid grid-cols-2 gap-2;
+    max-height: calc(100vh - 60px);
+  }
+  
+  .mobile-navigation {
+    @apply py-1;
+  }
+  
+  /* Optimize chat for landscape */
+  .chat-container-landscape {
+    @apply flex flex-row gap-2;
+  }
+  
+  .chat-messages-landscape {
+    @apply flex-1;
+  }
+  
+  .chat-sidebar-landscape {
+    @apply w-64 h-[calc(100vh-80px)];
+  }
+  
+  /* Position PIP widgets better in landscape */
+  .pip-manager-container {
+    bottom: 10px;
+    right: 10px;
+  }
+  
+  .pip-widget-landscape {
+    width: 250px !important;
+    height: 180px !important;
+  }
+  
+  /* iOS Layout for landscape */
+  .ios-app-grid {
+    grid-template-columns: repeat(8, 1fr);
+    height: calc(100vh - 100px);
+  }
+  
+  .ios-dock {
+    bottom: 8px;
+  }
+}
+
+/* Enhanced widget image scaling */
+.icloud-widget img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: block;
+}
+
+.widget-image-container {
+  overflow: hidden;
+  width: 100%;
+  border-radius: 0.5rem;
+}
+
+/* Improved widget scaling for all screen sizes */
+.icloud-widget {
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  height: auto;
+}
+
+.icloud-widget-body {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.widget-content {
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Adjust grid layout for better widget display */
+.dashboard-grid {
   display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1rem;
   padding: 1rem;
 }
 
-@media (min-width: 640px) {
-  .ios18-layout {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-    padding: 1.5rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .ios18-layout {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-    padding: 2rem;
-  }
-}
-
-@media (min-width: 1280px) {
-  .ios18-layout {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-/* Widget responsive sizing */
-.widget-responsive {
-  grid-column: span 1;
-}
-
-@media (min-width: 640px) {
-  .widget-responsive-md {
-    grid-column: span 2;
-  }
-}
-
-@media (min-width: 1024px) {
-  .widget-responsive-lg {
-    grid-column: span 3;
-  }
-}
-
-/* Responsive typography */
-.responsive-text-xs {
-  font-size: 0.75rem;
-}
-
-.responsive-text-sm {
-  font-size: 0.875rem;
-}
-
-.responsive-text-base {
-  font-size: 1rem;
-}
-
-.responsive-text-lg {
-  font-size: 1.125rem;
-}
-
-.responsive-text-xl {
-  font-size: 1.25rem;
-}
-
 @media (min-width: 768px) {
-  .responsive-text-xs {
-    font-size: 0.875rem;
-  }
-  
-  .responsive-text-sm {
-    font-size: 1rem;
-  }
-  
-  .responsive-text-base {
-    font-size: 1.125rem;
-  }
-  
-  .responsive-text-lg {
-    font-size: 1.25rem;
-  }
-  
-  .responsive-text-xl {
-    font-size: 1.5rem;
+  .dashboard-grid {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   }
 }
 
-/* Fluid spacing (for padding and margins) */
-.fluid-space-sm {
-  padding: clamp(0.5rem, 2vw, 1rem);
+@media (min-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  }
 }
 
-.fluid-space-md {
-  padding: clamp(1rem, 4vw, 2rem);
+/* iOS 18 Specific Styles */
+.ios-home-screen {
+  position: relative;
+  min-height: 100vh;
+  background-size: cover;
+  background-position: center;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-top: 44px; /* Status bar height */
+  padding-bottom: 100px; /* Dock height + bottom safe area */
 }
 
-.fluid-space-lg {
-  padding: clamp(1.5rem, 6vw, 3rem);
-}
-
-/* Responsive flex containers */
-.responsive-flex {
+.ios-page-indicator {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  justify-content: center;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  gap: 6px;
 }
 
-@media (min-width: 768px) {
-  .responsive-flex {
-    flex-direction: row;
-    align-items: center;
-  }
+.ios-page-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+  transition: all 0.2s ease;
 }
 
-/* Responsive grid layouts */
-.responsive-grid {
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  gap: 1rem;
+.ios-page-dot.active {
+  background-color: rgba(255, 255, 255, 0.8);
+  width: 20px;
+  border-radius: 3px;
 }
 
-@media (min-width: 640px) {
-  .responsive-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+.ios-app-label {
+  font-size: 11px;
+  text-align: center;
+  color: white;
+  margin-top: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-@media (min-width: 1024px) {
-  .responsive-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (min-width: 1280px) {
-  .responsive-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-/* Responsive order for content */
-.responsive-order-1 {
-  order: 1;
-}
-
-.responsive-order-2 {
-  order: 2;
-}
-
-@media (min-width: 768px) {
-  .responsive-order-md-1 {
-    order: 1;
-  }
-  
-  .responsive-order-md-2 {
-    order: 2;
-  }
-}
-
-/* Responsive images */
-.responsive-image {
-  width: 100%;
-  height: auto;
-  object-fit: cover;
-}
-
-@media (min-width: 768px) {
-  .responsive-image-constrained {
-    max-width: 500px;
-    margin: 0 auto;
-  }
-}
-
-/* Responsive aspect ratios */
-.aspect-square {
+/* iOS 18 Widget Styles */
+.ios-widget-small {
   aspect-ratio: 1 / 1;
+  border-radius: 20px;
 }
 
-.aspect-video {
-  aspect-ratio: 16 / 9;
+.ios-widget-medium {
+  aspect-ratio: 2 / 1;
+  border-radius: 20px;
 }
 
-.aspect-portrait {
-  aspect-ratio: 3 / 4;
+.ios-widget-large {
+  aspect-ratio: 2 / 2;
+  border-radius: 20px;
 }
 
-/* iOS-specific navigation responsiveness */
-@media (max-width: 767px) {
-  .ios-nav-collapsed {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 0.75rem;
-    background: var(--widget-bg);
-    backdrop-filter: blur(12px);
-    border-top: 1px solid var(--widget-border);
-    z-index: 50;
-  }
-  
-  .ios-nav-items {
-    display: flex;
-    justify-content: space-around;
-  }
-  
-  .ios-nav-label {
-    display: none;
-  }
+.ios-widget-stack {
+  position: relative;
 }
 
-@media (min-width: 768px) {
-  .ios-nav-expanded {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 250px;
-    padding: 1.5rem 1rem;
-    background: var(--widget-bg);
-    backdrop-filter: blur(12px);
-    border-right: 1px solid var(--widget-border);
-    z-index: 50;
-  }
-  
-  .ios-nav-items {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
-  .ios-nav-item {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem 1rem;
-    border-radius: 0.75rem;
-    transition: all 0.2s ease;
-  }
-  
-  .ios-nav-item:hover {
-    background: var(--widget-highlight, rgba(255, 255, 255, 0.1));
-  }
-  
-  .ios-nav-label {
-    display: block;
-  }
+.ios-widget-stack > .ios-widget {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: all 0.3s ease;
+}
+
+.ios-widget-stack > .ios-widget:not(:first-child) {
+  transform: scale(0.95) translateY(5px);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ios-widget-stack:hover > .ios-widget:nth-child(2) {
+  transform: scale(0.97) translateY(3px);
+  opacity: 0.9;
+  z-index: -1;
 }
