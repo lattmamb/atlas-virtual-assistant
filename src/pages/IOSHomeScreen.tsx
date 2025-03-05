@@ -1,11 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { useTheme } from '@/context/ThemeContext';
 import IOSStatusBar from '@/components/ios/IOSStatusBar';
 import IOSAppGrid from '@/components/ios/IOSAppGrid';
 import IOSWidget from '@/components/ios/IOSWidget';
-import { Clock, Calendar, Cloud, MessageSquare, Settings, Workflow, Music, Image, FileText } from 'lucide-react';
+import { Clock, Calendar, Cloud, MessageSquare, Settings as SettingsIcon, Workflow, Music, Image, FileText } from 'lucide-react';
 import BackgroundEffects from '@/components/widgets/BackgroundEffects';
 
 // Import all pages
@@ -355,7 +356,7 @@ const IOSHomeScreen: React.FC = () => {
                 onClick={() => handleAppClick('Settings')}
               >
                 <div className="w-full h-full flex items-center justify-center">
-                  <Settings className="h-6 w-6 text-white" />
+                  <SettingsIcon className="h-6 w-6 text-white" />
                 </div>
               </motion.div>
             </div>
