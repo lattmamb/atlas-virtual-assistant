@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -6,8 +5,6 @@ import { MessageSquare, Home, ChevronUp } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTheme } from '@/context/ThemeContext';
 
-// This component now serves as a minimal fixed navigation at the bottom
-// Most navigation functionality has moved to the PageCarousel
 const IOSMobileNavigation: React.FC = () => {
   const location = useLocation();
   const { isDarkMode } = useTheme();
@@ -19,9 +16,10 @@ const IOSMobileNavigation: React.FC = () => {
   
   return (
     <div className={cn(
-      "ios-dock fixed bottom-4 left-1/2 -translate-x-1/2 z-30",
+      "ios-dock fixed bottom-safe sm:bottom-4 left-1/2 -translate-x-1/2 z-30",
       "backdrop-blur-xl bg-black/40 border border-white/10 rounded-xl",
-      "flex items-center justify-between px-2 py-1 w-auto"
+      "flex items-center justify-between px-2 py-1 w-auto",
+      "shadow-lg"
     )}>
       {mainItems.map((item) => {
         const isActive = location.pathname === item.path;
@@ -52,7 +50,6 @@ const IOSMobileNavigation: React.FC = () => {
         );
       })}
       
-      {/* Indicator to swipe up for page carousel */}
       <motion.div
         className={cn(
           "ios-dock-mini flex items-center justify-center p-3 mx-1 rounded-full",

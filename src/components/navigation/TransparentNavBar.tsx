@@ -42,7 +42,8 @@ const TransparentNavBar: React.FC = () => {
       {isVisible && (
         <motion.header 
           className={cn(
-            "fixed top-0 left-0 right-0 z-50 py-3 px-4 md:px-6 transition-all duration-300",
+            "fixed top-0 left-0 right-0 z-50 py-4 md:py-5 px-4 md:px-6 transition-all duration-300",
+            "h-[72px] md:h-[80px] flex items-center",
             isScrolled 
               ? isDarkMode 
                 ? "bg-black/70 backdrop-blur-lg" 
@@ -54,7 +55,7 @@ const TransparentNavBar: React.FC = () => {
           exit={{ y: -100, opacity: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <div className="flex items-center justify-between max-w-7xl mx-auto">
+          <div className="flex items-center justify-between w-full max-w-7xl mx-auto">
             {/* Logo */}
             <NavLogo 
               isDarkMode={isDarkMode} 

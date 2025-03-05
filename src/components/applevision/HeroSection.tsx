@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
@@ -9,7 +8,7 @@ const HeroSection: React.FC = () => {
   const { isDarkMode } = useTheme();
   
   return (
-    <section className="min-h-screen w-full flex flex-col items-center justify-center px-4 sm:px-6 py-24">
+    <section className="min-h-[100dvh] w-full flex flex-col items-center justify-center px-4 sm:px-6 pt-[120px] pb-24 md:pt-[140px]">
       <div className="max-w-5xl mx-auto text-center z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -31,7 +30,7 @@ const HeroSection: React.FC = () => {
         </motion.div>
         
         <motion.h1 
-          className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight"
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mt-8 md:mt-12"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ 
@@ -93,9 +92,8 @@ const HeroSection: React.FC = () => {
         </motion.div>
       </div>
       
-      {/* 3D Floating Product Visualization */}
       <motion.div 
-        className="relative w-full max-w-2xl h-80 sm:h-96 mt-20 mb-10"
+        className="relative w-full max-w-2xl h-60 sm:h-80 mt-12 sm:mt-16 mb-8"
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ 
@@ -120,7 +118,6 @@ const HeroSection: React.FC = () => {
             />
           </div>
           
-          {/* Ambient reflection highlights */}
           <div className="absolute top-0 left-1/4 w-1/2 h-1 bg-gradient-to-r from-transparent via-white/30 to-transparent rounded-full" />
           <div className="absolute bottom-0 left-1/4 w-1/2 h-1 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-full" />
         </div>
