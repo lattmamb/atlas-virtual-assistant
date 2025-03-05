@@ -5,6 +5,7 @@
 /* Import component styles */
 @import './components/icloud.css';
 @import './components/glassmorphism.css';
+@import './components/panels.css';
 @import './theme.css';
 
 /* Import animations */

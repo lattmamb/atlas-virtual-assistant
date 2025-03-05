@@ -1,0 +1,63 @@
+
+{
+  "themes": [
+    {
+      "id": "ios18",
+      "name": "iOS 18",
+      "description": "The default Apple-inspired iOS 18 theme with sleek dark aesthetics",
+      "colors": {
+        "primary": "#0A84FF",
+        "secondary": "#64D2FF",
+        "background": "#000000",
+        "card": "rgba(30, 30, 30, 0.8)",
+        "text": "#FFFFFF",
+        "border": "rgba(255, 255, 255, 0.1)"
+      },
+      "effects": {
+        "blur": "16px",
+        "borderRadius": "1rem",
+        "shadowColor": "rgba(0, 0, 0, 0.5)",
+        "glow": true
+      }
+    },
+    {
+      "id": "atlas",
+      "name": "Atlas Universe",
+      "description": "Rich purple-blue Atlas Universe theme with neon accents",
+      "colors": {
+        "primary": "#9B87F5",
+        "secondary": "#7E69AB",
+        "background": "#1A1F2C",
+        "card": "rgba(30, 35, 50, 0.8)",
+        "text": "#FFFFFF",
+        "border": "rgba(155, 135, 245, 0.3)"
+      },
+      "effects": {
+        "blur": "16px",
+        "borderRadius": "1rem",
+        "shadowColor": "rgba(155, 135, 245, 0.3)",
+        "glow": true
+      }
+    },
+    {
+      "id": "light",
+      "name": "Light",
+      "description": "Clean light theme with neutral colors",
+      "colors": {
+        "primary": "#007AFF",
+        "secondary": "#5AC8FA",
+        "background": "#F5F5F7",
+        "card": "rgba(255, 255, 255, 0.8)",
+        "text": "#1A1A1A",
+        "border": "rgba(0, 0, 0, 0.1)"
+      },
+      "effects": {
+        "blur": "16px",
+        "borderRadius": "1rem",
+        "shadowColor": "rgba(0, 0, 0, 0.1)",
+        "glow": false
+      }
+    }
+  ],
+  "defaultTheme": "ios18"
+}

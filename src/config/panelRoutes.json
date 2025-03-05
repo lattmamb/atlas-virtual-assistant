@@ -1,0 +1,26 @@
+
+{
+  "panels": [
+    {
+      "id": "home",
+      "name": "Home",
+      "icon": "home"
+    },
+    {
+      "id": "vision",
+      "name": "Vision Pro",
+      "icon": "glasses"
+    },
+    {
+      "id": "universe",
+      "name": "Universe",
+      "icon": "globe"
+    },
+    {
+      "id": "link",
+      "name": "Atlas Link",
+      "icon": "link"
+    }
+  ],
+  "defaultPanel": "home"
+}

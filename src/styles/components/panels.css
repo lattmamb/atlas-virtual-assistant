@@ -1,0 +1,34 @@
+
+/* Panel indicators */
+.panel-dot {
+  transition: all 0.3s ease;
+}
+
+.shadow-glow {
+  box-shadow: 0 0 8px var(--accent-color, #0A84FF);
+}
+
+/* Swipe container */
+.swipe-container {
+  touch-action: pan-y;
+  user-select: none;
+}
+
+/* Panel transitions */
+.panel-transition {
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Panel header */
+.panel-header {
+  height: 60px;
+  z-index: 10;
+}
+
+/* Individual panels */
+.vision-panel,
+.universe-panel,
+.link-panel {
+  isolation: isolate;
+  position: relative;
+}
