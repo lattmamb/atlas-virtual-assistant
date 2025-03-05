@@ -11,8 +11,6 @@ import { UniverseComponentProps } from '@/lib/types';
 import ARBackground from '@/components/applevision/ARBackground';
 import HeroSection from '@/components/applevision/HeroSection';
 import ParallaxSection from '@/components/applevision/ParallaxSection';
-import PricingSection from '@/components/applevision/PricingSection';
-
 import ChatRoomPanel from '@/components/universe/ChatRoomPanel';
 import AtlasPanel from '@/components/universe/AtlasPanel';
 import WorkflowPanel from '@/components/universe/WorkflowPanel';
@@ -30,10 +28,9 @@ interface SectionConfig {
 
 const sections: SectionConfig[] = [
   { id: 'vision', title: 'Vision Pro', component: HeroSection },
-  { id: 'parallax', title: 'Explore', component: ({ scrollY }) => <HeroParallaxDemo /> },
-  { id: 'chat', title: 'Chat', component: ChatRoomPanel },
-  { id: 'atlas', title: 'Atlas', component: AtlasPanel },
-  { id: 'workflow', title: 'Workflows', component: WorkflowPanel },
+  { id: 'universe', title: 'U-N-I-Verse', component: ({ scrollY }) => <HeroParallaxDemo /> },
+  { id: 'chat', title: 'Chat Room', component: ChatRoomPanel },
+  { id: 'link', title: 'Atlas Link', component: AtlasPanel },
   { id: 'settings', title: 'Settings', component: SettingsPanel },
 ];
 

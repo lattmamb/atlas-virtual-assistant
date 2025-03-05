@@ -55,34 +55,36 @@ export function Squares({ className = "" }) {
       ref={containerRef} 
       className={`fixed inset-0 overflow-hidden pointer-events-none ${className}`}
     >
-      <style jsx global>{`
-        .squares-item {
-          position: absolute;
-          background-color: rgba(255, 255, 255, 0.03);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 8px;
-          animation: squares-float linear forwards;
-          opacity: 0;
-          transform: translateY(0) rotate(0);
-        }
+      <style>
+        {`
+          .squares-item {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            animation: squares-float linear forwards;
+            opacity: 0;
+            transform: translateY(0) rotate(0);
+          }
 
-        @keyframes squares-float {
-          0% {
-            opacity: 0;
-            transform: translateY(50px) rotate(0deg);
+          @keyframes squares-float {
+            0% {
+              opacity: 0;
+              transform: translateY(50px) rotate(0deg);
+            }
+            10% {
+              opacity: 0.5;
+            }
+            90% {
+              opacity: 0.5;
+            }
+            100% {
+              opacity: 0;
+              transform: translateY(-150px) rotate(360deg);
+            }
           }
-          10% {
-            opacity: 0.5;
-          }
-          90% {
-            opacity: 0.5;
-          }
-          100% {
-            opacity: 0;
-            transform: translateY(-150px) rotate(360deg);
-          }
-        }
-      `}</style>
+        `}
+      </style>
     </div>
   );
 }

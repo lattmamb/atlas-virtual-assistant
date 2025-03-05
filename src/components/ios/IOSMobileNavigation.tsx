@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { MessageSquare, Home, Settings, Workflow, Grid, ChevronUp } from 'lucide-react';
+import { MessageSquare, Home, Settings, ChevronUp } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTheme } from '@/context/ThemeContext';
 
@@ -14,12 +14,12 @@ const IOSMobileNavigation: React.FC = () => {
   
   const mainItems = [
     { icon: Home, path: '/', label: 'Home' },
-    { icon: MessageSquare, path: '/chatroom', label: 'Chat' },
+    { icon: MessageSquare, path: '/chatroom', label: 'Chat Room' },
   ];
   
   return (
     <div className={cn(
-      "ios-dock fixed bottom-4 left-1/2 -translate-x-1/2 z-40",
+      "ios-dock fixed bottom-4 left-1/2 -translate-x-1/2 z-30",
       "backdrop-blur-xl bg-black/40 border border-white/10 rounded-xl",
       "flex items-center justify-between px-2 py-1 w-auto"
     )}>

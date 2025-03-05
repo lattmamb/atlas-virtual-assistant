@@ -4,14 +4,12 @@ import { useLocation } from "react-router-dom";
 import { SparklesCore } from "@/components/ui/sparkles";
 
 const pageTitles: Record<string, string> = {
-  "/": "Atlas",
-  "/atlas": "Atlas Universe",
-  "/chatroom": "Chat",
-  "/workflows": "Workflows",
-  "/settings": "Settings",
-  "/applevisionpro": "Vision Pro",
+  "/": "Home",
+  "/universe": "U-N-I-Verse",
+  "/chatroom": "Chat Room",
   "/atlaslink": "Atlas Link",
-  // Add more routes as needed
+  "/applevisionpro": "Vision Pro",
+  "/settings": "Settings",
 };
 
 export function SparklesLoader() {

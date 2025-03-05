@@ -36,30 +36,30 @@ const PageCarousel = () => {
     { 
       path: "/", 
       title: "Home", 
-      description: "Welcome to Atlas Universe",
+      description: "Your Atlas Universe Hub",
       color: "from-blue-500 to-purple-600",
       icon: "🏠"
     },
     { 
+      path: "/universe", 
+      title: "U-N-I-Verse", 
+      description: "Explore the unified space",
+      color: "from-violet-500 to-indigo-600",
+      icon: "🌌"
+    },
+    { 
       path: "/chatroom", 
-      title: "Chat", 
+      title: "Chat Room", 
       description: "Talk to Atlas AI assistant",
       color: "from-green-500 to-teal-600",
       icon: "💬"
     },
     { 
-      path: "/atlas", 
-      title: "Atlas", 
-      description: "Explore the Atlas platform",
+      path: "/atlaslink", 
+      title: "Atlas Link", 
+      description: "Connect with Trinity Dodge",
       color: "from-amber-500 to-orange-600",
-      icon: "🚗"
-    },
-    { 
-      path: "/workflows", 
-      title: "Workflows", 
-      description: "Build automation workflows",
-      color: "from-violet-500 to-indigo-600",
-      icon: "⚙️"
+      icon: "🔗"
     },
     { 
       path: "/applevisionpro", 
