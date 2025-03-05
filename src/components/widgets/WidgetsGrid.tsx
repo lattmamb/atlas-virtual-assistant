@@ -15,7 +15,7 @@ const WidgetsGrid: React.FC<WidgetsGridProps> = ({ children, onEditMode }) => {
   return (
     <motion.div 
       className={cn(
-        "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4",
+        "dashboard-grid",
         isDarkMode ? 'text-white' : 'text-gray-900'
       )}
       initial={{ opacity: 0 }}

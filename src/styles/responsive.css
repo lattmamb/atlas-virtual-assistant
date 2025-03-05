@@ -7,6 +7,7 @@
     margin-bottom: 1rem;
     width: 100% !important;
     max-width: 100%;
+    height: auto !important;
   }
   
   .icloud-widget-header {
@@ -200,5 +201,59 @@
   .pip-widget-landscape {
     width: 250px !important;
     height: 180px !important;
+  }
+}
+
+/* Enhanced widget image scaling */
+.icloud-widget img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: block;
+}
+
+.widget-image-container {
+  overflow: hidden;
+  width: 100%;
+  border-radius: 0.5rem;
+}
+
+/* Improved widget scaling for all screen sizes */
+.icloud-widget {
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  height: auto;
+}
+
+.icloud-widget-body {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.widget-content {
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Adjust grid layout for better widget display */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+}
+
+@media (min-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
   }
 }
