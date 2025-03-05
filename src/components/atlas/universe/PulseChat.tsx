@@ -81,25 +81,25 @@ const PulseChat: React.FC<PulseChatProps> = ({ language, atxBalance, setAtxBalan
       `${
         language === 'en' ? 'Atlas: Noted "' : 'Atlas: Anotado "'
       }${msg}". ${
-        language === 'en' ? 'What's next?' : '¿Qué sigue?'
+        language === 'en' ? "What's next?" : "¿Qué sigue?"
       }`,
     grok: (msg: string) =>
       `${
         language === 'en' ? 'Grok: Cool, "' : 'Grok: Genial, "'
       }${msg}". ${
-        language === 'en' ? 'Got any spicy follow-ups?' : '¿Tienes algo más interesante?'
+        language === 'en' ? "Got any spicy follow-ups?" : "¿Tienes algo más interesante?"
       }`,
     gemini: (msg: string) =>
       `${
         language === 'en' ? 'Gemini: Analyzing "' : 'Gemini: Analizando "'
       }${msg}". ${
-        language === 'en' ? 'Need a visual?' : '¿Necesitas una visualización?'
+        language === 'en' ? "Need a visual?" : "¿Necesitas una visualización?"
       }`,
     claude: (msg: string) =>
       `${
         language === 'en' ? 'Claude: Reflecting on "' : 'Claude: Reflexionando sobre "'
       }${msg}". ${
-        language === 'en' ? 'Let's dive deeper.' : 'Profundicemos.'
+        language === 'en' ? "Let's dive deeper." : "Profundicemos."
       }`,
   };
 
