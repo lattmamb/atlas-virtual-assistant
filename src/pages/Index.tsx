@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -29,14 +28,12 @@ export default function Index() {
       {isDarkMode && (
         <div className="fixed inset-0 pointer-events-none z-0 opacity-50">
           <SparklesCore
-            id="tsparticlesfullpage"
             background="transparent"
-            minSize={0.6}
-            maxSize={1.4}
-            particleDensity={20}
+            minSize={0.4}
+            maxSize={1}
+            particleDensity={1200}
             className="w-full h-full"
             particleColor="#FFFFFF"
-            speed={0.5}
           />
         </div>
       )}

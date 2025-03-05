@@ -1,8 +1,6 @@
-
 import React from 'react';
 import { useTheme } from '@/context/ThemeContext';
 import StandardNavBar from './navbar/StandardNavBar';
-import iOS18NavBar from './navbar/iOS18NavBar';
 import { AppleNavBarProps } from './navbar/types';
 
 const AppleNavBar: React.FC<AppleNavBarProps> = (props) => {
@@ -11,7 +9,7 @@ const AppleNavBar: React.FC<AppleNavBarProps> = (props) => {
 
   // If using iOS 18 theme, use the iOS18NavBar, otherwise use the StandardNavBar
   if (isIOS18Theme) {
-    return <iOS18NavBar className={props.className} onSearch={props.onSearch} />;
+    return <StandardNavBar className={props.className} onSearch={props.onSearch} />;
   }
 
   // For all other themes, use the original navigation
