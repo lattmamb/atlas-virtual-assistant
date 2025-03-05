@@ -11,6 +11,7 @@ import Workflows from './pages/Workflows';
 import NotFound from './pages/NotFound';
 import IOSHomeScreen from './pages/IOSHomeScreen';
 import Trinity from './pages/Trinity';
+import AtlasUniverse from './pages/AtlasUniverse';
 import { ThemeProvider } from './context/ThemeContext';
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
         <Route path="/settings" element={<Settings />} />
         <Route path="/workflows" element={<Workflows />} />
         <Route path="/trinity" element={<Trinity />} />
+        <Route path="/atlasuniverse" element={<AtlasUniverse />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </ThemeProvider>
