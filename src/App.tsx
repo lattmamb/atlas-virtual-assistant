@@ -10,22 +10,26 @@ import UniverseHome from './pages/UniverseHome';
 import Workflows from './pages/Workflows';
 import NotFound from './pages/NotFound';
 import { ThemeProvider } from './context/ThemeContext';
+import IOSLayout from './components/ios/IOSLayout';
 
 function App() {
   return (
     <ThemeProvider>
       <Toaster position="top-center" richColors />
       <Routes>
-        <Route path="/" element={<UniverseHome />} />
-        <Route path="/index" element={<UniverseHome />} />
-        <Route path="/applevisionpro" element={<AppleVisionPro />} />
-        <Route path="/atlas" element={<Atlas />} />
-        <Route path="/atlaslink" element={<AtlasLink />} />
-        <Route path="/chatroom" element={<ChatRoom />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/universe" element={<UniverseHome />} />
-        <Route path="/workflows" element={<Workflows />} />
-        <Route path="*" element={<NotFound />} />
+        {/* Main routes with the immersive IOSLayout */}
+        <Route element={<IOSLayout />}>
+          <Route path="/" element={<UniverseHome />} />
+          <Route path="/index" element={<UniverseHome />} />
+          <Route path="/applevisionpro" element={<AppleVisionPro />} />
+          <Route path="/atlas" element={<Atlas />} />
+          <Route path="/atlaslink" element={<AtlasLink />} />
+          <Route path="/chatroom" element={<ChatRoom />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/universe" element={<UniverseHome />} />
+          <Route path="/workflows" element={<Workflows />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
       </Routes>
     </ThemeProvider>
   );

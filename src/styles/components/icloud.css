@@ -191,11 +191,12 @@
 }
 
 .ios-status-bar {
-  @apply fixed top-0 left-0 right-0 flex items-center justify-between px-5 py-2;
-  background: rgba(0, 0, 0, 0.01);
-  backdrop-filter: blur(10px);
-  height: 44px;
-  z-index: 999;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 24px;
+  padding: 0 16px;
+  font-size: 12px;
 }
 
 .ios-widget-stack {
@@ -222,4 +223,79 @@
 
 .ios-swipe-indicator {
   @apply w-12 h-1 bg-white/30 rounded-full mx-auto mt-4;
+}
+
+.ios-widget-small {
+  width: 150px;
+  height: 150px;
+}
+
+.ios-widget-medium {
+  width: 320px;
+  height: 150px;
+}
+
+.ios-widget-large {
+  width: 320px;
+  height: 320px;
+}
+
+.ios-home-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 100vh;
+  padding: 24px 16px 80px;
+}
+
+.ios-app-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-top: 40px;
+}
+
+.ios-app-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  margin-bottom: 8px;
+}
+
+.ios-app-label {
+  font-size: 12px;
+  color: white;
+  text-align: center;
+}
+
+.ios-page-indicator {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.ios-page-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.ios-page-dot.active {
+  background-color: white;
+}
+
+@media (max-width: 768px) {
+  .ios-app-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  
+  .ios-app-icon {
+    width: 60px;
+    height: 60px;
+  }
 }

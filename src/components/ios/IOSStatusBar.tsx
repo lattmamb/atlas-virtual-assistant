@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Battery, Signal, Wifi } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const IOSStatusBar: React.FC = () => {
   const [time, setTime] = useState(new Date());
@@ -22,7 +23,10 @@ const IOSStatusBar: React.FC = () => {
   });
   
   return (
-    <div className="ios-status-bar">
+    <div className={cn(
+      "ios-status-bar fixed top-0 left-0 right-0 z-50",
+      "backdrop-blur-xl bg-black/30 border-b border-white/5"
+    )}>
       <div className="flex items-center space-x-1">
         <div className="text-xs font-medium">{formattedTime}</div>
       </div>

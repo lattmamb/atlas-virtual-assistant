@@ -19,7 +19,10 @@ const IOSMobileNavigation: React.FC = () => {
   ];
   
   return (
-    <div className="ios-dock">
+    <div className={cn(
+      "ios-dock fixed bottom-4 left-4 right-4 z-50",
+      "backdrop-blur-xl bg-black/40 border border-white/10 rounded-xl"
+    )}>
       {navItems.map((item) => {
         const isActive = location.pathname === item.path;
         const Icon = item.icon;
@@ -33,7 +36,7 @@ const IOSMobileNavigation: React.FC = () => {
                 isActive 
                   ? "bg-gradient-to-b from-blue-500 to-blue-600" 
                   : isDarkMode 
-                    ? "bg-white/20 backdrop-blur-xl" 
+                    ? "bg-white/10 backdrop-blur-xl" 
                     : "bg-black/10 backdrop-blur-xl"
               )}
             >
