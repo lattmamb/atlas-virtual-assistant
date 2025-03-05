@@ -1,23 +1,20 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useUserPreferences } from '@/hooks/useUserPreferences';
 
-// Expand theme options
-type ThemeNames = 'dark' | 'light' | 'blue' | 'purple' | 'green' | 'orange' | 'red' | 'system' | 'ios18';
+type ThemeType = 'ios18' | 'atlas' | 'light' | string;
 
 interface ThemeContextType {
-  currentTheme: ThemeNames;
-  setTheme: (theme: ThemeNames) => void;
+  theme: ThemeType;
+  setTheme: (theme: ThemeType) => void;
   isDarkMode: boolean;
-  toggleTheme: () => void;
-  getAllThemes: () => { name: ThemeNames; label: string; color: string; icon?: string }[];
+  toggleDarkMode: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextType>({
-  currentTheme: 'ios18', // Changed default from 'dark' to 'ios18'
+  theme: 'ios18',
   setTheme: () => {},
   isDarkMode: true,
-  toggleTheme: () => {},
-  getAllThemes: () => []
+  toggleDarkMode: () => {}
 });
 
 export const useTheme = () => useContext(ThemeContext);
@@ -27,97 +24,39 @@ interface ThemeProviderProps {
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [currentTheme, setCurrentTheme] = useState<ThemeNames>('ios18'); // Changed default from 'dark' to 'ios18'
-  const [systemIsDark, setSystemIsDark] = useState(false);
+  const { preferences, updatePreferences } = useUserPreferences();
+  const [theme, setThemeState] = useState<ThemeType>(preferences.theme || 'ios18');
   
-  // Define all available themes
-  const allThemes = [
-    { name: 'ios18' as ThemeNames, label: 'iOS 18', color: '#000000', icon: 'apple' }, // Moved to top position
-    { name: 'system' as ThemeNames, label: 'System Default', color: '#888888', icon: 'monitor' },
-    { name: 'dark' as ThemeNames, label: 'Dark', color: '#1a1a1a', icon: 'moon' },
-    { name: 'light' as ThemeNames, label: 'Light', color: '#f5f5f7', icon: 'sun' },
-    { name: 'blue' as ThemeNames, label: 'Ocean', color: '#0c2d48', icon: 'waves' },
-    { name: 'purple' as ThemeNames, label: 'Twilight', color: '#2e1065', icon: 'sparkles' },
-    { name: 'green' as ThemeNames, label: 'Forest', color: '#064e3b', icon: 'leaf' },
-    { name: 'orange' as ThemeNames, label: 'Sunset', color: '#7c2d12', icon: 'flame' },
-    { name: 'red' as ThemeNames, label: 'Ruby', color: '#7f1d1d', icon: 'heart' },
-  ];
-  
-  // Detect system color scheme
+  // Update theme when preferences change
   useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    setSystemIsDark(mediaQuery.matches);
-    
-    const handler = (e: MediaQueryListEvent) => {
-      setSystemIsDark(e.matches);
-    };
-    
-    mediaQuery.addEventListener('change', handler);
-    return () => mediaQuery.removeEventListener('change', handler);
-  }, []);
-  
-  // Determine if the current theme is considered "dark mode"
-  const isDarkMode = currentTheme === 'system' 
-    ? systemIsDark 
-    : (currentTheme === 'dark' || 
-       currentTheme === 'blue' || 
-       currentTheme === 'purple' || 
-       currentTheme === 'green' ||
-       currentTheme === 'orange' ||
-       currentTheme === 'red' ||
-       currentTheme === 'ios18');
+    if (preferences.theme) {
+      setThemeState(preferences.theme);
+    }
+  }, [preferences.theme]);
 
-  const setTheme = (theme: ThemeNames) => {
-    setCurrentTheme(theme);
-    localStorage.setItem('atlas-theme', theme);
-    
-    // Apply theme to document for global CSS styling
-    document.documentElement.classList.remove('theme-dark', 'theme-light', 'theme-blue', 'theme-purple', 'theme-green', 'theme-orange', 'theme-red', 'theme-ios18');
-    
-    if (theme === 'system') {
-      document.documentElement.classList.add(systemIsDark ? 'theme-dark' : 'theme-light');
-    } else {
-      document.documentElement.classList.add(`theme-${theme}`);
-    }
-  };
-  
-  const toggleTheme = () => {
-    const themes = allThemes.map(t => t.name);
-    const currentIndex = themes.indexOf(currentTheme);
-    const nextIndex = (currentIndex + 1) % themes.length;
-    setTheme(themes[nextIndex]);
-  };
-  
-  const getAllThemes = () => {
-    return allThemes;
-  };
-  
-  // Load saved theme from localStorage on mount
+  // Apply theme to document
   useEffect(() => {
-    const savedTheme = localStorage.getItem('atlas-theme') as ThemeNames | null;
-    if (savedTheme && allThemes.some(theme => theme.name === savedTheme)) {
-      setTheme(savedTheme);
-    } else {
-      // If no saved theme, set to ios18 by default
-      setTheme('ios18');
-    }
-  }, []);
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
 
-  // Update theme when system preference changes
-  useEffect(() => {
-    if (currentTheme === 'system') {
-      document.documentElement.classList.remove('theme-dark', 'theme-light');
-      document.documentElement.classList.add(systemIsDark ? 'theme-dark' : 'theme-light');
-    }
-  }, [systemIsDark, currentTheme]);
+  const setTheme = (newTheme: ThemeType) => {
+    setThemeState(newTheme);
+    updatePreferences({ theme: newTheme });
+  };
+
+  const isDarkMode = theme !== 'light';
+
+  const toggleDarkMode = () => {
+    const newTheme = isDarkMode ? 'light' : 'ios18';
+    setTheme(newTheme);
+  };
 
   return (
     <ThemeContext.Provider value={{ 
-      currentTheme, 
+      theme, 
       setTheme, 
       isDarkMode, 
-      toggleTheme,
-      getAllThemes
+      toggleDarkMode 
     }}>
       {children}
     </ThemeContext.Provider>

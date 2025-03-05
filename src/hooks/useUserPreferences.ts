@@ -25,8 +25,8 @@ export const useUserPreferences = (userId?: string) => {
 
   useEffect(() => {
     const loadPreferences = async () => {
-      if (!userId) {
-        // If no user ID, use local storage
+      try {
+        // First, try to load from local storage regardless of user status
         const storedPrefs = localStorage.getItem('atlasUserPreferences');
         if (storedPrefs) {
           try {
@@ -37,26 +37,10 @@ export const useUserPreferences = (userId?: string) => {
             setPreferences(defaultPreferences);
           }
         }
-        setIsLoading(false);
-        return;
-      }
 
-      // If user ID exists, try loading from Supabase
-      try {
-        const { data, error } = await supabase
-          .from('user_preferences')
-          .select('*')
-          .eq('user_id', userId)
-          .single();
-
-        if (error) throw error;
-
-        if (data) {
-          setPreferences(data.preferences as UserPreferences);
-        } else {
-          // User doesn't have preferences yet, use defaults
-          setPreferences(defaultPreferences);
-        }
+        // If user is logged in, we could fetch additional prefs from an existing table
+        // like custom_instructions, but for now we'll just use local storage
+        // This code can be expanded later when we create proper user_preferences table
       } catch (e) {
         console.error('Error loading preferences:', e);
         setError(e as Error);
@@ -78,25 +62,8 @@ export const useUserPreferences = (userId?: string) => {
     // Save to localStorage for all users
     localStorage.setItem('atlasUserPreferences', JSON.stringify(updatedPreferences));
 
-    // If user is logged in, also save to Supabase
-    if (userId) {
-      try {
-        const { error } = await supabase
-          .from('user_preferences')
-          .upsert({
-            user_id: userId,
-            preferences: updatedPreferences,
-            updated_at: new Date().toISOString()
-          }, {
-            onConflict: 'user_id'
-          });
-
-        if (error) throw error;
-      } catch (e) {
-        console.error('Error saving preferences:', e);
-        setError(e as Error);
-      }
-    }
+    // Note: In the future, when we create a user_preferences table in Supabase,
+    // we can add code here to sync with the database for logged-in users
   };
 
   return {
