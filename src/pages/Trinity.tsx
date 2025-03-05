@@ -33,7 +33,7 @@ const Trinity: React.FC = () => {
       image: 'https://imgs.search.brave.com/aQYGfJh8YY9J3XiXKkw2Zq3GiqnkQNTe-OANX5MLFI4/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXRhdXRvLmNv/bS9tb2RlbHMvMjAy/My9kb2RnZS9yYW0t/MTUwMC90cmFkaXRp/b25hbC8yMDIzX2Rv/ZGdlX3JhbS0xNTAw/XzRkci1waWNrdXBf/YmlnLWhvcm5fbmF2/XzEuanBn',
       year: '2025',
       features: ['Towing up to 12,750 lbs', 'Crew cab', 'Quad cab', 'Regular cab options', 'Perfect for Taylorville trails'],
-      description: 'The 2025 Dodge Ram 1500 combines power and comfort, perfect for Taylorville's rural roads and farming needs.',
+      description: 'The 2025 Dodge Ram 1500 combines power and comfort, perfect for Taylorville\'s rural roads and farming needs.',
       ratings: 4.8,
     },
     {
