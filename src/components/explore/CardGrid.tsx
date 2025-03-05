@@ -45,9 +45,8 @@ const CardGrid: React.FC<CardGridProps> = ({ columns, gap, padding, cards }) => 
       animate="visible"
     >
       <div 
-        className={`grid grid-cols-1 md:grid-cols-${columns} gap-${gap}`}
+        className="grid grid-cols-1 sm:grid-cols-2 gap-6"
         style={{ 
-          gridTemplateColumns: `repeat(${columns === 2 ? 'auto-fit' : columns}, minmax(300px, 1fr))`,
           gap: `${parseInt(gap) * 0.25}rem`
         }}
       >

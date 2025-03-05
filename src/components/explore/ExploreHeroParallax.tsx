@@ -39,7 +39,7 @@ const ExploreHeroParallax: React.FC<ExploreHeroParallaxProps> = ({
   );
 
   // Particle animation for background
-  const particles = Array.from({ length: 25 }, (_, i) => ({
+  const particles = Array.from({ length: 30 }, (_, i) => ({
     id: i,
     size: Math.random() * 4 + 1,
     x: Math.random() * 100,
@@ -97,7 +97,7 @@ const ExploreHeroParallax: React.FC<ExploreHeroParallaxProps> = ({
         style={{ y, opacity, scale }}
       >
         <motion.h1
-          className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70"
+          className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
@@ -106,7 +106,7 @@ const ExploreHeroParallax: React.FC<ExploreHeroParallaxProps> = ({
         </motion.h1>
         
         <motion.p
-          className="max-w-2xl text-xl text-white/80 mb-8"
+          className="max-w-2xl text-lg sm:text-xl text-white/80 mb-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.4 }}

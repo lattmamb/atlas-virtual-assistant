@@ -22,34 +22,34 @@ const UniverseHome: React.FC = () => {
     }, 1500);
   }, []);
 
-  // Define the cards for our application
+  // Define the cards for our application - fixed the icon type
   const cards = [
     {
       title: "Vision",
       description: "Your intelligent assistant for mobility and beyond.",
-      icon: "Eye",
-      link: "/applevisionpro", // Using existing route
+      icon: "Eye" as const,
+      link: "/applevisionpro",
       background: "glassmorphism with cyan glow"
     },
     {
       title: "Universe",
       description: "Manage your entire Atlas ecosystem.",
-      icon: "Globe",
+      icon: "Globe" as const,
       link: "/universe",
       background: "glassmorphism with magenta glow"
     },
     {
       title: "Link",
       description: "Control and sync your Atlas Link Bracelet.",
-      icon: "Link2",
-      link: "/atlaslink", // Using existing route
+      icon: "Link2" as const,
+      link: "/atlaslink",
       background: "glassmorphism with orange glow"
     },
     {
       title: "Trinity Dodge",
       description: "Explore premium vehicle offerings in Taylorville.",
-      icon: "Car",
-      link: "/trinity", // This would need to be created
+      icon: "Car" as const,
+      link: "/trinity",
       background: "glassmorphism with red glow"
     }
   ];
