@@ -1,92 +1,87 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { 
   MessageSquare, 
-  Home, 
-  Settings, 
+  Cloud, 
   Calendar, 
-  Mail, 
+  Settings, 
   Image, 
   Music, 
-  FileText, 
-  Clock, 
-  Search, 
-  Camera, 
-  Shield, 
+  Workflow, 
   Map, 
-  BarChart, 
-  Phone, 
-  Workflow 
+  FileText, 
+  Phone,
+  Mail,
+  Car,
+  ShoppingCart
 } from 'lucide-react';
 
 interface AppIconProps {
-  icon: React.ElementType;
-  label: string;
-  path: string;
+  name: string;
+  icon: React.ReactNode;
   color: string;
+  to?: string;
+  onClick?: () => void;
 }
 
-const AppIcon: React.FC<AppIconProps> = ({ icon: Icon, label, path, color }) => (
-  <Link to={path}>
-    <motion.div
-      whileTap={{ scale: 0.9 }}
+const AppIcon: React.FC<AppIconProps> = ({ name, icon, color, to, onClick }) => {
+  const content = (
+    <motion.div 
       className="flex flex-col items-center"
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.9 }}
+      onClick={onClick}
     >
       <div 
-        className="ios-app-icon w-16 h-16" 
-        style={{ 
-          background: `linear-gradient(145deg, ${color}, ${adjustColor(color, -20)})`,
-          boxShadow: `0 2px 8px ${adjustColor(color, -40)}40` 
-        }}
+        className="ios-app-icon w-14 h-14 flex items-center justify-center mb-1"
+        style={{ background: color }}
       >
-        <Icon className="h-8 w-8 text-white" />
+        {icon}
       </div>
-      <span className="ios-app-label">{label}</span>
+      <span className="ios-app-label text-xs">{name}</span>
     </motion.div>
-  </Link>
-);
-
-// Helper function to adjust color brightness
-function adjustColor(color: string, amount: number): string {
-  return color; // Simplified for this example, would normally adjust the hex color
-}
+  );
+  
+  if (to) {
+    return <Link to={to}>{content}</Link>;
+  }
+  
+  return content;
+};
 
 const IOSAppGrid: React.FC = () => {
   const apps = [
-    { icon: MessageSquare, label: 'Messages', path: '/chat', color: '#30D158' },
-    { icon: Phone, label: 'Phone', path: '/', color: '#40C8E0' },
-    { icon: Mail, label: 'Mail', path: '/', color: '#1E88E5' },
-    { icon: Calendar, label: 'Calendar', path: '/', color: '#FF3B30' },
-    { icon: Image, label: 'Photos', path: '/', color: '#FFCC00' },
-    { icon: Camera, label: 'Camera', path: '/', color: '#9C27B0' },
-    { icon: Clock, label: 'Clock', path: '/', color: '#FF9500' },
-    { icon: Map, label: 'Maps', path: '/', color: '#64D2FF' },
-    { icon: Home, label: 'Home', path: '/', color: '#5E5CE6' },
-    { icon: Workflow, label: 'Workflows', path: '/workflows', color: '#FF2D55' },
-    { icon: FileText, label: 'Notes', path: '/', color: '#FFD60A' },
-    { icon: Shield, label: 'Atlas Link', path: '/atlas-link', color: '#007AFF' },
-    { icon: Music, label: 'Music', path: '/', color: '#FF2D55' },
-    { icon: BarChart, label: 'Stocks', path: '/', color: '#32D74B' },
-    { icon: Search, label: 'Search', path: '/', color: '#5E5CE6' },
-    { icon: Settings, label: 'Settings', path: '/settings', color: '#8E8E93' }
+    { name: 'Messages', icon: <MessageSquare className="h-7 w-7 text-white" />, color: 'rgb(0, 122, 255)', to: '/chatroom' },
+    { name: 'Cloud', icon: <Cloud className="h-7 w-7 text-white" />, color: 'rgb(52, 199, 89)', to: '/atlas' },
+    { name: 'Calendar', icon: <Calendar className="h-7 w-7 text-white" />, color: 'rgb(255, 59, 48)' },
+    { name: 'Photos', icon: <Image className="h-7 w-7 text-white" />, color: 'rgb(175, 82, 222)' },
+    { name: 'Settings', icon: <Settings className="h-7 w-7 text-white" />, color: 'rgb(88, 86, 214)', to: '/settings' },
+    { name: 'Music', icon: <Music className="h-7 w-7 text-white" />, color: 'rgb(255, 45, 85)' },
+    { name: 'Notes', icon: <FileText className="h-7 w-7 text-white" />, color: 'rgb(255, 204, 0)' },
+    { name: 'Workflows', icon: <Workflow className="h-7 w-7 text-white" />, color: 'rgb(90, 200, 250)', to: '/workflows' },
+    { name: 'Maps', icon: <Map className="h-7 w-7 text-white" />, color: 'rgb(255, 149, 0)' },
+    { name: 'Phone', icon: <Phone className="h-7 w-7 text-white" />, color: 'rgb(0, 122, 255)' },
+    { name: 'Mail', icon: <Mail className="h-7 w-7 text-white" />, color: 'rgb(52, 199, 89)' },
+    { name: 'Trinity', icon: <Car className="h-7 w-7 text-white" />, color: 'rgb(255, 59, 48)', to: '/trinity' },
+    { name: 'Store', icon: <ShoppingCart className="h-7 w-7 text-white" />, color: 'rgb(175, 82, 222)' },
+    { name: 'Atlas Link', icon: <Cloud className="h-7 w-7 text-white" />, color: 'rgb(0, 122, 255)', to: '/atlaslink' },
+    { name: 'Universe', icon: <Cloud className="h-7 w-7 text-white" />, color: 'rgb(175, 82, 222)', to: '/universe' },
+    { name: 'Vision Pro', icon: <Cloud className="h-7 w-7 text-white" />, color: 'rgb(52, 199, 89)', to: '/applevisionpro' }
   ];
   
   return (
-    <div className="ios-home-screen" style={{ backgroundImage: 'linear-gradient(to bottom, #000B1E, #001E3C)' }}>
-      <div className="ios-app-grid">
-        {apps.map((app, index) => (
-          <AppIcon key={index} {...app} />
-        ))}
-      </div>
-      
-      <div className="ios-page-indicator">
-        <div className="ios-page-dot active"></div>
-        <div className="ios-page-dot"></div>
-        <div className="ios-page-dot"></div>
-      </div>
+    <div className="ios-app-grid p-4 grid grid-cols-4 gap-4">
+      {apps.map((app, index) => (
+        <AppIcon 
+          key={index} 
+          name={app.name} 
+          icon={app.icon} 
+          color={app.color}
+          to={app.to}
+        />
+      ))}
     </div>
   );
 };

@@ -13,7 +13,7 @@ interface ThemeContextType {
 }
 
 const ThemeContext = createContext<ThemeContextType>({
-  currentTheme: 'dark',
+  currentTheme: 'ios18', // Changed default from 'dark' to 'ios18'
   setTheme: () => {},
   isDarkMode: true,
   toggleTheme: () => {},
@@ -27,11 +27,12 @@ interface ThemeProviderProps {
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [currentTheme, setCurrentTheme] = useState<ThemeNames>('dark');
+  const [currentTheme, setCurrentTheme] = useState<ThemeNames>('ios18'); // Changed default from 'dark' to 'ios18'
   const [systemIsDark, setSystemIsDark] = useState(false);
   
   // Define all available themes
   const allThemes = [
+    { name: 'ios18' as ThemeNames, label: 'iOS 18', color: '#000000', icon: 'apple' }, // Moved to top position
     { name: 'system' as ThemeNames, label: 'System Default', color: '#888888', icon: 'monitor' },
     { name: 'dark' as ThemeNames, label: 'Dark', color: '#1a1a1a', icon: 'moon' },
     { name: 'light' as ThemeNames, label: 'Light', color: '#f5f5f7', icon: 'sun' },
@@ -40,7 +41,6 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     { name: 'green' as ThemeNames, label: 'Forest', color: '#064e3b', icon: 'leaf' },
     { name: 'orange' as ThemeNames, label: 'Sunset', color: '#7c2d12', icon: 'flame' },
     { name: 'red' as ThemeNames, label: 'Ruby', color: '#7f1d1d', icon: 'heart' },
-    { name: 'ios18' as ThemeNames, label: 'iOS 18', color: '#000000', icon: 'apple' }
   ];
   
   // Detect system color scheme
@@ -97,6 +97,9 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     const savedTheme = localStorage.getItem('atlas-theme') as ThemeNames | null;
     if (savedTheme && allThemes.some(theme => theme.name === savedTheme)) {
       setTheme(savedTheme);
+    } else {
+      // If no saved theme, set to ios18 by default
+      setTheme('ios18');
     }
   }, []);
 
