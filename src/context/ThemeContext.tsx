@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 // Expand theme options
-type ThemeNames = 'dark' | 'light' | 'blue' | 'purple' | 'green' | 'orange' | 'red' | 'system';
+type ThemeNames = 'dark' | 'light' | 'blue' | 'purple' | 'green' | 'orange' | 'red' | 'system' | 'ios18';
 
 interface ThemeContextType {
   currentTheme: ThemeNames;
@@ -39,7 +39,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     { name: 'purple' as ThemeNames, label: 'Twilight', color: '#2e1065', icon: 'sparkles' },
     { name: 'green' as ThemeNames, label: 'Forest', color: '#064e3b', icon: 'leaf' },
     { name: 'orange' as ThemeNames, label: 'Sunset', color: '#7c2d12', icon: 'flame' },
-    { name: 'red' as ThemeNames, label: 'Ruby', color: '#7f1d1d', icon: 'heart' }
+    { name: 'red' as ThemeNames, label: 'Ruby', color: '#7f1d1d', icon: 'heart' },
+    { name: 'ios18' as ThemeNames, label: 'iOS 18', color: '#000000', icon: 'apple' }
   ];
   
   // Detect system color scheme
@@ -63,14 +64,15 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
        currentTheme === 'purple' || 
        currentTheme === 'green' ||
        currentTheme === 'orange' ||
-       currentTheme === 'red');
+       currentTheme === 'red' ||
+       currentTheme === 'ios18');
 
   const setTheme = (theme: ThemeNames) => {
     setCurrentTheme(theme);
     localStorage.setItem('atlas-theme', theme);
     
     // Apply theme to document for global CSS styling
-    document.documentElement.classList.remove('theme-dark', 'theme-light', 'theme-blue', 'theme-purple', 'theme-green', 'theme-orange', 'theme-red');
+    document.documentElement.classList.remove('theme-dark', 'theme-light', 'theme-blue', 'theme-purple', 'theme-green', 'theme-orange', 'theme-red', 'theme-ios18');
     
     if (theme === 'system') {
       document.documentElement.classList.add(systemIsDark ? 'theme-dark' : 'theme-light');
