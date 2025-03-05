@@ -1,20 +1,17 @@
 
 import React, { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
-import CelestialBackground from '@/components/effects/CelestialBackground';
 import SplashCursor from '@/components/effects/SplashCursor';
 
 interface IOSParallaxBackgroundProps {
   className?: string;
   children?: ReactNode;
-  useCelestialBackground?: boolean;
   useSplashCursor?: boolean;
 }
 
 const IOSParallaxBackground: React.FC<IOSParallaxBackgroundProps> = ({ 
   className,
   children,
-  useCelestialBackground = true,
   useSplashCursor = true
 }) => {
   return (
@@ -22,6 +19,7 @@ const IOSParallaxBackground: React.FC<IOSParallaxBackgroundProps> = ({
       // HeroParallax styling for consistent immersive feel
       "h-[300vh] py-40 overflow-hidden antialiased relative flex flex-col self-auto",
       "[perspective:1000px] [transform-style:preserve-3d]",
+      "bg-gradient-to-b from-[#000B1E] to-[#001E3C]", // Gradient background since we removed celestial
       className
     )}>
       {useSplashCursor && (
@@ -32,7 +30,6 @@ const IOSParallaxBackground: React.FC<IOSParallaxBackgroundProps> = ({
           TRANSPARENT={true}
         />
       )}
-      {useCelestialBackground && <CelestialBackground />}
       <div className="relative z-10">
         {children}
       </div>

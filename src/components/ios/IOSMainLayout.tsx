@@ -8,14 +8,12 @@ import IOSParallaxBackground from './IOSParallaxBackground';
 interface IOSMainLayoutProps {
   children: ReactNode;
   className?: string;
-  useCelestial?: boolean;
   useSplashCursor?: boolean;
 }
 
 const IOSMainLayout: React.FC<IOSMainLayoutProps> = ({ 
   children,
   className,
-  useCelestial = true,
   useSplashCursor = true
 }) => {
   return (
@@ -23,7 +21,6 @@ const IOSMainLayout: React.FC<IOSMainLayoutProps> = ({
       <IOSStatusBar />
       
       <IOSParallaxBackground 
-        useCelestialBackground={useCelestial}
         useSplashCursor={useSplashCursor}
       >
         <main className={cn(

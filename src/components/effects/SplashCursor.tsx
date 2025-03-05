@@ -1,4 +1,3 @@
-
 "use client";
 import React, { useEffect, useRef } from "react";
 
@@ -32,7 +31,7 @@ const SplashCursor: React.FC<SplashCursorProps> = ({
   SPLAT_FORCE = 6000,
   SHADING = true,
   COLOR_UPDATE_SPEED = 10,
-  BACK_COLOR = { r: 0.0, g: 0.0, b: 0.15 }, // Changed to dark blue to match cosmic theme
+  BACK_COLOR = { r: 0.0, g: 0.0, b: 0.15 }, // Dark blue to match cosmic theme
   TRANSPARENT = true,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -90,13 +89,16 @@ const SplashCursor: React.FC<SplashCursorProps> = ({
       return;
     }
 
-    // WebGL setup
     function getWebGLContext(canvas: HTMLCanvasElement) {
       const params = { alpha: true, depth: false, stencil: false, antialias: false, preserveDrawingBuffer: false };
-      let gl = canvas.getContext('webgl2', params) as WebGL2RenderingContext;
+      let gl = canvas.getContext('webgl2', params) as WebGL2RenderingContext | null;
       const isWebGL2 = !!gl;
       if (!isWebGL2)
         gl = canvas.getContext('webgl', params) as WebGLRenderingContext || canvas.getContext('experimental-webgl', params) as WebGLRenderingContext;
+
+      if (!gl) {
+        return { gl: null, ext: null };
+      }
 
       let halfFloat;
       let supportLinearFiltering;
@@ -116,9 +118,10 @@ const SplashCursor: React.FC<SplashCursorProps> = ({
       let formatR;
 
       if (isWebGL2) {
-        formatRGBA = getSupportedFormat(gl, gl.RGBA16F, gl.RGBA, halfFloatTexType);
-        formatRG = getSupportedFormat(gl, gl.RG16F, gl.RG, halfFloatTexType);
-        formatR = getSupportedFormat(gl, gl.R16F, gl.RED, halfFloatTexType);
+        const gl2 = gl as WebGL2RenderingContext;
+        formatRGBA = getSupportedFormat(gl, gl2.RGBA16F, gl.RGBA, halfFloatTexType);
+        formatRG = getSupportedFormat(gl, gl2.RG16F, gl2.RG, halfFloatTexType);
+        formatR = getSupportedFormat(gl, gl2.R16F, gl2.RED, halfFloatTexType);
       } else {
         formatRGBA = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType);
         formatRG = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType);
@@ -137,16 +140,20 @@ const SplashCursor: React.FC<SplashCursorProps> = ({
       };
     }
 
-    function getSupportedFormat(gl: WebGLRenderingContext | WebGL2RenderingContext, internalFormat: number, format: number, type: number) {
+    function getSupportedFormat(gl: WebGLRenderingContext | WebGL2RenderingContext, internalFormat: number, format: number, type: number | undefined) {
+      if (!type) return null;
       if (!supportRenderTextureFormat(gl, internalFormat, format, type)) {
-        switch (internalFormat) {
-          case (gl as WebGL2RenderingContext).R16F:
-            return getSupportedFormat(gl, (gl as WebGL2RenderingContext).RG16F, gl.RG, type);
-          case (gl as WebGL2RenderingContext).RG16F:
-            return getSupportedFormat(gl, (gl as WebGL2RenderingContext).RGBA16F, gl.RGBA, type);
-          default:
-            return null;
+        if (gl instanceof WebGL2RenderingContext) {
+          switch (internalFormat) {
+            case gl.R16F:
+              return getSupportedFormat(gl, gl.RG16F, gl.RG, type);
+            case gl.RG16F:
+              return getSupportedFormat(gl, gl.RGBA16F, gl.RGBA, type);
+            default:
+              return null;
+          }
         }
+        return null;
       }
       return {
         internalFormat,
@@ -196,7 +203,9 @@ const SplashCursor: React.FC<SplashCursorProps> = ({
       return shader;
     }
 
-    function createProgram(gl: WebGLRenderingContext, vertexShader: WebGLShader, fragmentShader: WebGLShader) {
+    function createProgram(gl: WebGLRenderingContext, vertexShader: WebGLShader | null, fragmentShader: WebGLShader | null) {
+      if (!vertexShader || !fragmentShader) return null;
+      
       const program = gl.createProgram();
       if (!program) return null;
       
@@ -784,6 +793,54 @@ const SplashCursor: React.FC<SplashCursorProps> = ({
     }
     
     // Event handlers
+    canvas.addEventListener('mousedown', (e: MouseEvent) => {
+      let posX = e.offsetX;
+      let posY = e.offsetY;
+      let pointer = pointers[0];
+      updatePointerDownData(pointer, -1, posX, posY);
+    });
+    
+    canvas.addEventListener('mousemove', (e: MouseEvent) => {
+      let posX = e.offsetX;
+      let posY = e.offsetY;
+      updatePointerMoveData(pointers[0], posX, posY);
+    });
+    
+    window.addEventListener('mouseup', () => {
+      updatePointerUpData(pointers[0]);
+    });
+    
+    canvas.addEventListener('touchstart', (e: TouchEvent) => {
+      e.preventDefault();
+      const touches = e.targetTouches;
+      for (let i = 0; i < touches.length; i++) {
+        if (i >= pointers.length) pointers.push(new pointerPrototype());
+        
+        let posX = touches[i].pageX - canvas.getBoundingClientRect().left;
+        let posY = touches[i].pageY - canvas.getBoundingClientRect().top;
+        updatePointerDownData(pointers[i], touches[i].identifier, posX, posY);
+      }
+    });
+    
+    canvas.addEventListener('touchmove', (e: TouchEvent) => {
+      e.preventDefault();
+      const touches = e.targetTouches;
+      for (let i = 0; i < touches.length; i++) {
+        let posX = touches[i].pageX - canvas.getBoundingClientRect().left;
+        let posY = touches[i].pageY - canvas.getBoundingClientRect().top;
+        updatePointerMoveData(pointers[i], posX, posY);
+      }
+    });
+    
+    window.addEventListener('touchend', (e: TouchEvent) => {
+      const touches = e.changedTouches;
+      for (let i = 0; i < touches.length; i++) {
+        let pointer = pointers.find(p => p.id === touches[i].identifier);
+        if (pointer) updatePointerUpData(pointer);
+      }
+    });
+
+    // Helper functions for pointer events
     function updatePointerDownData(pointer: any, id: number, posX: number, posY: number) {
       pointer.id = id;
       pointer.down = true;
@@ -807,55 +864,7 @@ const SplashCursor: React.FC<SplashCursorProps> = ({
     function updatePointerUpData(pointer: any) {
       pointer.down = false;
     }
-    
-    // Add event listeners
-    canvas.addEventListener('mousedown', e => {
-      let posX = e.offsetX;
-      let posY = e.offsetY;
-      let pointer = pointers[0];
-      updatePointerDownData(pointer, -1, posX, posY);
-    });
-    
-    canvas.addEventListener('mousemove', e => {
-      let posX = e.offsetX;
-      let posY = e.offsetY;
-      updatePointerMoveData(pointers[0], posX, posY);
-    });
-    
-    window.addEventListener('mouseup', () => {
-      updatePointerUpData(pointers[0]);
-    });
-    
-    canvas.addEventListener('touchstart', e => {
-      e.preventDefault();
-      const touches = e.targetTouches;
-      for (let i = 0; i < touches.length; i++) {
-        if (i >= pointers.length) pointers.push(new pointerPrototype());
-        
-        let posX = touches[i].pageX - canvas.getBoundingClientRect().left;
-        let posY = touches[i].pageY - canvas.getBoundingClientRect().top;
-        updatePointerDownData(pointers[i], touches[i].identifier, posX, posY);
-      }
-    });
-    
-    canvas.addEventListener('touchmove', e => {
-      e.preventDefault();
-      const touches = e.targetTouches;
-      for (let i = 0; i < touches.length; i++) {
-        let posX = touches[i].pageX - canvas.getBoundingClientRect().left;
-        let posY = touches[i].pageY - canvas.getBoundingClientRect().top;
-        updatePointerMoveData(pointers[i], posX, posY);
-      }
-    });
-    
-    window.addEventListener('touchend', e => {
-      const touches = e.changedTouches;
-      for (let i = 0; i < touches.length; i++) {
-        let pointer = pointers.find(p => p.id === touches[i].identifier);
-        if (pointer) updatePointerUpData(pointer);
-      }
-    });
-    
+
     // Initialize the animation
     multipleSplats(parseInt(String(Math.random() * 20)) + 5);
     update();
