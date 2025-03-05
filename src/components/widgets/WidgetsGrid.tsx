@@ -6,9 +6,10 @@ import { useTheme } from '@/context/ThemeContext';
 
 export interface WidgetsGridProps {
   children?: React.ReactNode;
+  onEditMode?: (editing: boolean) => void;
 }
 
-const WidgetsGrid: React.FC<WidgetsGridProps> = ({ children }) => {
+const WidgetsGrid: React.FC<WidgetsGridProps> = ({ children, onEditMode }) => {
   const { isDarkMode } = useTheme();
   
   return (
