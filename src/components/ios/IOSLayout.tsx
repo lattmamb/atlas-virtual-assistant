@@ -1,6 +1,6 @@
 
 import React, { useEffect } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { useTheme } from '@/context/ThemeContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import IOSMainLayout from './IOSMainLayout';
