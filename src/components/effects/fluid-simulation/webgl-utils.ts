@@ -11,18 +11,23 @@ export function getWebGLContext(canvas: HTMLCanvasElement): WebGLContext {
     premultipliedAlpha: true
   };
 
-  let gl = canvas.getContext('webgl2', params) as WebGL2RenderingContext;
-  const isWebGL2 = !!gl;
+  let gl: WebGLRenderingContext | WebGL2RenderingContext;
+  const gl2Context = canvas.getContext('webgl2', params) as WebGL2RenderingContext;
+  const isWebGL2 = !!gl2Context;
   
-  if (!gl) {
-    gl = (
+  if (isWebGL2) {
+    gl = gl2Context;
+  } else {
+    const fallbackContext = (
       canvas.getContext('webgl', params) || 
       canvas.getContext('experimental-webgl', params)
     ) as WebGLRenderingContext;
-  }
-
-  if (!gl) {
-    throw new Error('WebGL not supported');
+    
+    if (!fallbackContext) {
+      throw new Error('WebGL not supported');
+    }
+    
+    gl = fallbackContext;
   }
 
   // Extension handling
@@ -35,13 +40,14 @@ export function getWebGLContext(canvas: HTMLCanvasElement): WebGLContext {
   };
 
   if (isWebGL2) {
-    gl.getExtension('EXT_color_buffer_float');
-    ext.supportLinearFiltering = gl.getExtension('OES_texture_float_linear') !== null;
+    gl2Context.getExtension('EXT_color_buffer_float');
+    ext.supportLinearFiltering = gl2Context.getExtension('OES_texture_float_linear') !== null;
   } else {
     ext.formatRGBA = gl.getExtension('EXT_sRGB');
     ext.formatRG = gl.getExtension('EXT_sRGB');
     ext.formatR = gl.getExtension('EXT_sRGB');
-    ext.halfFloatTexType = gl.getExtension('OES_texture_half_float')?.HALF_FLOAT_OES || gl.HALF_FLOAT;
+    const halfFloatExt = gl.getExtension('OES_texture_half_float');
+    ext.halfFloatTexType = halfFloatExt ? halfFloatExt.HALF_FLOAT_OES : gl.HALF_FLOAT;
     ext.supportLinearFiltering = gl.getExtension('OES_texture_half_float_linear') !== null;
   }
 

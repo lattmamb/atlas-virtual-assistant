@@ -16,6 +16,17 @@ export interface FluidSimulationProps {
   TRANSPARENT?: boolean;
 }
 
+export interface WebGLContext {
+  gl: WebGLRenderingContext | WebGL2RenderingContext;
+  ext: {
+    formatRGBA: any;
+    formatRG: any;
+    formatR: any;
+    halfFloatTexType: number | undefined;
+    supportLinearFiltering: boolean;
+  };
+}
+
 export interface WebGLContextResult {
   gl: WebGLRenderingContext | WebGL2RenderingContext | null;
   ext: {
