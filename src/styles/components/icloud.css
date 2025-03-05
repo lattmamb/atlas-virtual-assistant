@@ -1,127 +1,147 @@
 
-/* iOS Dock */
-.ios-dock {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
+.icloud-widget {
+  @apply rounded-xl shadow-lg border overflow-hidden backdrop-blur-sm;
+  width: 100%;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
   display: flex;
-  gap: 16px;
-  padding: 12px 24px;
-  background: rgba(30, 30, 30, 0.75);
-  backdrop-filter: blur(12px);
-  border-radius: 30px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  z-index: 10;
+  flex-direction: column;
 }
 
-.ios-dock-app {
-  width: 56px;
-  height: 56px;
-  border-radius: 14px;
-  overflow: hidden;
-  cursor: pointer;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-  transition: transform 0.2s ease;
+.icloud-widget:hover {
+  @apply shadow-xl;
 }
 
-/* iOS App Icons */
-.ios-app-icon {
-  border-radius: 14px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+.icloud-widget-header {
+  @apply flex items-center justify-between p-3 border-b text-sm font-medium;
 }
 
-/* iOS Widget Specific Styles */
-.ios-widget {
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-  transition: all 0.3s ease;
+.icloud-widget-title {
+  @apply flex items-center;
 }
 
-.ios-widget-header {
-  padding: 10px 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.ios-widget-content {
-  height: 100%;
-}
-
-/* Page indicators */
-.ios-page-indicator {
+.icloud-widget-body {
+  @apply bg-transparent;
+  flex: 1;
   display: flex;
-  justify-content: center;
-  gap: 6px;
-  margin: 16px 0;
+  flex-direction: column;
 }
 
-.ios-page-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 4px;
-  background-color: rgba(255, 255, 255, 0.3);
-  transition: all 0.3s ease;
+/* Image handling */
+.icloud-widget-image {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
 }
 
-.ios-page-dot.active {
-  width: 20px;
-  background-color: rgba(255, 255, 255, 0.8);
+.icloud-widget-image-container {
+  overflow: hidden;
+  width: 100%;
 }
 
-/* Trinity Dodge Page Styles */
-.trinity-page {
-  --trinity-red: rgb(230, 30, 30);
-  --trinity-darkred: rgb(180, 20, 20);
-  --trinity-blue: rgb(30, 100, 210);
-  --trinity-darkblue: rgb(20, 70, 180);
+/* Touch-friendly controls */
+.touch-control {
+  @apply p-3;
+  touch-action: manipulation;
 }
 
-.trinity-page .vehicle-card {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+/* Glass morphism effect for dark theme */
+.glass-dark {
+  @apply backdrop-blur-xl bg-slate-900/40 border border-slate-800/50 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.5)];
 }
 
-.trinity-page .vehicle-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+.glass-light {
+  @apply backdrop-blur-xl bg-white/40 border border-white/20 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.1)];
 }
 
-.trinity-page .vehicle-feature-tag {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 9999px;
-  padding: 4px 12px;
-  font-size: 0.75rem;
+/* Apple card styling */
+.apple-card {
+  @apply rounded-xl shadow-md border border-white/20 bg-white/80 backdrop-blur-md p-4 transition-all duration-300;
 }
 
-.trinity-page .vehicle-price-tag {
-  background: var(--trinity-red);
-  color: white;
-  border-radius: 0.5rem;
-  padding: 4px 12px;
-  font-weight: bold;
+/* Dark mode apple card */
+.dark-apple-card {
+  @apply bg-slate-800/90 backdrop-blur-lg border border-slate-700 shadow-lg rounded-xl p-4;
 }
 
-.trinity-page .action-button {
-  transition: all 0.2s ease;
+/* Mobile optimized widget */
+.mobile-widget {
+  @apply w-full relative my-2 max-w-full;
+  transform: none !important;
 }
 
-.trinity-page .action-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+/* Celestial mode effects */
+.celestial-bg {
+  @apply bg-gradient-to-br from-slate-900 to-slate-950;
 }
 
-.trinity-page .tab-button {
-  position: relative;
-  transition: all 0.3s ease;
+.star {
+  @apply absolute rounded-full bg-white opacity-70;
+  animation: twinkle 3s infinite ease-in-out;
 }
 
-.trinity-page .tab-button.active::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background-color: var(--trinity-red);
+@keyframes twinkle {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* Dashboard grid layout */
+.dashboard-grid {
+  @apply grid gap-4 p-4;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  height: calc(100vh - 80px);
+  overflow-y: auto;
+}
+
+/* Responsive dashboard grid */
+@media (min-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  }
+}
+
+/* Chat components */
+.chat-box {
+  @apply flex flex-col h-full overflow-hidden rounded-lg border border-slate-200;
+}
+
+.chat-messages {
+  @apply flex-1 overflow-y-auto p-3 space-y-3;
+}
+
+.chat-input-container {
+  @apply border-t p-2 flex items-center;
+}
+
+.user-message {
+  @apply bg-primary text-primary-foreground p-3 rounded-lg ml-auto max-w-[75%];
+}
+
+.ai-message {
+  @apply bg-muted p-3 rounded-lg mr-auto max-w-[75%];
+}
+
+/* Workflow canvas */
+.workflow-canvas {
+  @apply border border-dashed border-slate-300 rounded-lg p-4 h-48 flex items-center justify-center text-muted-foreground;
+}
+
+/* Social feed */
+.social-feed {
+  @apply space-y-3 overflow-y-auto max-h-48;
+}
+
+.social-post {
+  @apply bg-muted/50 p-3 rounded-lg text-sm;
+}
+
+/* Mobility map */
+.mobility-map {
+  @apply bg-slate-100 dark:bg-slate-800 rounded-lg p-4 h-48 flex items-center justify-center text-muted-foreground;
 }

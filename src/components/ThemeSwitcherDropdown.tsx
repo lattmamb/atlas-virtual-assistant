@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { Palette, Moon, Sun, Monitor, Cloud, Sparkles, Leaf, Flame, Heart, Apple } from 'lucide-react';
+import { Palette, Moon, Sun, Monitor, Cloud, Sparkles, Leaf, Flame, Heart } from 'lucide-react';
 
 interface ThemeSwitcherDropdownProps {
   className?: string;
@@ -30,7 +30,6 @@ const ThemeSwitcherDropdown: React.FC<ThemeSwitcherDropdownProps> = ({ className
       case 'green': return <Leaf className="h-4 w-4" />;
       case 'orange': return <Flame className="h-4 w-4" />;
       case 'red': return <Heart className="h-4 w-4" />;
-      case 'ios18': return <Apple className="h-4 w-4" />;
       default: return <Palette className="h-4 w-4" />;
     }
   };
