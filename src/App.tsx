@@ -12,11 +12,16 @@ import NotFound from './pages/NotFound';
 import { ThemeProvider } from './context/ThemeContext';
 import IOSLayout from './components/ios/IOSLayout';
 import SplashCursor from './components/effects/SplashCursor';
+import { AnimatePresence } from 'framer-motion';
 
 function App() {
   return (
     <ThemeProvider>
-      <Toaster position="top-center" richColors />
+      <Toaster position="top-center" richColors toastOptions={{ 
+        className: 'frosted-glass',
+        duration: 4000
+      }} />
+      
       {/* Global SplashCursor effect for all routes */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <SplashCursor 
@@ -26,21 +31,24 @@ function App() {
           TRANSPARENT={true}
         />
       </div>
-      <Routes>
-        {/* All routes use the IOSLayout without other background effects */}
-        <Route element={<IOSLayout />}>
-          <Route path="/" element={<UniverseHome />} />
-          <Route path="/index" element={<UniverseHome />} />
-          <Route path="/applevisionpro" element={<AppleVisionPro />} />
-          <Route path="/atlas" element={<Atlas />} />
-          <Route path="/atlaslink" element={<AtlasLink />} />
-          <Route path="/chatroom" element={<ChatRoom />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/universe" element={<UniverseHome />} />
-          <Route path="/workflows" element={<Workflows />} />
-          <Route path="*" element={<NotFound />} />
-        </Route>
-      </Routes>
+      
+      <AnimatePresence mode="wait">
+        <Routes>
+          {/* All routes use the IOSLayout without other background effects */}
+          <Route element={<IOSLayout />}>
+            <Route path="/" element={<UniverseHome />} />
+            <Route path="/index" element={<UniverseHome />} />
+            <Route path="/applevisionpro" element={<AppleVisionPro />} />
+            <Route path="/atlas" element={<Atlas />} />
+            <Route path="/atlaslink" element={<AtlasLink />} />
+            <Route path="/chatroom" element={<ChatRoom />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/universe" element={<UniverseHome />} />
+            <Route path="/workflows" element={<Workflows />} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
+        </Routes>
+      </AnimatePresence>
     </ThemeProvider>
   );
 }

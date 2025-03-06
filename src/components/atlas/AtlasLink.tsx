@@ -13,6 +13,7 @@ import { motion } from 'framer-motion';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { useIsMobile } from '@/hooks/use-mobile';
 import AppSidebar from '@/components/AppSidebar';
+import IOSStatusBarContent from '@/components/ios/IOSStatusBarContent';
 
 const AtlasLinkContent: React.FC = () => {
   const { celestialMode } = useAtlasLink();
@@ -30,6 +31,9 @@ const AtlasLinkContent: React.FC = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
+      {/* iOS Status Bar */}
+      <IOSStatusBarContent isDarkMode={true} />
+      
       {!celestialMode && (
         <RetroGrid 
           className="opacity-30" 
@@ -40,7 +44,7 @@ const AtlasLinkContent: React.FC = () => {
       {celestialMode && <CelestialEffect />}
       
       <SidebarProvider defaultOpen={!isMobile}>
-        <div className="flex w-full h-full overflow-hidden">
+        <div className="flex w-full h-full overflow-hidden pt-11">
           {/* App Navigation Sidebar */}
           <AppSidebar activePage="atlas" />
           
@@ -67,6 +71,9 @@ const AtlasLinkContent: React.FC = () => {
           <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-gradient-to-tr from-transparent to-purple-500/10 rounded-full filter blur-[100px] pointer-events-none opacity-30" />
         </>
       )}
+      
+      {/* iOS Home Indicator */}
+      <div className="ios-home-indicator" />
     </motion.div>
   );
 };

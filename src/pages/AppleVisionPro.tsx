@@ -13,6 +13,7 @@ import AppSidebar from '@/components/AppSidebar';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { toast } from 'sonner';
+import IOSStatusBarContent from '@/components/ios/IOSStatusBarContent';
 
 const AppleVisionPro = () => {
   const { isDarkMode } = useTheme();
@@ -42,18 +43,31 @@ const AppleVisionPro = () => {
 
   return (
     <SidebarProvider defaultOpen={!isMobile}>
-      <div className={cn(
-        "relative min-h-screen w-full overflow-x-hidden",
-        isDarkMode ? "text-white" : "text-gray-900"
-      )}>
+      <motion.div 
+        className={cn(
+          "relative min-h-screen w-full overflow-x-hidden",
+          isDarkMode ? "text-white" : "text-gray-900"
+        )}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        {/* iOS Status Bar */}
+        <IOSStatusBarContent isDarkMode={isDarkMode} />
+        
         {/* App Sidebar */}
         <AppSidebar activePage="applevisionpro" />
         
         {/* Content */}
-        <div className="relative z-10">
+        <div className="relative z-10 pt-11">
           <AppleNavBar />
           
-          <main className="flex flex-col items-center">
+          <motion.main 
+            className="flex flex-col items-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+          >
             {/* Hero Section */}
             <HeroSection />
             
@@ -65,7 +79,7 @@ const AppleVisionPro = () => {
             
             {/* Pricing Section */}
             <PricingSection />
-          </main>
+          </motion.main>
           
           {/* Footer */}
           <footer className="py-8 px-4 text-center">
@@ -76,7 +90,10 @@ const AppleVisionPro = () => {
             </div>
           </footer>
         </div>
-      </div>
+        
+        {/* iOS Home Indicator */}
+        <div className="ios-home-indicator" />
+      </motion.div>
     </SidebarProvider>
   );
 };
