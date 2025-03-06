@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useAtlasLink } from './AtlasLinkContext';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
