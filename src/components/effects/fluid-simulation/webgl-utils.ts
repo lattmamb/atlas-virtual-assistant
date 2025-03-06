@@ -47,7 +47,7 @@ export function getWebGLContext(canvas: HTMLCanvasElement): WebGLContext {
     ext.formatRG = gl.getExtension('EXT_sRGB');
     ext.formatR = gl.getExtension('EXT_sRGB');
     const halfFloatExt = gl.getExtension('OES_texture_half_float');
-    ext.halfFloatTexType = halfFloatExt ? halfFloatExt.HALF_FLOAT_OES : undefined;
+    ext.halfFloatTexType = halfFloatExt ? halfFloatExt.HALF_FLOAT_OES : gl.HALF_FLOAT;
     ext.supportLinearFiltering = gl.getExtension('OES_texture_half_float_linear') !== null;
   }
 

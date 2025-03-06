@@ -7,7 +7,6 @@ import { useTheme } from '@/context/ThemeContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-import { LampContainer } from '@/components/ui/lamp';
 
 interface MessageInputProps {
   value: string;

@@ -83,12 +83,14 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
       {isDarkMode && (
         <div className="fixed inset-0 pointer-events-none z-0 opacity-50">
           <SparklesCore
+            id="tsparticlesfullpage"
             background="transparent"
-            minSize={0.4}
-            maxSize={1}
-            particleDensity={1200}
+            minSize={0.6}
+            maxSize={1.4}
+            particleDensity={20}
             className="w-full h-full"
             particleColor="#FFFFFF"
+            speed={0.5}
           />
         </div>
       )}
