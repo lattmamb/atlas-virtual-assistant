@@ -1,52 +1,59 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-
-interface CarouselCardProps {
-  imgUrl: string;
-  index: number;
-  faceWidth: number;
-  faceCount: number;
-  radius: number;
-  onClick: (imgUrl: string, index: number) => void;
-}
-
-const transition = { 
-  duration: 0.15, 
-  ease: [0.32, 0.72, 0, 1], 
-  filter: "blur(4px)" 
-};
+import { cn } from "@/lib/utils";
+import { CarouselCardProps } from "./types";
 
 const CarouselCard: React.FC<CarouselCardProps> = ({
-  imgUrl,
+  card,
   index,
   faceWidth,
   faceCount,
   radius,
   onClick,
+  isDarkMode
 }) => {
   return (
     <motion.div
-      key={`key-${imgUrl}-${index}`}
-      className="absolute flex h-full origin-center items-center justify-center rounded-xl p-2"
+      key={`key-${card.id}-${index}`}
+      className="absolute flex h-full origin-center items-center justify-center p-2"
       style={{
         width: `${faceWidth}px`,
         transform: `rotateY(${
           index * (360 / faceCount)
         }deg) translateZ(${radius}px)`,
+        transformStyle: "preserve-3d",
+        backfaceVisibility: "hidden",
       }}
-      onClick={() => onClick(imgUrl, index)}
+      onClick={() => onClick(card, index)}
     >
-      <motion.img
-        src={imgUrl}
-        alt={`keyword_${index} ${imgUrl}`}
-        layoutId={`img-${imgUrl}`}
-        className="pointer-events-none w-full rounded-xl object-cover aspect-square"
-        initial={{ filter: "blur(4px)" }}
-        layout="position"
-        animate={{ filter: "blur(0px)" }}
-        transition={transition}
-      />
+      <motion.div
+        className={cn(
+          "w-full h-full rounded-2xl overflow-hidden flex flex-col items-center justify-center",
+          "bg-gradient-to-br", card.color,
+          "border", isDarkMode ? "border-white/10" : "border-black/10",
+          "shadow-lg transform-gpu transition-transform",
+          "hover:scale-105 hover:shadow-xl"
+        )}
+        style={{
+          transformStyle: "preserve-3d",
+          transform: "translateZ(20px)",
+          boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
+        }}
+        whileHover={{ 
+          scale: 1.05, 
+          rotateY: 5,
+          z: 30,
+          boxShadow: "0 15px 40px rgba(0,0,0,0.7)" 
+        }}
+        layoutId={`card-${card.id}`}
+      >
+        <span className="text-5xl mb-4 transform-gpu">{card.icon}</span>
+        <h3 className="text-2xl font-bold text-white mb-2">{card.title}</h3>
+        <p className="text-white/80 text-sm px-4 text-center">
+          {card.description}
+        </p>
+      </motion.div>
     </motion.div>
   );
 };
