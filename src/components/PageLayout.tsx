@@ -21,7 +21,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
       title={title}
       carouselScale={0.6}
     >
-      <div className="content-area">
+      <div className="content-area w-full h-full">
         {children}
       </div>
     </PerspectivePageLayout>

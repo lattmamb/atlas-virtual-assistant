@@ -24,11 +24,21 @@ const PerspectivePageLayout: React.FC<PerspectivePageLayoutProps> = ({
   const location = useLocation();
   const [isPageActive, setIsPageActive] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [hoverOffTimeout, setHoverOffTimeout] = useState<number | null>(null);
 
   // Handle background click to return to carousel
   const handleBackgroundClick = (e: React.MouseEvent) => {
     // Only trigger if clicking directly on the background container, not on content
     if (e.target === e.currentTarget && isPageActive && !isTransitioning) {
+      e.preventDefault();
+      e.stopPropagation();
+      returnToCarousel();
+    }
+  };
+  
+  // Handle return to carousel navigation
+  const returnToCarousel = () => {
+    if (isPageActive && !isTransitioning) {
       setIsTransitioning(true);
       setIsPageActive(false);
       
@@ -56,21 +66,44 @@ const PerspectivePageLayout: React.FC<PerspectivePageLayoutProps> = ({
         !isTransitioning &&
         location.pathname !== '/'
       ) {
-        setIsTransitioning(true);
-        setIsPageActive(false);
+        returnToCarousel();
+      }
+    };
+
+    // Add mouse leave handler to detect when cursor leaves the content area
+    const handleMouseLeave = (e: MouseEvent) => {
+      // Only setup hover-off detection when on a page (not home)
+      if (location.pathname !== '/' && isPageActive && !isTransitioning) {
+        // Clear any existing timeout
+        if (hoverOffTimeout) {
+          window.clearTimeout(hoverOffTimeout);
+        }
         
-        setTimeout(() => {
-          navigate('/');
-        }, 500);
+        // Set a new timeout to check if mouse has moved to the carousel area
+        const timeoutId = window.setTimeout(() => {
+          const hoveredElement = document.elementFromPoint(e.clientX, e.clientY);
+          if (hoveredElement && 
+              !hoveredElement.closest('.content-area') && 
+              hoveredElement.closest('.carousel-area')) {
+            returnToCarousel();
+          }
+        }, 800); // Delay to prevent accidental navigation
+        
+        setHoverOffTimeout(Number(timeoutId));
       }
     };
 
     document.addEventListener('click', handleDocumentClick);
+    document.addEventListener('mouseleave', handleMouseLeave, { capture: true });
     
     return () => {
       document.removeEventListener('click', handleDocumentClick);
+      document.removeEventListener('mouseleave', handleMouseLeave, { capture: true });
+      if (hoverOffTimeout) {
+        window.clearTimeout(hoverOffTimeout);
+      }
     };
-  }, [location.pathname, navigate, isPageActive, isTransitioning]);
+  }, [location.pathname, navigate, isPageActive, isTransitioning, hoverOffTimeout]);
 
   return (
     <div 
@@ -113,7 +146,7 @@ const PerspectivePageLayout: React.FC<PerspectivePageLayoutProps> = ({
       {showCarousel && (
         <div className={cn(
           "carousel-area absolute inset-0 flex items-center justify-center",
-          "transition-all duration-500 ease-in-out transform-gpu",
+          "transition-all duration-500 ease-in-out transform-gpu cursor-pointer",
           isPageActive 
             ? "opacity-30 z-10 scale-75 translate-y-[15%] blur-[1px]" 
             : "opacity-100 z-20 scale-100 translate-y-0 blur-0"
