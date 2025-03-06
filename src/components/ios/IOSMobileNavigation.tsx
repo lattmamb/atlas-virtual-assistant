@@ -1,55 +1,48 @@
 
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { cn } from '@/lib/utils';
-import { MessageSquare, Home, Settings, Workflow, Grid, Cloud } from 'lucide-react';
+import { Home, MessageSquare, Settings, Sparkles, Search } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { useTheme } from '@/context/ThemeContext';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { cn } from '@/lib/utils';
 
 const IOSMobileNavigation: React.FC = () => {
-  const location = useLocation();
-  const { isDarkMode } = useTheme();
+  const { pathname } = useLocation();
+  const isMobile = useIsMobile();
+  
+  if (!isMobile) return null;
   
   const navItems = [
     { icon: Home, path: '/', label: 'Home' },
-    { icon: MessageSquare, path: '/chat', label: 'Chat' },
-    { icon: Workflow, path: '/workflows', label: 'Flows' },
-    { icon: Settings, path: '/settings', label: 'Settings' }
+    { icon: MessageSquare, path: '/chatroom', label: 'Chat', badge: 2 },
+    { icon: Search, path: '/search', label: 'Search' },
+    { icon: Sparkles, path: '/atlas', label: 'Atlas' },
+    { icon: Settings, path: '/settings', label: 'Settings' },
   ];
   
   return (
-    <div className={cn(
-      "ios-dock fixed bottom-4 left-4 right-4 z-50",
-      "backdrop-blur-xl bg-black/40 border border-white/10 rounded-xl"
-    )}>
-      {navItems.map((item) => {
-        const isActive = location.pathname === item.path;
-        const Icon = item.icon;
-        
-        return (
-          <Link key={item.path} to={item.path} className="no-select">
-            <motion.div
-              whileTap={{ scale: 0.9 }}
-              className={cn(
-                "ios-dock-app flex items-center justify-center",
-                isActive 
-                  ? "bg-gradient-to-b from-blue-500 to-blue-600" 
-                  : isDarkMode 
-                    ? "bg-white/10 backdrop-blur-xl" 
-                    : "bg-black/10 backdrop-blur-xl"
-              )}
-            >
-              <Icon 
-                className={cn(
-                  "h-6 w-6",
-                  isActive ? "text-white" : "text-white/80"
-                )} 
-              />
-            </motion.div>
-          </Link>
-        );
-      })}
+    <div className="ios-dock">
+      {navItems.map((item) => (
+        <Link key={item.path} to={item.path}>
+          <motion.div 
+            className={cn(
+              "ios-app-icon relative",
+              pathname === item.path ? "opacity-100" : "opacity-70"
+            )}
+            whileTap={{ scale: 0.9 }}
+          >
+            <div className="ios-app-icon-inner">
+              <item.icon className="h-6 w-6" />
+            </div>
+            
+            {item.badge && (
+              <div className="ios-notification-badge">
+                {item.badge}
+              </div>
+            )}
+          </motion.div>
+        </Link>
+      ))}
     </div>
   );
 };

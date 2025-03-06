@@ -1,4 +1,3 @@
-
 import { WebGLContext } from './types';
 
 export function getWebGLContext(canvas: HTMLCanvasElement): WebGLContext {
@@ -82,4 +81,22 @@ export function createBlit(gl: WebGLRenderingContext | WebGL2RenderingContext) {
     gl.bindFramebuffer(gl.FRAMEBUFFER, destination);
     gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
   }
+}
+
+// Add getSupportedFormat function
+export function getSupportedFormat(gl: WebGLRenderingContext | WebGL2RenderingContext, internalFormat: number, format: number, type: number): [number, number, number] {
+  if (!supportRenderTextureFormat(gl, internalFormat, format, type)) {
+    switch (internalFormat) {
+      case (gl as WebGL2RenderingContext).R16F:
+        return getSupportedFormat(gl, (gl as WebGL2RenderingContext).RG16F, (gl as WebGL2RenderingContext).RG, (gl as WebGL2RenderingContext).HALF_FLOAT_OES || (gl as any).HALF_FLOAT);
+      case (gl as WebGL2RenderingContext).RG16F:
+        return getSupportedFormat(gl, (gl as WebGL2RenderingContext).RGBA16F, (gl as WebGL2RenderingContext).RGBA, (gl as WebGL2RenderingContext).HALF_FLOAT_OES || (gl as any).HALF_FLOAT);
+      case (gl as WebGL2RenderingContext).RGBA16F:
+        return getSupportedFormat(gl, (gl as WebGL2RenderingContext).RGBA, (gl as WebGL2RenderingContext).RGBA, gl.UNSIGNED_BYTE);
+      default:
+        return [gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE];
+    }
+  }
+
+  return [internalFormat, format, type];
 }
