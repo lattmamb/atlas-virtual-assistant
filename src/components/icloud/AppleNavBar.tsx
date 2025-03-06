@@ -1,24 +1,13 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { cn } from "@/lib/utils";
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { 
-  MessageSquare, 
-  Settings, 
-  User, 
-  Grid,
-  Cloud,
-  Search,
-  Sparkles,
-  Workflow,
-  Shield
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import ThemeSwitcherDropdown from '../ThemeSwitcherDropdown';
 import { useTheme } from '@/context/ThemeContext';
-import { toast } from 'sonner';
-import { motion } from 'framer-motion';
+import Logo from './Logo';
+import NavButtons from './NavButtons';
+import ProfileButton from './ProfileButton';
+import GridButton from './GridButton';
 
 interface AppleNavBarProps {
   onToggleAppGrid?: () => void;
@@ -38,16 +27,6 @@ const AppleNavBar: React.FC<AppleNavBarProps> = ({
   const { isDarkMode, currentTheme } = useTheme();
   const isIOS18Theme = currentTheme === 'ios18';
 
-  const handleProfileClick = () => {
-    toast.success('Profile feature coming soon!', {
-      description: 'Your Trinity Dodge profile will be available in the next update.',
-      duration: 3000,
-    });
-  };
-
-  const MotionLink = motion(Link);
-  const MotionButton = motion(Button);
-
   // If using iOS 18 theme, we'll use a more iOS-like navigation
   if (isIOS18Theme) {
     return (
@@ -57,53 +36,21 @@ const AppleNavBar: React.FC<AppleNavBarProps> = ({
         className
       )}>
         <div className="flex items-center">
-          <MotionLink 
-            to="/" 
-            className="flex items-center group"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <div className="relative w-6 h-6 mr-2 flex items-center justify-center">
-              <Cloud 
-                className="absolute h-5 w-5 transition-all duration-500 text-blue-400 group-hover:scale-110" 
-              />
-            </div>
-            <span className="font-medium hidden sm:inline text-white">
-              Atlas
-            </span>
-          </MotionLink>
+          <Logo variant="ios18" />
         </div>
         
         <div className="flex items-center space-x-1">
           {onSearch && (
-            <MotionButton 
-              variant="ghost" 
-              size="icon"
-              onClick={onSearch}
-              className="rounded-full w-8 h-8 hover:bg-white/10"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-            >
-              <Search className="h-4 w-4" />
-            </MotionButton>
+            <GridButton 
+              onToggleAppGrid={onSearch} 
+              isDarkMode={isDarkMode} 
+              variant="ios18"
+            />
           )}
           
           <ThemeSwitcherDropdown />
           
-          <MotionButton 
-            variant="ghost" 
-            size="icon"
-            onClick={handleProfileClick}
-            className={cn(
-              "rounded-full w-8 h-8 ml-1",
-              "bg-gradient-to-br from-blue-500 to-blue-600 text-white",
-              "border border-blue-400/30"
-            )}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            <User className="h-4 w-4" />
-          </MotionButton>
+          <ProfileButton isDarkMode={isDarkMode} variant="ios18" />
         </div>
       </div>
     );
@@ -120,184 +67,32 @@ const AppleNavBar: React.FC<AppleNavBarProps> = ({
     )}>
       <div className="flex items-center">
         <SidebarTrigger className="mr-3" />
-        <MotionLink 
-          to="/" 
-          className="flex items-center group perspective-tilt"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <div className="relative w-6 h-6 mr-2 flex items-center justify-center">
-            <Cloud 
-              className={cn(
-                "absolute h-5 w-5 transition-all duration-500 text-blue-400",
-                "group-hover:scale-110 group-hover:rotate-[360deg]"
-              )} 
-            />
-            <Sparkles className="absolute h-3 w-3 bottom-[1px] right-[1px] text-amber-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          </div>
-          <span className="font-medium hidden sm:inline transition-colors group-hover:text-blue-400 group-hover:animated-gradient-text">
-            Atlas Assistant
-          </span>
-        </MotionLink>
+        <Logo />
       </div>
       
       {!hideMainNav && (
         <div className="flex items-center space-x-1 sm:space-x-2">
-          {onSearch && (
-            <MotionButton 
-              variant="ghost" 
-              size="icon"
-              onClick={onSearch}
-              className={cn(
-                "rounded-full w-8 h-8 glow-on-hover",
-                isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100"
-              )}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-            >
-              <Search className="h-4 w-4" />
-            </MotionButton>
-          )}
+          <NavButtons isDarkMode={isDarkMode} onSearch={onSearch} />
           
           {showAppGridButton && (
-            <MotionButton 
-              variant="ghost" 
-              size="icon"
-              onClick={onToggleAppGrid}
-              className={cn(
-                "rounded-full w-8 h-8 transition-transform hover:scale-110 active:scale-95 glow-on-hover",
-                isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100"
-              )}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-            >
-              <Grid className="h-4 w-4" />
-            </MotionButton>
+            <GridButton onToggleAppGrid={onToggleAppGrid} isDarkMode={isDarkMode} />
           )}
-          
-          <MotionLink 
-            to="/atlas-link"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            <Button 
-              variant="ghost" 
-              size="icon"
-              className={cn(
-                "rounded-full w-8 h-8 transition-transform hover:scale-110 active:scale-95 glow-on-hover",
-                isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100"
-              )}
-            >
-              <Shield className="h-4 w-4" />
-            </Button>
-          </MotionLink>
-          
-          <MotionLink 
-            to="/workflows"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            <Button 
-              variant="ghost" 
-              size="icon"
-              className={cn(
-                "rounded-full w-8 h-8 transition-transform hover:scale-110 active:scale-95 glow-on-hover",
-                isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100"
-              )}
-            >
-              <Workflow className="h-4 w-4" />
-            </Button>
-          </MotionLink>
-          
-          <MotionLink 
-            to="/chat"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            <Button 
-              variant="ghost" 
-              size="icon"
-              className={cn(
-                "rounded-full w-8 h-8 transition-transform hover:scale-110 active:scale-95 glow-on-hover",
-                isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100"
-              )}
-            >
-              <MessageSquare className="h-4 w-4" />
-            </Button>
-          </MotionLink>
-          
-          <MotionLink 
-            to="/settings"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            <Button 
-              variant="ghost" 
-              size="icon"
-              className={cn(
-                "rounded-full w-8 h-8 transition-transform hover:scale-110 active:scale-95 glow-on-hover",
-                isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100"
-              )}
-            >
-              <Settings className="h-4 w-4" />
-            </Button>
-          </MotionLink>
           
           <ThemeSwitcherDropdown />
           
-          <MotionButton 
-            variant="ghost" 
-            size="icon"
-            onClick={handleProfileClick}
-            className={cn(
-              "rounded-full w-8 h-8 ml-1 transition-all",
-              "bg-gradient-to-br from-blue-500 to-blue-600 text-white",
-              "hover:shadow-md hover:shadow-blue-500/20 hover:scale-110 active:scale-95",
-              "border border-blue-400/30 glow-on-hover"
-            )}
-            whileHover={{ scale: 1.1, y: -2 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            <User className="h-4 w-4" />
-          </MotionButton>
+          <ProfileButton isDarkMode={isDarkMode} />
         </div>
       )}
       
       {hideMainNav && (
         <div className="flex items-center space-x-2">
           {showAppGridButton && (
-            <MotionButton 
-              variant="ghost" 
-              size="icon"
-              onClick={onToggleAppGrid}
-              className={cn(
-                "rounded-full w-8 h-8 glow-on-hover",
-                isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100"
-              )}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-            >
-              <Grid className="h-4 w-4" />
-            </MotionButton>
+            <GridButton onToggleAppGrid={onToggleAppGrid} isDarkMode={isDarkMode} />
           )}
           
           <ThemeSwitcherDropdown />
           
-          <MotionButton 
-            variant="ghost" 
-            size="icon"
-            onClick={handleProfileClick}
-            className={cn(
-              "rounded-full w-8 h-8 ml-1 transition-all",
-              "bg-gradient-to-br from-blue-500 to-blue-600 text-white",
-              "hover:shadow-md hover:shadow-blue-500/20 hover:scale-110 active:scale-95",
-              "border border-blue-400/30 glow-on-hover"
-            )}
-            whileHover={{ scale: 1.1, y: -2 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            <User className="h-4 w-4" />
-          </MotionButton>
+          <ProfileButton isDarkMode={isDarkMode} />
         </div>
       )}
     </div>
