@@ -1,66 +1,22 @@
+
 "use client"
 
-import { memo, useEffect, useLayoutEffect, useMemo, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react";
 import {
   AnimatePresence,
   motion,
   useAnimation,
-  useMotionValue,
-  useTransform,
-} from "framer-motion"
-import { Search, Maximize, Minimize } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { useTheme } from "@/context/ThemeContext"
-import { useNavigate } from "react-router-dom"
+} from "framer-motion";
+import { Search, Maximize, Minimize } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useTheme } from "@/context/ThemeContext";
+import { useNavigate } from "react-router-dom";
 
-export const useIsomorphicLayoutEffect =
-  typeof window !== "undefined" ? useLayoutEffect : useEffect
-
-type UseMediaQueryOptions = {
-  defaultValue?: boolean
-  initializeWithValue?: boolean
-}
-
-const IS_SERVER = typeof window === "undefined"
-
-export function useMediaQuery(
-  query: string,
-  {
-    defaultValue = false,
-    initializeWithValue = true,
-  }: UseMediaQueryOptions = {}
-): boolean {
-  const getMatches = (query: string): boolean => {
-    if (IS_SERVER) {
-      return defaultValue
-    }
-    return window.matchMedia(query).matches
-  }
-
-  const [matches, setMatches] = useState<boolean>(() => {
-    if (initializeWithValue) {
-      return getMatches(query)
-    }
-    return defaultValue
-  })
-
-  const handleChange = () => {
-    setMatches(getMatches(query))
-  }
-
-  useIsomorphicLayoutEffect(() => {
-    const matchMedia = window.matchMedia(query)
-    handleChange()
-
-    matchMedia.addEventListener("change", handleChange)
-
-    return () => {
-      matchMedia.removeEventListener("change", handleChange)
-    }
-  }, [query])
-
-  return matches
-}
+// Import refactored components and hooks
+import { useMediaQuery } from "@/hooks/use-media-query";
+import CarouselContainer from "./carousel/CarouselContainer";
+import FullscreenOverlay from "./carousel/FullscreenOverlay";
+import { keywords } from "./carousel/constants";
 
 interface PageInfo {
   id: string;
@@ -77,115 +33,14 @@ interface ThreeDCarouselProps {
   fullWidth?: boolean;
 }
 
-const Carousel = memo(
-  ({
-    handleClick,
-    controls,
-    cards,
-    isCarouselActive,
-    fullWidth = false,
-  }: {
-    handleClick: (card: PageInfo, index: number) => void
-    controls: any
-    cards: PageInfo[]
-    isCarouselActive: boolean
-    fullWidth?: boolean
-  }) => {
-    const isScreenSizeSm = useMediaQuery("(max-width: 640px)")
-    const cylinderWidth = isScreenSizeSm ? 900 : fullWidth ? 2200 : 1800
-    const faceCount = cards.length
-    const faceWidth = cylinderWidth / faceCount
-    const radius = cylinderWidth / (2 * Math.PI)
-    const rotation = useMotionValue(0)
-    const transform = useTransform(
-      rotation,
-      (value) => `rotate3d(0, 1, 0, ${value}deg)`
-    )
-    const { isDarkMode } = useTheme()
-
-    return (
-      <div
-        className="flex h-full items-center justify-center"
-        style={{
-          perspective: "1000px",
-          transformStyle: "preserve-3d",
-          willChange: "transform",
-        }}
-      >
-        <motion.div
-          drag={isCarouselActive ? "x" : false}
-          className="relative flex h-full origin-center cursor-grab justify-center active:cursor-grabbing"
-          style={{
-            transform,
-            rotateY: rotation,
-            width: cylinderWidth,
-            transformStyle: "preserve-3d",
-          }}
-          onDrag={(_, info) =>
-            isCarouselActive &&
-            rotation.set(rotation.get() + info.offset.x * 0.05)
-          }
-          onDragEnd={(_, info) =>
-            isCarouselActive &&
-            controls.start({
-              rotateY: rotation.get() + info.velocity.x * 0.05,
-              transition: {
-                type: "spring",
-                stiffness: 100,
-                damping: 30,
-                mass: 0.1,
-              },
-            })
-          }
-          animate={controls}
-        >
-          {cards.map((card, i) => (
-            <motion.div
-              key={`key-${card.id}-${i}`}
-              className="absolute flex h-full origin-center items-center justify-center rounded-xl p-2"
-              style={{
-                width: `${faceWidth}px`,
-                transform: `rotateY(${
-                  i * (360 / faceCount)
-                }deg) translateZ(${radius}px)`,
-              }}
-              onClick={() => handleClick(card, i)}
-            >
-              <motion.div
-                className={cn(
-                  "w-full h-full rounded-xl overflow-hidden flex flex-col items-center justify-center",
-                  "bg-gradient-to-br", card.color,
-                  "border", isDarkMode ? "border-white/10" : "border-black/10",
-                  "shadow-lg"
-                )}
-                layoutId={`card-${card.id}`}
-              >
-                <span className="text-5xl mb-4">{card.icon}</span>
-                <h3 className="text-2xl font-bold text-white mb-2">{card.title}</h3>
-                <p className="text-white/80 text-sm px-4 text-center">
-                  {card.description}
-                </p>
-              </motion.div>
-            </motion.div>
-          ))}
-        </motion.div>
-      </div>
-    )
-  }
-)
-
-const duration = 0.15
-const transition = { duration, ease: [0.32, 0.72, 0, 1] }
-const transitionOverlay = { duration: 0.5, ease: [0.32, 0.72, 0, 1] }
-
 export function ThreeDPageCarousel({ pages, fullWidth = false }: ThreeDCarouselProps) {
-  const navigate = useNavigate()
-  const { isDarkMode } = useTheme()
-  const [activeCard, setActiveCard] = useState<PageInfo | null>(null)
-  const [isCarouselActive, setIsCarouselActive] = useState(true)
-  const [isFullscreen, setIsFullscreen] = useState(false)
-  const [searchText, setSearchText] = useState("")
-  const controls = useAnimation()
+  const navigate = useNavigate();
+  const { isDarkMode } = useTheme();
+  const [activeCard, setActiveCard] = useState<PageInfo | null>(null);
+  const [isCarouselActive, setIsCarouselActive] = useState(true);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const controls = useAnimation();
   
   const defaultPages: PageInfo[] = [
     { 
@@ -236,33 +91,33 @@ export function ThreeDPageCarousel({ pages, fullWidth = false }: ThreeDCarouselP
       icon: "⚙️",
       path: "/settings"
     }
-  ]
+  ];
   
-  const carouselPages = pages || defaultPages
+  const carouselPages = pages || defaultPages;
 
   const filteredPages = searchText 
     ? carouselPages.filter(page => 
         page.title.toLowerCase().includes(searchText.toLowerCase()) ||
         page.description.toLowerCase().includes(searchText.toLowerCase())
       )
-    : carouselPages
+    : carouselPages;
 
   const handleCardClick = (card: PageInfo, index: number) => {
-    setActiveCard(card)
-    setIsCarouselActive(false)
-    controls.stop()
+    setActiveCard(card);
+    setIsCarouselActive(false);
+    controls.stop();
     
     // Navigate to the page after a brief delay to show the transition
     setTimeout(() => {
-      navigate(card.path)
+      navigate(card.path);
       
       // Reset the active card after navigation
       setTimeout(() => {
-        setActiveCard(null)
-        setIsCarouselActive(true)
-      }, 500)
-    }, 800)
-  }
+        setActiveCard(null);
+        setIsCarouselActive(true);
+      }, 500);
+    }, 800);
+  };
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -276,7 +131,7 @@ export function ThreeDPageCarousel({ pages, fullWidth = false }: ThreeDCarouselP
         setIsFullscreen(false);
       }
     }
-  }
+  };
 
   return (
     <motion.div 
@@ -336,7 +191,7 @@ export function ThreeDPageCarousel({ pages, fullWidth = false }: ThreeDCarouselP
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50"
             style={{ willChange: "opacity" }}
-            transition={transitionOverlay}
+            transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
             onClick={() => {
               setActiveCard(null);
               setIsCarouselActive(true);
@@ -372,7 +227,7 @@ export function ThreeDPageCarousel({ pages, fullWidth = false }: ThreeDCarouselP
         "relative w-full overflow-hidden",
         isFullscreen ? "h-[calc(100vh-64px)]" : "h-[500px]"
       )}>
-        <Carousel
+        <Carousel3D
           handleClick={handleCardClick}
           controls={controls}
           cards={filteredPages}
@@ -381,18 +236,144 @@ export function ThreeDPageCarousel({ pages, fullWidth = false }: ThreeDCarouselP
         />
       </div>
     </motion.div>
-  )
+  );
 }
 
+// 3D Card Carousel component
+const Carousel3D = ({
+  handleClick,
+  controls,
+  cards,
+  isCarouselActive,
+  fullWidth = false,
+}: {
+  handleClick: (card: PageInfo, index: number) => void;
+  controls: any;
+  cards: PageInfo[];
+  isCarouselActive: boolean;
+  fullWidth?: boolean;
+}) => {
+  const isScreenSizeSm = useMediaQuery("(max-width: 640px)");
+  const cylinderWidth = isScreenSizeSm ? 900 : fullWidth ? 2200 : 1800;
+  const faceCount = cards.length;
+  const faceWidth = cylinderWidth / faceCount;
+  const radius = cylinderWidth / (2 * Math.PI);
+  const { isDarkMode } = useTheme();
+
+  // Convert page cards to format expected by CarouselContainer
+  const pageCards = cards.map((card, index) => ({ 
+    card, 
+    index,
+    id: card.id
+  }));
+
+  return (
+    <div
+      className="flex h-full items-center justify-center"
+      style={{
+        perspective: "1000px",
+        transformStyle: "preserve-3d",
+        willChange: "transform",
+      }}
+    >
+      <PageCarouselContainer
+        handleClick={handleClick}
+        controls={controls}
+        cards={cards}
+        isCarouselActive={isCarouselActive}
+        isDarkMode={isDarkMode}
+        cylinderWidth={cylinderWidth}
+      />
+    </div>
+  );
+};
+
+// Specialized carousel container for page cards
+const PageCarouselContainer = memo(({
+  handleClick,
+  controls,
+  cards,
+  isCarouselActive,
+  isDarkMode,
+  cylinderWidth,
+}: {
+  handleClick: (card: PageInfo, index: number) => void;
+  controls: any;
+  cards: PageInfo[];
+  isCarouselActive: boolean;
+  isDarkMode: boolean;
+  cylinderWidth: number;
+}) => {
+  const faceCount = cards.length;
+  const faceWidth = cylinderWidth / faceCount;
+  const radius = cylinderWidth / (2 * Math.PI);
+  const rotation = useAnimation();
+  
+  return (
+    <motion.div
+      drag={isCarouselActive ? "x" : false}
+      className="relative flex h-full origin-center cursor-grab justify-center active:cursor-grabbing"
+      style={{
+        width: cylinderWidth,
+        transformStyle: "preserve-3d",
+      }}
+      onDrag={(_, info) =>
+        isCarouselActive && controls.set({ rotateY: info.offset.x * 0.05 })
+      }
+      onDragEnd={(_, info) =>
+        isCarouselActive &&
+        controls.start({
+          rotateY: info.velocity.x * 0.5,
+          transition: {
+            type: "spring",
+            stiffness: 100,
+            damping: 30,
+            mass: 0.1,
+          },
+        })
+      }
+      animate={controls}
+    >
+      {cards.map((card, i) => (
+        <motion.div
+          key={`key-${card.id}-${i}`}
+          className="absolute flex h-full origin-center items-center justify-center rounded-xl p-2"
+          style={{
+            width: `${faceWidth}px`,
+            transform: `rotateY(${
+              i * (360 / faceCount)
+            }deg) translateZ(${radius}px)`,
+          }}
+          onClick={() => handleClick(card, i)}
+        >
+          <motion.div
+            className={cn(
+              "w-full h-full rounded-xl overflow-hidden flex flex-col items-center justify-center",
+              "bg-gradient-to-br", card.color,
+              "border", isDarkMode ? "border-white/10" : "border-black/10",
+              "shadow-lg"
+            )}
+            layoutId={`card-${card.id}`}
+          >
+            <span className="text-5xl mb-4">{card.icon}</span>
+            <h3 className="text-2xl font-bold text-white mb-2">{card.title}</h3>
+            <p className="text-white/80 text-sm px-4 text-center">
+              {card.description}
+            </p>
+          </motion.div>
+        </motion.div>
+      ))}
+    </motion.div>
+  );
+});
+
+PageCarouselContainer.displayName = "PageCarouselContainer";
+
+// Original ThreeDPhotoCarousel component 
 function ThreeDPhotoCarousel() {
   const [activeImg, setActiveImg] = useState<string | null>(null);
   const [isCarouselActive, setIsCarouselActive] = useState(true);
   const controls = useAnimation();
-  
-  const keywords = [
-    "night", "city", "sky", "sunset", "sunrise", "winter", "skyscraper",
-    "building", "cityscape", "architecture", "street", "lights", "downtown", "bridge"
-  ];
   
   const cards = useMemo(
     () => keywords.map((keyword) => `https://picsum.photos/200/300?${keyword}`),
@@ -418,29 +399,10 @@ function ThreeDPhotoCarousel() {
     <motion.div layout className="relative">
       <AnimatePresence mode="sync">
         {activeImg && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0 }}
-            className="fixed inset-0 bg-black bg-opacity-10 flex items-center justify-center z-50 m-5 md:m-36 lg:mx-[19rem] rounded-3xl"
-            style={{ willChange: "opacity" }}
-            transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
-            onClick={handleClose}
-          >
-            <motion.img
-              src={activeImg}
-              alt="Full view"
-              className="max-w-full max-h-full rounded-lg shadow-lg"
-              initial={{ scale: 0.5 }}
-              animate={{ scale: 1 }}
-              transition={{
-                delay: 0.5,
-                duration: 0.5,
-                ease: [0.25, 0.1, 0.25, 1],
-              }}
-              style={{ willChange: "transform" }}
-            />
-          </motion.div>
+          <FullscreenOverlay
+            activeImg={activeImg}
+            onClose={handleClose}
+          />
         )}
       </AnimatePresence>
       <div className="relative h-[500px] w-full overflow-hidden">
@@ -452,4 +414,4 @@ function ThreeDPhotoCarousel() {
   );
 }
 
-export { ThreeDPhotoCarousel };
+export { ThreeDPhotoCarousel, useMediaQuery };
