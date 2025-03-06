@@ -1,102 +1,149 @@
-import { WebGLContext } from './types';
 
-export function getWebGLContext(canvas: HTMLCanvasElement): WebGLContext {
-  const params = { 
-    alpha: true, 
-    depth: false, 
-    stencil: false, 
-    antialias: false, 
-    preserveDrawingBuffer: false,
-    premultipliedAlpha: true
-  };
-
-  let gl: WebGLRenderingContext | WebGL2RenderingContext;
-  const gl2Context = canvas.getContext('webgl2', params) as WebGL2RenderingContext;
-  const isWebGL2 = !!gl2Context;
+// WebGL utility functions
+export function loadTexture(gl: WebGLRenderingContext | WebGL2RenderingContext, src: string): WebGLTexture {
+  const texture = gl.createTexture();
+  if (!texture) {
+    throw new Error('Failed to create texture');
+  }
   
-  if (isWebGL2) {
-    gl = gl2Context;
-  } else {
-    const fallbackContext = (
-      canvas.getContext('webgl', params) || 
-      canvas.getContext('experimental-webgl', params)
-    ) as WebGLRenderingContext;
+  const image = new Image();
+  image.onload = () => {
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.bindTexture(gl.TEXTURE_2D, null);
+  };
+  image.src = src;
+  
+  return texture;
+}
+
+export function createFramebuffer(gl: WebGLRenderingContext | WebGL2RenderingContext, texture: WebGLTexture): WebGLFramebuffer {
+  const framebuffer = gl.createFramebuffer();
+  if (!framebuffer) {
+    throw new Error('Failed to create framebuffer');
+  }
+  
+  gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
+  
+  return framebuffer;
+}
+
+// Fixed function with proper WebGL2 handling
+export function getWebGLContext(canvas: HTMLCanvasElement): WebGLRenderingContext | WebGL2RenderingContext {
+  const params = { alpha: true, depth: false, stencil: false, antialias: false, preserveDrawingBuffer: false };
+  
+  // Try WebGL2 first
+  let gl = canvas.getContext('webgl2', params) as WebGL2RenderingContext;
+  
+  if (!gl) {
+    // Fall back to WebGL1
+    gl = canvas.getContext('webgl', params) as WebGLRenderingContext;
     
-    if (!fallbackContext) {
+    if (!gl) {
       throw new Error('WebGL not supported');
     }
+  }
+  
+  return gl;
+}
+
+// Fix HALF_FLOAT handling with proper feature detection
+export function getSupportedFormat(gl: WebGLRenderingContext | WebGL2RenderingContext, internalFormat: number, format: number, type: number): boolean {
+  if (isWebGL2(gl)) {
+    // WebGL2 context
+    const gl2 = gl as WebGL2RenderingContext;
     
-    gl = fallbackContext;
-  }
-
-  // Extension handling
-  const ext = {
-    formatRGBA: null,
-    formatRG: null,
-    formatR: null,
-    halfFloatTexType: null,
-    supportLinearFiltering: false
-  };
-
-  if (isWebGL2) {
-    gl2Context.getExtension('EXT_color_buffer_float');
-    ext.supportLinearFiltering = gl2Context.getExtension('OES_texture_float_linear') !== null;
+    const texture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texImage2D(gl.TEXTURE_2D, 0, internalFormat, 4, 4, 0, format, type, null);
+    
+    const fbo = gl.createFramebuffer();
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
+    
+    const status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+    
+    return status === gl.FRAMEBUFFER_COMPLETE;
   } else {
-    ext.formatRGBA = gl.getExtension('EXT_sRGB');
-    ext.formatRG = gl.getExtension('EXT_sRGB');
-    ext.formatR = gl.getExtension('EXT_sRGB');
-    const halfFloatExt = gl.getExtension('OES_texture_half_float');
-    ext.halfFloatTexType = halfFloatExt ? halfFloatExt.HALF_FLOAT_OES : gl.HALF_FLOAT;
-    ext.supportLinearFiltering = gl.getExtension('OES_texture_half_float_linear') !== null;
+    // WebGL1 context
+    const gl1 = gl as WebGLRenderingContext;
+    const ext = gl1.getExtension('OES_texture_half_float');
+    
+    if (!ext) {
+      return false;
+    }
+    
+    return true;
   }
-
-  return { gl, ext };
 }
 
-// Add getResolution function
-export function getResolution(canvas: HTMLCanvasElement, resolution: number): { width: number, height: number } {
-  let aspectRatio = canvas.width / canvas.height;
-  if (aspectRatio < 1) aspectRatio = 1.0 / aspectRatio;
+// Helper to check if the context is WebGL2
+export function isWebGL2(gl: WebGLRenderingContext | WebGL2RenderingContext): boolean {
+  return (gl as WebGL2RenderingContext).HALF_FLOAT !== undefined;
+}
 
-  let width = Math.round(resolution);
-  let height = Math.round(width / aspectRatio);
-
-  if (canvas.width > canvas.height) {
-    return { width, height };
+// Function to get correct HALF_FLOAT type based on context
+export function getHalfFloatType(gl: WebGLRenderingContext | WebGL2RenderingContext): number {
+  if (isWebGL2(gl)) {
+    return (gl as WebGL2RenderingContext).HALF_FLOAT;
   } else {
-    return { width: height, height: width };
+    const ext = (gl as WebGLRenderingContext).getExtension('OES_texture_half_float');
+    if (!ext) {
+      throw new Error('OES_texture_half_float not supported');
+    }
+    return (ext as any).HALF_FLOAT_OES;
   }
 }
 
-// Add createBlit function
-export function createBlit(gl: WebGLRenderingContext | WebGL2RenderingContext) {
-  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, -1, 1, 1, 1, 1, -1]), gl.STATIC_DRAW);
-  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
-  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([0, 1, 2, 0, 2, 3]), gl.STATIC_DRAW);
-  gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
-  gl.enableVertexAttribArray(0);
-
-  return (destination: WebGLFramebuffer | null) => {
-    gl.bindFramebuffer(gl.FRAMEBUFFER, destination);
-    gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
-  }
+// Function to support render texture format
+export function supportRenderTextureFormat(gl: WebGLRenderingContext | WebGL2RenderingContext, internalFormat: number, format: number, type: number): boolean {
+  // Check if format is supported
+  return getSupportedFormat(gl, internalFormat, format, type);
 }
 
-// Add getSupportedFormat function
-export function getSupportedFormat(gl: WebGLRenderingContext | WebGL2RenderingContext, internalFormat: number, format: number, type: number): [number, number, number] {
-  if (!supportRenderTextureFormat(gl, internalFormat, format, type)) {
-    switch (internalFormat) {
-      case (gl as WebGL2RenderingContext).R16F:
-        return getSupportedFormat(gl, (gl as WebGL2RenderingContext).RG16F, (gl as WebGL2RenderingContext).RG, (gl as WebGL2RenderingContext).HALF_FLOAT_OES || (gl as any).HALF_FLOAT);
-      case (gl as WebGL2RenderingContext).RG16F:
-        return getSupportedFormat(gl, (gl as WebGL2RenderingContext).RGBA16F, (gl as WebGL2RenderingContext).RGBA, (gl as WebGL2RenderingContext).HALF_FLOAT_OES || (gl as any).HALF_FLOAT);
-      case (gl as WebGL2RenderingContext).RGBA16F:
-        return getSupportedFormat(gl, (gl as WebGL2RenderingContext).RGBA, (gl as WebGL2RenderingContext).RGBA, gl.UNSIGNED_BYTE);
-      default:
-        return [gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE];
+// Create an improved texture for use in the fluid simulation
+export function createFluidTexture(gl: WebGLRenderingContext | WebGL2RenderingContext, width: number, height: number): WebGLTexture {
+  const texture = gl.createTexture();
+  if (!texture) {
+    throw new Error('Failed to create texture');
+  }
+  
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  
+  // Use the appropriate format and type
+  let internalFormat = gl.RGBA;
+  let format = gl.RGBA;
+  let type = gl.UNSIGNED_BYTE;
+  
+  // Try to use half float if available (better precision)
+  if (isWebGL2(gl)) {
+    const gl2 = gl as WebGL2RenderingContext;
+    if (supportRenderTextureFormat(gl, gl2.RGBA16F, gl.RGBA, gl2.HALF_FLOAT)) {
+      internalFormat = gl2.RGBA16F;
+      type = gl2.HALF_FLOAT;
+    }
+  } else {
+    const gl1 = gl as WebGLRenderingContext;
+    const ext = gl1.getExtension('OES_texture_half_float');
+    if (ext && supportRenderTextureFormat(gl, gl.RGBA, gl.RGBA, (ext as any).HALF_FLOAT_OES)) {
+      type = (ext as any).HALF_FLOAT_OES;
     }
   }
-
-  return [internalFormat, format, type];
+  
+  gl.texImage2D(gl.TEXTURE_2D, 0, internalFormat, width, height, 0, format, type, null);
+  
+  return texture;
 }

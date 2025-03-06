@@ -1,155 +1,124 @@
 
-import React, { useState } from 'react';
-import { ChatInput } from "@/components/ui/chat-input";
-import { Button } from "@/components/ui/button";
-import { Send, Mic, Image, Smile, Paperclip } from 'lucide-react';
-import { useTheme } from '@/context/ThemeContext';
-import { motion, AnimatePresence } from 'framer-motion';
-import { toast } from 'sonner';
+import React, { useState, useRef, useEffect, ChangeEvent, KeyboardEvent } from 'react';
 import { cn } from '@/lib/utils';
+import { Send, Mic } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useAtlasLink } from './AtlasLinkContext';
+import { useTheme } from '@/context/ThemeContext';
 
-interface MessageInputProps {
+export interface MessageInputProps {
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
   onSend: () => void;
+  className?: string; // Add className to interface
 }
 
-const MessageInput: React.FC<MessageInputProps> = ({ value, onChange, onSend }) => {
+const MessageInput: React.FC<MessageInputProps> = ({
+  value,
+  onChange,
+  onSend,
+  className, // Destructure className
+}) => {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const { celestialMode } = useAtlasLink();
   const { isDarkMode } = useTheme();
-  const [isFocused, setIsFocused] = useState(false);
   
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const adjustHeight = () => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = 'auto';
+      const newHeight = Math.min(textarea.scrollHeight, 120); // Max height of 120px
+      textarea.style.height = `${newHeight}px`;
+    }
+  };
+  
+  useEffect(() => {
+    adjustHeight();
+  }, [value]);
+  
+  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       onSend();
     }
   };
-
-  const handleFocus = () => {
-    setIsFocused(true);
+  
+  const toggleRecording = () => {
+    setIsRecording(!isRecording);
+    if (!isRecording) {
+      // Would start recording here in a real app
+      setTimeout(() => {
+        setIsRecording(false);
+      }, 3000);
+    }
   };
-
-  const handleBlur = () => {
-    setIsFocused(false);
-  };
-
-  const handleAttachmentClick = () => {
-    toast.info("Attachment feature coming soon", {
-      position: "bottom-center",
-      duration: 2000
-    });
-  };
-
+  
   return (
-    <motion.div 
+    <div 
       className={cn(
-        "py-3 px-4 border-t transition-all duration-300",
-        isDarkMode ? 'border-gray-800 bg-black/30' : 'border-gray-200 bg-white/10'
+        "relative w-full",
+        celestialMode ? "px-4" : "px-2",
+        className // Apply passed className
       )}
-      initial={{ y: 10, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
     >
-      <div className="flex items-center gap-2 max-w-4xl mx-auto">
-        {/* Attachments button (only visible when not typing) */}
-        <AnimatePresence mode="wait">
-          {value.length === 0 && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.2 }}
-            >
-              <Button 
-                size="icon" 
-                variant="ghost" 
-                className={cn(
-                  "h-10 w-10 rounded-full",
-                  isDarkMode ? "hover:bg-gray-800" : "hover:bg-gray-100"
-                )}
-                onClick={handleAttachmentClick}
-              >
-                <Paperclip className="h-5 w-5 text-gray-400" />
-              </Button>
-            </motion.div>
-          )}
-        </AnimatePresence>
-        
-        {/* Input field */}
-        <div className="flex-1 relative">
-          <ChatInput
-            value={value}
-            onChange={onChange}
-            onKeyDown={handleKeyDown}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            placeholder="Message Atlas..."
-            className={cn(
-              "flex-1 transition-all duration-300 rounded-2xl",
-              isDarkMode 
-                ? 'bg-gray-900 text-white border-gray-700' 
-                : 'bg-white/70 text-gray-800 border-gray-300',
-              isFocused ? 'ring-2 ring-blue-400 ring-opacity-50' : ''
-            )}
-          />
-          
-          {/* Empty state buttons */}
-          <AnimatePresence>
-            {value.length === 0 && (
-              <motion.div 
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center gap-2"
-                initial={{ opacity: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ duration: 0.2 }}
-              >
-                <Button 
-                  size="icon" 
-                  variant="ghost" 
-                  className="h-8 w-8 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100/10"
-                  onClick={handleAttachmentClick}
-                >
-                  <Image className="h-4 w-4" />
-                </Button>
-                <Button 
-                  size="icon" 
-                  variant="ghost" 
-                  className="h-8 w-8 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100/10"
-                  onClick={handleAttachmentClick}
-                >
-                  <Smile className="h-4 w-4" />
-                </Button>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-        
-        {/* Send button */}
-        <motion.div
-          initial={{ scale: 1 }}
-          animate={{ 
-            scale: value.length > 0 ? [1, 1.05, 1] : 1,
-            transition: { duration: 0.3 }
+      <div 
+        className={cn(
+          "flex items-end w-full overflow-hidden rounded-2xl",
+          celestialMode 
+            ? "bg-black/30 border border-white/10 backdrop-blur-xl" 
+            : isDarkMode 
+              ? "bg-gray-800/80 border border-gray-700" 
+              : "bg-gray-100 border border-gray-200"
+        )}
+      >
+        <textarea
+          ref={textareaRef}
+          value={value}
+          onChange={(e) => {
+            onChange(e);
+            adjustHeight();
           }}
+          onKeyDown={handleKeyDown}
+          placeholder="Message Atlas..."
+          className={cn(
+            "w-full resize-none py-3 px-4 bg-transparent",
+            "outline-none focus:outline-none",
+            "text-sm md:text-base",
+            "min-h-[44px] max-h-[120px]",
+            celestialMode ? "text-white placeholder:text-white/50" : ""
+          )}
+          rows={1}
+        />
+        
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={value.trim() ? onSend : toggleRecording}
+          className={cn(
+            "p-3 mr-2 mb-2 rounded-xl",
+            "flex items-center justify-center",
+            celestialMode 
+              ? "bg-blue-500/30 text-white hover:bg-blue-500/40" 
+              : "bg-blue-500 text-white hover:bg-blue-600"
+          )}
         >
-          <Button 
-            onClick={onSend} 
-            className={cn(
-              "rounded-full h-10 w-10 p-0 flex items-center justify-center transition-all duration-300",
-              value.length === 0 
-                ? (isDarkMode ? 'bg-gray-800' : 'bg-gray-200') 
-                : 'bg-blue-600 hover:bg-blue-500'
-            )}
-            disabled={value.length === 0}
-          >
-            {value.length === 0 ? (
-              <Mic className="h-5 w-5 text-gray-400" />
-            ) : (
-              <Send className="h-5 w-5 text-white" />
-            )}
-          </Button>
-        </motion.div>
+          {value.trim() ? (
+            <Send size={18} />
+          ) : (
+            <Mic size={18} className={isRecording ? "animate-pulse text-red-400" : ""} />
+          )}
+        </motion.button>
       </div>
-    </motion.div>
+      
+      {isRecording && (
+        <div className="absolute -top-8 left-0 right-0 flex justify-center">
+          <div className="bg-red-500 text-white text-xs px-3 py-1 rounded-full animate-pulse">
+            Recording...
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 
