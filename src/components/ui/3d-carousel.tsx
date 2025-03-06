@@ -289,7 +289,7 @@ const Carousel3D = ({
 };
 
 // Specialized carousel container for page cards
-const PageCarouselContainer = memo(({
+const PageCarouselContainer = React.memo(({
   handleClick,
   controls,
   cards,

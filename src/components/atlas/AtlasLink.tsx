@@ -10,9 +10,7 @@ import MobileNavigation from './atlasLink/MobileNavigation';
 import { RetroGrid } from '@/components/ui/retro-grid';
 import { useTheme } from '@/context/ThemeContext';
 import { motion } from 'framer-motion';
-import { SidebarProvider } from '@/components/ui/sidebar';
 import { useIsMobile } from '@/hooks/use-mobile';
-import AppSidebar from '@/components/AppSidebar';
 
 const AtlasLinkContent: React.FC = () => {
   const { celestialMode } = useAtlasLink();
@@ -23,8 +21,8 @@ const AtlasLinkContent: React.FC = () => {
   return (
     <motion.div 
       className={cn(
-        "h-screen flex flex-col overflow-hidden relative",
-        "bg-black text-white"
+        "h-full flex flex-col overflow-hidden relative interactive-element content-area",
+        "bg-black text-white rounded-xl"
       )}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -39,26 +37,21 @@ const AtlasLinkContent: React.FC = () => {
       
       {celestialMode && <CelestialEffect />}
       
-      <SidebarProvider defaultOpen={!isMobile}>
-        <div className="flex w-full h-full overflow-hidden">
-          {/* App Navigation Sidebar */}
-          <AppSidebar activePage="atlas" />
-          
-          {/* Atlas Sidebar with controls and settings */}
-          <Sidebar 
-            activePage={activePage}
-            onPageChange={setActivePage}
-          />
-          
-          {/* Main Content - Just the Chat Interface */}
-          <div className="flex-1 flex flex-col h-full overflow-hidden relative">
-            <ChatTab />
-          </div>
+      <div className="flex flex-col md:flex-row w-full h-full overflow-hidden">
+        {/* Atlas Sidebar with controls and settings */}
+        <Sidebar 
+          activePage={activePage}
+          onPageChange={setActivePage}
+        />
+        
+        {/* Main Content - Just the Chat Interface */}
+        <div className="flex-1 flex flex-col h-full overflow-hidden relative">
+          <ChatTab />
         </div>
-      </SidebarProvider>
+      </div>
       
       {/* Mobile navigation */}
-      <MobileNavigation />
+      {isMobile && <MobileNavigation />}
       
       {/* Ambient corner glow */}
       {!celestialMode && (

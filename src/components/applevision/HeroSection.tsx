@@ -6,7 +6,6 @@ import { motion } from 'framer-motion';
 import HeroTitle from './hero/HeroTitle';
 import HeroContent from './hero/HeroContent';
 import Product3DView from './hero/Product3DView';
-import { ThreeDPageCarousel } from '../ui/3d-carousel';
 
 const HeroSection: React.FC = () => {
   const { isDarkMode } = useTheme();
@@ -24,11 +23,6 @@ const HeroSection: React.FC = () => {
       </div>
       
       <Product3DView />
-      
-      {/* Add the 3D Carousel for navigation */}
-      <div className="w-full max-w-6xl mt-12">
-        <ThreeDPageCarousel />
-      </div>
     </motion.section>
   );
 };

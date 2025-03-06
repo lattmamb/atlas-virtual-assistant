@@ -9,14 +9,10 @@ import ParallaxSection from '@/components/applevision/ParallaxSection';
 import FeaturesSection from '@/components/applevision/FeaturesSection';
 import PricingSection from '@/components/applevision/PricingSection';
 import AppleNavBar from '@/components/applevision/AppleNavBar';
-import AppSidebar from '@/components/AppSidebar';
-import { SidebarProvider } from '@/components/ui/sidebar';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { toast } from 'sonner';
 
 const AppleVisionPro = () => {
   const { isDarkMode } = useTheme();
-  const isMobile = useIsMobile();
   const [scrollY, setScrollY] = useState(0);
 
   // Track scroll position for parallax effects
@@ -41,22 +37,17 @@ const AppleVisionPro = () => {
   }, []);
 
   return (
-    <SidebarProvider defaultOpen={!isMobile}>
-      <div className={cn(
-        "relative min-h-screen w-full overflow-x-hidden",
-        isDarkMode ? "text-white" : "text-gray-900"
-      )}>
-        {/* App Sidebar */}
-        <AppSidebar activePage="applevisionpro" />
+    <div className={cn(
+      "relative w-full overflow-x-hidden content-area interactive-element",
+      isDarkMode ? "text-white" : "text-gray-900"
+    )}>
+      {/* Content */}
+      <div className="relative z-10">
+        <AppleNavBar />
         
-        {/* Content */}
-        <div className="relative z-10">
-          <AppleNavBar />
-          
-          <main className="flex flex-col items-center">
-            {/* Hero Section */}
-            <HeroSection />
-            
+        <main className="flex flex-col items-center">
+          {/* Main Content */}
+          <div className="w-full">
             {/* Parallax Features Section */}
             <ParallaxSection scrollY={scrollY} />
             
@@ -65,19 +56,19 @@ const AppleVisionPro = () => {
             
             {/* Pricing Section */}
             <PricingSection />
-          </main>
-          
-          {/* Footer */}
-          <footer className="py-8 px-4 text-center">
-            <div className="max-w-7xl mx-auto">
-              <p className="text-sm opacity-70">
-                © {new Date().getFullYear()} Apple Vision Pro. All rights reserved.
-              </p>
-            </div>
-          </footer>
-        </div>
+          </div>
+        </main>
+        
+        {/* Footer */}
+        <footer className="py-8 px-4 text-center">
+          <div className="max-w-7xl mx-auto">
+            <p className="text-sm opacity-70">
+              © {new Date().getFullYear()} Apple Vision Pro. All rights reserved.
+            </p>
+          </div>
+        </footer>
       </div>
-    </SidebarProvider>
+    </div>
   );
 };
 

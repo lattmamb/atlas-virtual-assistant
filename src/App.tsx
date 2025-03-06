@@ -11,6 +11,7 @@ import NotFound from './pages/NotFound';
 import { ThemeProvider } from './context/ThemeContext';
 import HomeScreen from './components/HomeScreen';
 import { SparklesLoader } from './components/ui/sparkles-loader';
+import PerspectivePageLayout from './components/layout/PerspectivePageLayout';
 
 function App() {
   const location = useLocation();
@@ -36,11 +37,31 @@ function App() {
       ) : (
         <Routes>
           <Route path="/" element={<HomeScreen />} />
-          <Route path="/universe" element={<UniverseHome />} />
-          <Route path="/applevisionpro" element={<AppleVisionPro />} />
-          <Route path="/atlaslink" element={<AtlasLink />} />
-          <Route path="/chatroom" element={<ChatRoom />} />
-          <Route path="/settings" element={<Settings />} />
+          <Route path="/universe" element={
+            <PerspectivePageLayout title="Universe">
+              <UniverseHome />
+            </PerspectivePageLayout>
+          } />
+          <Route path="/applevisionpro" element={
+            <PerspectivePageLayout title="Apple Vision Pro">
+              <AppleVisionPro />
+            </PerspectivePageLayout>
+          } />
+          <Route path="/atlaslink" element={
+            <PerspectivePageLayout title="Atlas Link">
+              <AtlasLink />
+            </PerspectivePageLayout>
+          } />
+          <Route path="/chatroom" element={
+            <PerspectivePageLayout title="Chat Room">
+              <ChatRoom />
+            </PerspectivePageLayout>
+          } />
+          <Route path="/settings" element={
+            <PerspectivePageLayout title="Settings">
+              <Settings />
+            </PerspectivePageLayout>
+          } />
           <Route path="*" element={<NotFound />} />
         </Routes>
       )}
