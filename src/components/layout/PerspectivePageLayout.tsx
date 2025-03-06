@@ -17,7 +17,7 @@ const PerspectivePageLayout: React.FC<PerspectivePageLayoutProps> = ({
   children,
   title,
   showCarousel = true,
-  carouselScale = 0.7,
+  carouselScale = 0.6,
 }) => {
   const { isDarkMode } = useTheme();
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ const PerspectivePageLayout: React.FC<PerspectivePageLayoutProps> = ({
       // Delay navigation to allow animation to play
       setTimeout(() => {
         navigate('/');
-      }, 400);
+      }, 500);
     }
   };
 
@@ -61,7 +61,7 @@ const PerspectivePageLayout: React.FC<PerspectivePageLayoutProps> = ({
         
         setTimeout(() => {
           navigate('/');
-        }, 400);
+        }, 500);
       }
     };
 
@@ -82,13 +82,18 @@ const PerspectivePageLayout: React.FC<PerspectivePageLayoutProps> = ({
         {isPageActive && (
           <motion.div 
             className={cn(
-              "flex-grow content-area", 
-              "z-20 relative"
+              "flex-grow content-area z-20 relative",
+              "bg-background/5 backdrop-blur-sm rounded-xl shadow-2xl",
+              "border", isDarkMode ? "border-white/10" : "border-black/10"
             )}
-            initial={{ scale: 0.8, opacity: 0, y: 40 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.8, opacity: 0, y: 40 }}
-            transition={{ duration: 0.4, ease: [0.19, 1, 0.22, 1] }}
+            initial={{ scale: 0.8, opacity: 0, y: 40, rotateX: 10 }}
+            animate={{ scale: 1, opacity: 1, y: 0, rotateX: 0 }}
+            exit={{ scale: 0.8, opacity: 0, y: 40, rotateX: 10 }}
+            transition={{ 
+              duration: 0.5, 
+              ease: [0.19, 1, 0.22, 1],
+              opacity: { duration: 0.4 }
+            }}
           >
             {title && (
               <div className={cn(
@@ -108,19 +113,22 @@ const PerspectivePageLayout: React.FC<PerspectivePageLayoutProps> = ({
       {showCarousel && (
         <div className={cn(
           "carousel-area absolute inset-0 flex items-center justify-center",
-          "transition-all duration-500 ease-in-out",
-          isPageActive ? "opacity-30 scale-75 -z-10" : "opacity-100 scale-100 z-10"
+          "transition-all duration-500 ease-in-out transform-gpu",
+          isPageActive 
+            ? "opacity-30 z-10 scale-75 translate-y-[15%] blur-[1px]" 
+            : "opacity-100 z-20 scale-100 translate-y-0 blur-0"
         )}>
           <motion.div 
-            className="w-full h-full"
-            initial={{ scale: carouselScale, y: 60 }}
+            className="w-full max-w-7xl mx-auto"
+            initial={{ scale: carouselScale, y: 60, rotateX: 15 }}
             animate={{ 
               scale: isPageActive ? carouselScale : 1,
-              y: isPageActive ? 60 : 0
+              y: isPageActive ? 60 : 0,
+              rotateX: isPageActive ? 15 : 0
             }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5, ease: [0.19, 1, 0.22, 1] }}
           >
-            <ThreeDPageCarousel />
+            <ThreeDPageCarousel fullWidth={!isPageActive} />
           </motion.div>
         </div>
       )}

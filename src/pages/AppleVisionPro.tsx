@@ -48,6 +48,9 @@ const AppleVisionPro = () => {
         <main className="flex flex-col items-center">
           {/* Main Content */}
           <div className="w-full">
+            {/* Hero Section */}
+            <HeroSection />
+            
             {/* Parallax Features Section */}
             <ParallaxSection scrollY={scrollY} />
             

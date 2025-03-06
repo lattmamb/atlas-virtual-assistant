@@ -40,7 +40,7 @@ const HomeScreen: React.FC = () => {
         isDarkMode ? "text-white" : "text-black"
       )}>
         <div className="w-full max-w-7xl mx-auto flex-1 flex items-center justify-center">
-          <ThreeDPageCarousel />
+          <ThreeDPageCarousel fullWidth={true} />
         </div>
       </div>
     </div>

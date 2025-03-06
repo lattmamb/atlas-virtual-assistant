@@ -19,6 +19,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
     <PerspectivePageLayout 
       showCarousel={showCarousel}
       title={title}
+      carouselScale={0.6}
     >
       <div className="content-area">
         {children}

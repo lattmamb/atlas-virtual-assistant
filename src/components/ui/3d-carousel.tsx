@@ -201,11 +201,12 @@ export function ThreeDPageCarousel({ pages, fullWidth = false }: ThreeDCarouselP
               layoutId={`card-${activeCard.id}`}
               className={cn(
                 "w-64 h-64 md:w-96 md:h-96 rounded-2xl overflow-hidden",
-                "bg-gradient-to-br", activeCard.color
+                "bg-gradient-to-br", activeCard.color,
+                "shadow-[0_0_60px_rgba(255,255,255,0.15)]"
               )}
-              initial={{ scale: 0.8, opacity: 0.5 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
+              initial={{ scale: 0.8, opacity: 0.5, rotateY: 5 }}
+              animate={{ scale: 1, opacity: 1, rotateY: 0 }}
+              exit={{ scale: 0.8, opacity: 0, rotateY: 5 }}
               transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
             >
               <div className="w-full h-full flex flex-col items-center justify-center p-6">
@@ -232,7 +233,7 @@ export function ThreeDPageCarousel({ pages, fullWidth = false }: ThreeDCarouselP
           controls={controls}
           cards={filteredPages}
           isCarouselActive={isCarouselActive}
-          fullWidth={isFullscreen}
+          fullWidth={isFullscreen || fullWidth}
         />
       </div>
     </motion.div>
@@ -271,7 +272,7 @@ const Carousel3D = ({
     <div
       className="flex h-full items-center justify-center"
       style={{
-        perspective: "1000px",
+        perspective: "1400px",
         transformStyle: "preserve-3d",
         willChange: "transform",
       }}
@@ -337,25 +338,39 @@ const PageCarouselContainer = React.memo(({
       {cards.map((card, i) => (
         <motion.div
           key={`key-${card.id}-${i}`}
-          className="absolute flex h-full origin-center items-center justify-center rounded-xl p-2"
+          className="absolute flex h-full origin-center items-center justify-center p-2"
           style={{
             width: `${faceWidth}px`,
             transform: `rotateY(${
               i * (360 / faceCount)
             }deg) translateZ(${radius}px)`,
+            transformStyle: "preserve-3d",
+            backfaceVisibility: "hidden",
           }}
           onClick={() => handleClick(card, i)}
         >
           <motion.div
             className={cn(
-              "w-full h-full rounded-xl overflow-hidden flex flex-col items-center justify-center",
+              "w-full h-full rounded-2xl overflow-hidden flex flex-col items-center justify-center",
               "bg-gradient-to-br", card.color,
               "border", isDarkMode ? "border-white/10" : "border-black/10",
-              "shadow-lg"
+              "shadow-lg transform-gpu transition-transform",
+              "hover:scale-105 hover:shadow-xl"
             )}
+            style={{
+              transformStyle: "preserve-3d",
+              transform: "translateZ(20px)",
+              boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
+            }}
+            whileHover={{ 
+              scale: 1.05, 
+              rotateY: 5,
+              z: 30,
+              boxShadow: "0 15px 40px rgba(0,0,0,0.7)" 
+            }}
             layoutId={`card-${card.id}`}
           >
-            <span className="text-5xl mb-4">{card.icon}</span>
+            <span className="text-5xl mb-4 transform-gpu">{card.icon}</span>
             <h3 className="text-2xl font-bold text-white mb-2">{card.title}</h3>
             <p className="text-white/80 text-sm px-4 text-center">
               {card.description}

@@ -38,27 +38,27 @@ function App() {
         <Routes>
           <Route path="/" element={<HomeScreen />} />
           <Route path="/universe" element={
-            <PerspectivePageLayout title="Universe">
+            <PerspectivePageLayout title="Universe" carouselScale={0.6}>
               <UniverseHome />
             </PerspectivePageLayout>
           } />
           <Route path="/applevisionpro" element={
-            <PerspectivePageLayout title="Apple Vision Pro">
+            <PerspectivePageLayout title="Apple Vision Pro" carouselScale={0.6}>
               <AppleVisionPro />
             </PerspectivePageLayout>
           } />
           <Route path="/atlaslink" element={
-            <PerspectivePageLayout title="Atlas Link">
+            <PerspectivePageLayout title="Atlas Link" carouselScale={0.6}>
               <AtlasLink />
             </PerspectivePageLayout>
           } />
           <Route path="/chatroom" element={
-            <PerspectivePageLayout title="Chat Room">
+            <PerspectivePageLayout title="Chat Room" carouselScale={0.6}>
               <ChatRoom />
             </PerspectivePageLayout>
           } />
           <Route path="/settings" element={
-            <PerspectivePageLayout title="Settings">
+            <PerspectivePageLayout title="Settings" carouselScale={0.6}>
               <Settings />
             </PerspectivePageLayout>
           } />
